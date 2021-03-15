@@ -1,0 +1,46 @@
+{
+  "name": "NcrRUGBY",
+  "version": "1.0.0",
+  "description": "NcrRUGBY ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": ""
+  },
+  "homepage": "",
+  "dependencies": {
+    "aws-sdk": "^2.534.0",
+    "bcrypt": "^3.0.6",
+    "compression": "^1.7.4",
+    "dotenv": "^8.0.0",
+    "ejs": "^2.7.1",
+    "excel4node": "^1.7.2",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.1.5",
+    "express-mung": "^0.5.1",
+    "extend": "^3.0.2",
+    "handlebars": "^4.1.2",
+    "helmet": "^4.4.1",
+    "joi": "^17.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "multer": "^1.4.2",
+    "mysql2": "^1.6.5",
+    "node-cron": "^2.0.3",
+    "nodemailer": "^6.3.0",
+    "querystring": "^0.2.0",
+    "request": "^2.88.2",
+    "sequelize": "^5.10.1",
+    "sequelize-cli": "^5.5.0",
+    "uuid": "^3.3.2"
+  }
+}
