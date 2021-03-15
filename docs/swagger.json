@@ -1,0 +1,339 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "NcrRugby API",
+    "description": "NcrRugby spec for Swagger",
+    "termsOfService": "http://swagger.io/terms/"
+  },
+  "basePath": "/api/v1",
+  "tags": [
+    {
+      "name": "User",
+      "description": "API for User"
+    },
+    {
+      "name": "Common",
+      "description": "API for Common Usage"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "multipart/form-data"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths":{
+    "/signUp":{
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Sign Up",
+        "operationId": "Sign Up",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+            "name": "fullName",
+            "in": "formData",
+            "description": "User name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "userName",
+            "in": "formData",
+            "description": "User name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "Email",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "phoneNumber",
+            "in": "formData",
+            "description": "Telephone Number",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "gender",
+            "in": "formData",
+            "description": "0/1",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name":"countryCode",
+            "in":"formData",
+            "description":"countryCode",
+            "required":false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User successfully signed up. Please verify your email",
+            "schema": {
+              "$ref": "#/definitions/signUp200"
+            }
+          },
+          "409": {
+            "description": "User with this email already exists",
+            "schema": {
+              "$ref": "#/definitions/signUp409"
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Login",
+        "operationId": "Login",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+            "name": "userName",
+            "in": "formData",
+            "description": "Username of the User",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password of the User",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged In Successfully",
+            "schema": {
+              "$ref": "#/definitions/login200"
+            }
+          },
+          "403": {
+            "description": "Logged In Unauthorised",
+            "schema": {
+              "$ref": "#/definitions/login403"
+            }
+          }
+        }
+      }
+    },
+    "/forgotPassword": {
+      "post": {
+        "tags": [
+          "Common"
+        ],
+        "description": "Forgot Password",
+        "operationId": "Forgot Password",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+            "name": "userName",
+            "in": "formData",
+            "description": "userName of the User",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "oldpassword",
+            "in": "formData",
+            "description": "Old password of the User",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "formData",
+            "description": "Password of the User",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reset link sent in email",
+            "schema": {
+              "$ref": "#/definitions/forgotPassword200"
+            }
+          },
+          "403": {
+            "description": "Email not found",
+            "schema": {
+              "$ref": "#/definitions/forgotPassword400"
+            }
+          }
+        }
+      }
+    }
+    },
+    "definitions":{
+    "login200":{
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "code": {
+          "type": "integer",
+          "example": "200"
+        },
+        "message": {
+          "type": "string",
+          "example": "Loggied in Successfully"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "id": "5e4dc58f196c6b36601a9030",
+            "email": "manish.mohit2110+6@gmail.com",
+            "telephone": "8004624940",
+            "name": "manish mishra",
+            "answers": []
+          }
+        }
+      }
+    },
+    "login403":{
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "code": {
+          "type": "integer",
+          "example": "403"
+        },
+        "message": {
+          "type": "string",
+          "example": "Wrong email or password"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "message": "You have entered incorrect email/password"
+          }
+        }
+      }
+    },
+    "forgotPassword200":{
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "code": {
+          "type": "integer",
+          "example": "200"
+        },
+        "message": {
+          "type": "string",
+          "example": "Password updated successfully"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "status": true,
+            "message": "Password updated successfully"
+          }
+        }
+      }
+    },
+    "forgotPassword400":{
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "code": {
+          "type": "integer",
+          "example": "400"
+        },
+        "message": {
+          "type": "string",
+          "example": "User does not exists"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "status": true,
+            "message": "User does not exists"
+          }
+        }
+      }
+    },
+    "signUp200":{
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": "true"
+        },
+        "code": {
+          "type": "integer",
+          "example": "200"
+        },
+        "message": {
+          "type": "string",
+          "example": "User successfully signed up. Please verify your email"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "status": true,
+            "message": ""
+          }
+        }
+      }
+    },
+    "signUp409":{
+      "properties": {
+        "status": {
+          "type": "boolean",
+          "example": "false"
+        },
+        "code": {
+          "type": "integer",
+          "example": "409"
+        },
+        "message": {
+          "type": "string",
+          "example": "User with this email already exists"
+        },
+        "data": {
+          "type": "object",
+          "example": {
+            "status": false,
+            "message": ""
+          }
+        }
+      }
+    }
+   }
+}

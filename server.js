@@ -3,7 +3,7 @@ require('dotenv').config();
 process.env.fromId = `NCRRUGBY <${process.env.mailFrom}>`;
 const compression = require('compression');
 //const xFrameOptions = require('x-frame-options');
-const helmet = require('helmet')
+//const helmet = require('helmet')
 const path = require('path');
 var fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
@@ -14,6 +14,9 @@ const checkAppVersion = require("./middlewares/checkAppVersion");
 const conRelease = require("./middlewares/releaseConnection");
 let logger = require("./helper/logger-helper")
 var mung = require('express-mung');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./docs/swagger.json');
+
 
 //const cron = require("./cron");
 const app = express();
@@ -22,7 +25,7 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, device_token, access_token,device_type, language");
   res.header("Access-Control-Expose-Headers", "Origin, X-Requested-With, Content-Type, Accept, device_token, access_token,device_type, language");
-
+res.header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'  *")
   next();
 });
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -38,13 +41,14 @@ app.use((req, res, next) => {
 // 
 
 //app.use(xFrameOptions());
-app.use(helmet());
-app.use(helmet.noSniff());
+//app.use(helmet());
+//app.use(helmet.noSniff());
 app.use(compression());
 app.use(fileUpload());
 
 app.use('/logs', express.static("logs"));
-app.use('/api/v1/docs', express.static("docs"));
+//app.use('/api/v1/docs', express.static("docs"));
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/assets', express.static("public"));
 app.engine('html', require('ejs').renderFile);  
 
