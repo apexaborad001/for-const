@@ -1,6 +1,5 @@
 /node_modules
 /.env
 /.env-production
-/config
 /public
 /package-lock.json
