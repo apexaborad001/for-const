@@ -83,7 +83,7 @@ models.sequelize.authenticate()
       await con.query(`SET sql_mode = ""`);
       //await con.close();
       let port = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
-      app.listen(5000, () => {
+      app.listen(port, () => {
         console.log(`started1 on port  ${port}`); 
       });
     } catch (err) {
