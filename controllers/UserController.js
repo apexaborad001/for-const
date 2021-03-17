@@ -91,7 +91,7 @@ const signUp = async(req, res) => {
   };
   
     
-  const login =  async(req, res) => {
+  const login =  async(req, res) => { 
     let userName = req.body.userName;
     let password = req.body.password;
     try {
@@ -103,8 +103,8 @@ const signUp = async(req, res) => {
         let otp_verified = response.otpVerified;
         let comparedPassword = await bcrypt.compare(password, response.password);
         if (comparedPassword) {
-		      if (response.status !== req.constants.BLOCKED) {
-		        let accessToken = await helper.createAccessToken(response.email, response.id, req.database, response.fullName);
+		      if (response.status !== req.constants.BLOCKED) { 
+		        let accessToken = await helper.createAccessToken(response.email, response.id, req.database, response.fullName, req.models); 
 				res.set({
 					'access_token': accessToken
 				});

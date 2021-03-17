@@ -143,15 +143,15 @@ let saveToS3 = async(req, uploaded_payload, bucketdir) => {
 
   let createAccessToken = async(...args) => {
     let expiresIn = new Date().getTime();
-    let deviceModel = req.models.devices(args[2]);
-    let access_token = jwt.sign({ email: args[0], user_id: args[1], fullName: args[5], expiresIn: expiresIn }, process.env.SECRET_KEY, { expiresIn: '365d' });
+    let deviceModel = args[4].devices;
+    let access_token = jwt.sign({ email: args[0], user_id: args[1], fullName: args[3], expiresIn: expiresIn }, process.env.SECRET_KEY, { expiresIn: '365d' });
      try {
         if(args[6]){
           let saveData = await deviceModel.update({
             accessToken: access_token
           }, {
             where: {
-              id: args[6]
+              id: args[5]
             }
           });
           return access_token;

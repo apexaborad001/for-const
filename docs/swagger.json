@@ -28,7 +28,7 @@
     "application/json"
   ],
   "paths":{
-    "/signUp":{
+    "/manage-user/signUp":{
       "post": {
         "tags": [
           "User"
@@ -76,14 +76,14 @@
           {
             "name": "gender",
             "in": "formData",
-            "description": "0/1",
+            "description": "male/female/others",
             "required": true,
             "type": "string"
           },
           {
             "name":"countryCode",
             "in":"formData",
-            "description":"countryCode",
+            "description":"+91",
             "required":false,
             "type": "string"
           }
@@ -104,7 +104,7 @@
         }
       }
     },
-    "/login": {
+    "/manage-user/login": {
       "post": {
         "tags": [
           "User"
@@ -145,7 +145,7 @@
         }
       }
     },
-    "/forgotPassword": {
+    "/manage-user/forgotPassword": {
       "post": {
         "tags": [
           "Common"
