@@ -9,6 +9,8 @@ const routes = require('express').Router();
 routes.post('/manage-user/signUp', validate(userValidation.signUp),userController.signUp);
 routes.post('/manage-user/login',validate(userValidation.login),userController.login);
 routes.post('/manage-user/editProfile', auth.isAuthenticated, userController.editProfile);
+routes.post('/manage-user/forgotPassword', validate(userValidation.forgotPassword), userController.forgotPassword);
+routes.post('/manage-user/logout', auth.isAuthenticated, userController.logout);
 routes.get("*", (req, res, next) => {
     res.send("Un-authorized access");
 });

@@ -58,14 +58,15 @@ module.exports = (req) => {
         "NOT_FOUND": "No such user found."
       },
       "LOGOUT": {
-        "SUCCESSFUL": "Logged out successfully.",
-        "UNSUCCESSFUL": "Failed to logout."
+        "SUCCESSFULL": "Logged out successfully.",
+        "UNSUCCESSFULL": "Failed to logout."
       },
       "INTERNAL500": "Something went wrong.",
       "COMMON_DATA": {
        },
       "FORGOT_PASSWORD": {
-        "FOLLOW_EMAIL": "Please check the email sent to your email ID.",
+        "SUCCESS": "Password update successfully",
+        "FAILURE": "Invalid userName/Password",
       },
       "CHANGE_PASSWORD": {
         "PROMT_NEW_PASSWORD": "Please enter a new password, you have already used this password.",

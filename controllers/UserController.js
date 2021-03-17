@@ -14,6 +14,24 @@ const editProfile = async(req,res) =>{
             }
             await userData.save();
             let data = userData;
+            if(req.files){
+                try{
+					let imageRes = await helper.upload(req, "myprofile");
+					imageRes["userId"] = req.decoded.user_id;
+					await req.models.user_images.destroy({
+                    	where:{
+                    		userId:req.decoded.user_id
+                    	}
+                    })
+					let saveImage = new req.models.user_images(imageRes)
+					await saveImage.save()
+
+
+                }catch(err){
+                    console.log(err)
+                }
+                
+            }
             return res.status(req.constants.HTTP_SUCCESS).json({ 
                 status: req.constants.SUCCESS, 
                 code: req.constants.HTTP_SUCCESS,
@@ -53,7 +71,17 @@ const signUp = async(req, res) => {
 				email_verified:1,
 				status:1
           };
-          await req.models.user.create(userData);
+          let newUserData = await req.models.user.create(userData);
+			if(req.files){
+                try{
+					let imageRes = await helper.upload(req, "myprofile");
+					imageRes["userId"] = newUserData.id;
+            		let saveImage = new req.models.user_images(imageRes)
+					await saveImage.save()
+			    }catch(err){
+                    console.log(err)
+                }    
+            }
 	  	  return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
          }               
     } catch (error) {
@@ -136,8 +164,110 @@ const signUp = async(req, res) => {
     }
   }
   
+  const forgotPassword =  async(req, res) => {
+    let userName = req.body.userName;
+    let oldPassword = req.body.oldPassword;
+    let password = bcrypt.hashSync(req.body.password, 10);
+    try {
+        const foundUser = await req.models.user.findOne({
+        	where: { userName: userName, isDeleted : 0 },
+      	});
+      	let response = JSON.parse(JSON.stringify(foundUser, null, 4));
+      	if(response){
+		    let comparedPassword = await bcrypt.compare(oldPassword, response.password);
+		    if (comparedPassword) {
+		            foundUser["password"] = password;
+				    let isUpdate = await foundUser.save();
+				    if(isUpdate){
+				    	return res.status(req.constants.HTTP_SUCCESS).send({
+							code: req.constants.HTTP_SUCCESS,
+							status: req.constants.SUCCESS,
+							message: req.messages.FORGOT_PASSWORD.SUCCESS
+						}) 	
+				    }else{
+						return res.status(req.constants.HTTP_NOT_EXISTS).json({
+							status: req.constants.ERROR,
+							code: req.constants.HTTP_NOT_EXISTS,
+							message: req.messages.FORGOT_PASSWORD.FAILURE
+						});
+				    }
+				
+		    } else {
+		      logger.log('Forgot Password', req, {
+		        status: req.constants.ERROR,
+		        code: req.constants.HTTP_NOT_EXISTS,
+		        message: req.messages.LOGIN.FAILURE
+		      }, 'guest', 0);
+			  return res.status(req.constants.HTTP_NOT_EXISTS).json({
+				 status: req.constants.ERROR,
+				 code: req.constants.HTTP_NOT_EXISTS,
+				 message: req.messages.FORGOT_PASSWORD.FAILURE
+			   });
+		    }
+      } else {
+        logger.log('Forgot Password', req, {
+          status: req.constants.ERROR,
+          code: req.constants.HTTP_NOT_EXISTS,
+          message: req.messages.LOGIN.NOT_FOUND
+        }, 'guest', 0);
+        res.status(req.constants.HTTP_NOT_EXISTS).json({
+          status: req.constants.ERROR,
+          code: req.constants.HTTP_NOT_EXISTS,
+          message: req.messages.LOGIN.NOT_FOUND
+        })
+      }
+    } catch (err) {
+      logger.log('Forgot Password', req, err, 'guest', 0);
+      res.status(req.constants.HTTP_SERVER_ERROR).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_SERVER_ERROR,
+        message: req.messages.INTERNAL500 + err
+      })
+    }
+  }
+  
+   logout = async function(req, res) {
+    try {
+      let device = req.models.devices.findOne({
+        where: {
+          userId: req.decoded.user_id,
+          accessToken: req.headers["access_token"]
+        }
+      });
+      if (device) {
+        await req.models.devices.destroy({
+          where: {
+            userId: req.decoded.user_id,
+            accessToken: req.headers["access_token"]
+          }
+        });
+        return res.status(req.constants.HTTP_SUCCESS).json({
+          status: req.constants.SUCCESS,
+          code: req.constants.HTTP_SUCCESS,
+          message: req.messages.LOGOUT.SUCCESSFULL
+        });
+
+      }else{
+        return res.status(req.constants.HTTP_SUCCESS).json({
+          status: req.constants.ERROR,
+          code: req.constants.HTTP_SUCCESS,
+          message: req.messages.LOGOUT.UNSUCCESSFULL
+        });
+
+      }
+
+    } catch (err) {
+      logger.log('Logout User', req, err, 'user', req.decoded.user_id);
+      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+    }
+
+  },
+ 
+  
 module.exports = {
 login,
 signUp, 
-editProfile
+editProfile,
+logout,
+forgotPassword
 };

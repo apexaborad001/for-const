@@ -35,8 +35,15 @@ const login = Joi.object({
         badge: Joi.any().default(''),
       }
     });
-  
+const forgotPassword =  Joi.object({
+      body: {
+        password: Joi.string().required(),
+        userName: Joi.string().required(),
+        oldPassword:Joi.string().required()
+      }
+    });
 module.exports = {
   login,
-  signUp
+  signUp,
+  forgotPassword
 }

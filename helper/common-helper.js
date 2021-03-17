@@ -66,7 +66,55 @@ let sendEmail = async(...args) => {
   })
 };
 
-let saveToS3 = async(req, uploaded_payload) => {
+
+let upload = async(req, imageType='')=>{
+          const fileUpload = require('express-fileupload');
+          const path = require('path');
+          const fs = require("fs");
+
+          return new Promise((resolve, reject)=> {
+            try{
+              let file_to_upload = req.files ? req.files.image : '';
+              // let file_to_upload = req.files.image
+              //console.log(req.files)
+              
+              let absolute_path = path.join(__dirname, "../public/temp");
+              if (!fs.existsSync(absolute_path)) {
+                fs.mkdirSync(absolute_path, { recursive: true })
+                fs.chmodSync(absolute_path, '775', function(err) {
+                  if (err) throw err;
+                });
+              }
+              var extension = file_to_upload.name.split('.').pop();
+              // if (upload_type_allowed.includes("." + extension)) {
+              var orignal_name = (new Date()).getTime() + "." + extension;
+              //var orignal_name = file_to_upload.name;
+              file_to_upload.mv(absolute_path + '/' + orignal_name, async(err) => {
+                if (err) {
+                  reject(err)
+                  
+                } else {
+                  //Action as required
+                  try{
+                    let imgdir = "common";
+                    let a = await saveToS3(req, orignal_name, imgdir);
+                    // console.log(a)
+                    // console.log(orignal_name)
+                    let imageRes =  {"imagePath":imgdir+"/"+orignal_name, "imageType":imageType, "name":orignal_name};
+                    resolve(imageRes)
+                  }catch(err){
+                    console.log(err)
+                  }
+                  
+                }
+              });
+            }catch(err){
+              reject(err)
+            }
+          })
+    }
+
+let saveToS3 = async(req, uploaded_payload, bucketdir) => {
   return new Promise(async(resolve, reject) => {
     try {
 
@@ -75,7 +123,7 @@ let saveToS3 = async(req, uploaded_payload) => {
       if (fs.existsSync(payload_absolute_path)) {
         let fileBuffer = fs.readFileSync(payload_absolute_path);;
 
-        let user_created_timespan = "common";
+        let user_created_timespan = bucketdir;
         await awsHelper.makeFolder(user_created_timespan);
         let uploadResponse = await awsHelper.uploadS3(user_created_timespan, fileBuffer, uploaded_payload);
         resolve(true);
@@ -149,5 +197,6 @@ module.exports = {
   getCurrentUTCTime,
   saveToS3,
   apiKeyGeneration,
-  createAccessToken
+  createAccessToken,
+  upload
 }
