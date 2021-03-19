@@ -12,8 +12,31 @@ routes.post('/manage-user/editProfile', auth.isAuthenticated, userController.edi
 routes.post('/manage-user/forgotPassword', validate(userValidation.forgotPassword), userController.forgotPassword);
 routes.post('/manage-user/logout', auth.isAuthenticated, userController.logout);
 routes.get('/manage-user/getUser',auth.isAuthenticated,userController.getUser);
+
+routes.get("/s3test", async (req, res)=>{
+		try {
+			var AWS = require('aws-sdk');
+			const s3 = new AWS.S3();
+			let response = await s3.listBuckets();
+		   return res.send({"res":response, s3:s3})
+
+		} catch (err) {
+		  res.send({"res":err})
+		}
+})
+routes.get("/s3test2", async (req, res)=>{
+		try {
+			var AWS = require('aws-sdk');
+			const s3 = new AWS.S3();
+		    return res.send({s3:s3})
+
+		} catch (err) {
+		  res.send({"res":err})
+		}
+})
 routes.get("*", (req, res, next) => {
     res.send("Un-authorized access");
 });
+
 
 module.exports = routes;
