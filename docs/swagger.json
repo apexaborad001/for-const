@@ -175,6 +175,94 @@
         }
       }
     },
+    "/manage-user/editProfile": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "edit Profile",
+        "operationId": "edit Profile",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
+          "name": "fullName",
+          "in": "formData",
+          "description": "User name",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "phoneNumber",
+          "in": "formData",
+          "description": "Telephone Number",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "gender",
+          "in": "formData",
+          "description": "male/female/others",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "in": "formData",
+          "description": "Email",
+          "required": true,
+          "type": "string"
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "Your profile has been successfully updated "
+          },
+          "500": {
+            "description": "Internal Server error- Cannot save user"
+          }
+        }
+      }
+    },
+    "/manage-user/logout": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "logout",
+        "operationId": "logout",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged out successfully"
+          },
+          "200": {
+            "description": "Failed to logout."
+          }
+        }
+      }
+    },
     "/manage-user/forgotPassword": {
       "post": {
         "tags": [
