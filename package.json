@@ -17,8 +17,13 @@
   },
   "homepage": "",
   "dependencies": {
+<<<<<<< HEAD
     "aws-sdk": "^2.864.0",
     "bcrypt": "^3.0.8",
+=======
+    "aws-sdk": "^2.534.0",
+    "bcrypt-nodejs": "0.0.3",
+>>>>>>> d72890939955a60c9caf3340adfbeba65c7fb989
     "compression": "^1.7.4",
     "dotenv": "^8.2.0",
     "ejs": "^2.7.4",
