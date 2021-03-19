@@ -20,6 +20,11 @@ routes.get("/s3test", async (req, res)=>{
 			const s3Params = {
 				Bucket: "ncrrugbyuat"
 			};
+			const Obj = s3.putObject({
+				Key: "common/", 
+				Bucket: "ncrrugbyuat"
+			});
+
           	s3.listObjects(s3Params, function(err, data) {
 			  if (err) {
 			 		return res.send({"Error":err})
