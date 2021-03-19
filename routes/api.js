@@ -20,7 +20,29 @@ routes.get("/s3test", async (req, res)=>{
 			const s3Params = {
 				Bucket: "ncrrugbyuat"
 			};
-			const Obj = s3.putObject({
+			
+				try {
+					let readmeText = "User Folder Generated";
+					let fileData = readmeText.toString("binary");
+					let params = {
+					 Bucket: "ncrrugbyuat",
+					  Body: fileData,
+					  Key: `readme.txt`
+					};
+					let response = s3.upload(params, (err, data) => {
+					  if (err) {
+						return res.send({"Error":err})
+					  } else {
+						return res.send({"Success":data});
+					  }
+					});
+				  } catch (err) {
+					res.send({"res":err})
+				  }
+			
+			
+			
+			/*const Obj = s3.putObject({
 				Key: "common/", 
 				Bucket: "ncrrugbyuat"
 			});
@@ -30,7 +52,7 @@ routes.get("/s3test", async (req, res)=>{
 			 		return res.send({"Error":err})
 			  } else {
 				return res.send({"Success":data});
-			}});
+			}});*/
 
 		} catch (err) {
 		  res.send({"res":err})
