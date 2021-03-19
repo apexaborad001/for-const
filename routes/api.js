@@ -27,7 +27,7 @@ routes.get("/s3test", async (req, res)=>{
 					let params = {
 					 Bucket: "ncrrugbyuat",
 					  Body: fileData,
-					  Key: `/common/readme.txt`
+					  Key: `common/readme.txt`
 					};
 					let response = s3.upload(params, (err, data) => {
 					  if (err) {
