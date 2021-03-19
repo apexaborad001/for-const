@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const helper = require('../helper/common-helper');
 const logger = require('../helper/logger-helper');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt-nodejs');
 const moment = require('moment');
 
 const editProfile = async(req,res) =>{  
@@ -45,8 +45,8 @@ const editProfile = async(req,res) =>{
 
 const signUp = async(req, res) => {   
     try {    
-        let email = req.body.email,
-        password = bcrypt.hashSync(req.body.password, 10);
+        let email = req.body.email;         
+        let password = bcrypt.hashSync(req.body.password);
         let findUser = await req.models.user.findOne({
           where: {
             userName: req.body.userName
@@ -97,7 +97,7 @@ const signUp = async(req, res) => {
       	response = JSON.parse(JSON.stringify(response, null, 4));
       	if(response){
         let otp_verified = response.otpVerified;
-        let comparedPassword = await bcrypt.compare(password, response.password);
+        let comparedPassword = await bcrypt.compareSync(password, response.password);
         if (comparedPassword) {
 		      if (response.status !== req.constants.BLOCKED) { 
 		        let accessToken = await helper.createAccessToken(response.email, response.id, req.database, response.fullName, req.models); 
