@@ -17,8 +17,15 @@ routes.get("/s3test", async (req, res)=>{
 		try {
 			var AWS = require('aws-sdk');
 			const s3 = new AWS.S3();
-			let response = await s3.listBuckets();
-		   return res.send({"res":response, s3:s3})
+			const s3Params = {
+				Bucket: "ncrrugbyuat"
+			};
+          	s3.listObjects(s3Params, function(err, data) {
+			  if (err) {
+			 		return res.send({"Error":err})
+			  } else {
+				return res.send({"Success":data});
+			}});
 
 		} catch (err) {
 		  res.send({"res":err})
