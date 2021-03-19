@@ -79,6 +79,10 @@ module.exports = (req) => {
       },
       "MAIL_SUBJECT":{
 		
+      },
+      "USER_PROFILE":{
+        "SUCCESS":"User found successfully",
+        "UNSUCCESSFULL": "User not found"
       }
 
     }

@@ -12,7 +12,7 @@
       "name": "User",
       "description": "API for User"
     },
-    {
+      {
       "name": "Common",
       "description": "API for Common Usage"
     }
@@ -145,6 +145,36 @@
         }
       }
     },
+    "/manage-user/getUser": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Get user",
+        "operationId": "Get user by id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "User found successfully"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/manage-user/forgotPassword": {
       "post": {
         "tags": [
@@ -163,7 +193,7 @@
             "type": "string"
           },
           {
-            "name": "oldpassword",
+            "name": "oldPassword",
             "in": "formData",
             "description": "Old password of the User",
             "required": true,

@@ -11,6 +11,7 @@ routes.post('/manage-user/login',validate(userValidation.login),userController.l
 routes.post('/manage-user/editProfile', auth.isAuthenticated, userController.editProfile);
 routes.post('/manage-user/forgotPassword', validate(userValidation.forgotPassword), userController.forgotPassword);
 routes.post('/manage-user/logout', auth.isAuthenticated, userController.logout);
+routes.get('/manage-user/getUser',auth.isAuthenticated,userController.getUser);
 routes.get("*", (req, res, next) => {
     res.send("Un-authorized access");
 });

@@ -4,6 +4,7 @@ const helper = require('../helper/common-helper');
 const logger = require('../helper/logger-helper');
 const bcrypt = require('bcrypt');
 const moment = require('moment');
+
 const editProfile = async(req,res) =>{  
         try{
             const user_id = req.decoded.user_id;
@@ -25,12 +26,9 @@ const editProfile = async(req,res) =>{
                     })
 					let saveImage = new req.models.user_images(imageRes)
 					await saveImage.save()
-
-
                 }catch(err){
                     console.log(err)
                 }
-                
             }
             return res.status(req.constants.HTTP_SUCCESS).json({ 
                 status: req.constants.SUCCESS, 
@@ -41,9 +39,7 @@ const editProfile = async(req,res) =>{
         }catch(err){
             console.log(err)
            return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
-  
         }
-        
     };
 
 
@@ -164,6 +160,42 @@ const signUp = async(req, res) => {
     }
   }
   
+const getUser = async(req, res) => {   
+  try {    
+      let userId=req.decoded.user_id
+      let findUser = await req.models.user.findOne({
+        where: {
+          id: userId
+        },
+        attributes:{exclude:['password']}
+      });
+        if(findUser)
+        {
+            res.status(req.constants.HTTP_SUCCESS).send({
+            code: req.constants.HTTP_SUCCESS,
+            status: req.constants.SUCCESS,
+            message: req.messages.USER_PROFILE.SUCCESS,
+            data:findUser
+          }) 
+        }
+        else{
+          logger.log('getUser', req, err, 'user',userId);
+          res.status(req.constants.HTTP_NOT_FOUND).send({
+            code: req.constants.HTTP_NOT_FOUND,
+            status: req.constants.ERROR,
+            message: req.messages.USER_PROFILE.UNSUCCESSFULL,
+            })
+        }
+      }catch(err){
+        logger.log('getUser', req, err, 'user', userId);
+        res.status(req.constants.HTTP_SERVER_ERROR).json({
+          status: req.constants.ERROR,
+          code: req.constants.HTTP_SERVER_ERROR,
+          message: req.messages.INTERNAL500 + err
+        })
+    }
+  }
+  
   const forgotPassword =  async(req, res) => {
     let userName = req.body.userName;
     let oldPassword = req.body.oldPassword;
@@ -226,7 +258,8 @@ const signUp = async(req, res) => {
     }
   }
   
-   logout = async function(req, res) {
+  
+   const logout = async function(req, res) {
     try {
       let device = req.models.devices.findOne({
         where: {
@@ -261,13 +294,12 @@ const signUp = async(req, res) => {
       return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
     }
 
-  },
- 
-  
+  }
 module.exports = {
 login,
 signUp, 
 editProfile,
 logout,
-forgotPassword
+forgotPassword,
+getUser
 };
