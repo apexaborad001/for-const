@@ -185,14 +185,14 @@ routes.get("/s3test5", async (req, res)=>{
 				  Body: filebuffer,
 				  Key: `common/${filename}`,
 				  ACL: "public-read",
-				  contentType: contentType[extension],
+				  ContentType: contentType[extension],
 				};
 				//console.log(params);
 				let response = s3.upload(params, (err, data) => {
 				  if (err) {
 			 		return res.send({"Error":err});
 				  } else {
-						return res.send({"Success":data});
+						return res.send({"Success":data, params});
 				  }
 				});
 				 
