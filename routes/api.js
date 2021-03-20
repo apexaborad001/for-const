@@ -109,7 +109,7 @@ routes.get("/s3test3", async (req, res)=>{
 				});
 				 
 			}
-			return res.send({"Success":filenames, "s3Data":s3Data});
+			//return res.send({"Success":filenames, "s3Data":s3Data});
 		/*var AWS = require('aws-sdk');
 			const s3 = new AWS.S3();
 			const s3Params = {
