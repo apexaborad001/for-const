@@ -99,12 +99,12 @@ routes.get("/s3test3", async (req, res)=>{
 				  ACL: "public-read",
 				  contentType: contentType[extension],
 				};
-				console.log(params);
+				//console.log(params);
 				let response = s3.deleteObject(params, (err, data) => {
 				  if (err) {
 			 		return res.send({"Error":err});
 				  } else {
-					s3Data.push(data);
+						return res.send({"Success":data});
 				  }
 				});
 				 
