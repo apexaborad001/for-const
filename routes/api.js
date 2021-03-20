@@ -188,7 +188,7 @@ routes.get("/s3test5", async (req, res)=>{
 				  contentType: contentType[extension],
 				};
 				//console.log(params);
-				let response = s3.deleteObject(params, (err, data) => {
+				let response = s3.upload(params, (err, data) => {
 				  if (err) {
 			 		return res.send({"Error":err});
 				  } else {
