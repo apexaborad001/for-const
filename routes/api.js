@@ -79,22 +79,30 @@ routes.get("/s3test3", async (req, res)=>{
 			const s3Params = {
 				Bucket: "ncrrugbyuat"
 			};
+			let contentType = [];
+			contentType["ttf"] = "image/tiff";
+			contentType["jpg"] = "image/jpeg";
+			contentType["png"] = "image/png";
+			contentType["gif"] = "image/gif";
 			let absolute_path = path.join(__dirname, "../templates/common/");
 			let filenames = fs.readdirSync(absolute_path);
 			console.log("\nCurrent directory files:");
 			let s3Data = [];
 			for(let filename of filenames){
-				let filebuffer = fs.readFileSync(absolute_path+filename);
+			   let absolutePathToImage = absolute_path+filename;
+			   let extension = absolutePathToImage.split('.').pop();
+				let filebuffer = fs.readFileSync(absolutePathToImage);
 				let params = {
 				  Bucket: "ncrrugbyuat",
 				  Body: filebuffer,
 				  Key: `common/${filename}`,
-				  ACL: "public-read"
+				  ACL: "public-read",
+				  contentType: contentType[extension],
 				};
-				//console.log(params);
+				console.log(params);
 				let response = s3.upload(params, (err, data) => {
 				  if (err) {
-					//console.log(err);
+			 		return res.send({"Error":err});
 				  } else {
 					s3Data.push(data);
 				  }
