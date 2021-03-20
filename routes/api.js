@@ -72,7 +72,37 @@ routes.get("/s3test2", async (req, res)=>{
 
 routes.get("/s3test3", async (req, res)=>{
 		try {
+			const  fs = require('fs');
+			let path =  require("path");
 			var AWS = require('aws-sdk');
+			const s3 = new AWS.S3();
+			const s3Params = {
+				Bucket: "ncrrugbyuat"
+			};
+			let absolute_path = path.join(__dirname, "../templates/common/");
+			let filenames = fs.readdirSync(absolute_path);
+			console.log("\nCurrent directory files:");
+			let s3Data = [];
+			for(let filename of filenames){
+				let filebuffer = fs.readFileSync(absolute_path+filename);
+				let params = {
+				  Bucket: "ncrrugbyuat",
+				  Body: filebuffer,
+				  Key: `common/${filename}`,
+				  ACL: "public-read"
+				};
+				//console.log(params);
+				let response = s3.upload(params, (err, data) => {
+				  if (err) {
+					//console.log(err);
+				  } else {
+					s3Data.push(data);
+				  }
+				});
+				 
+			}
+			return res.send({"Success":filenames, "s3Data":s3Data});
+		/*var AWS = require('aws-sdk');
 			const s3 = new AWS.S3();
 			const s3Params = {
 				Bucket: "ncrrugbyuat"
@@ -85,7 +115,7 @@ routes.get("/s3test3", async (req, res)=>{
 			  } else {
 				return res.send({"Success":data});
 			}});
-
+      */
 		} catch (err) {
 		  res.send({"res":err})
 		}
