@@ -129,6 +129,28 @@ routes.get("/s3test3", async (req, res)=>{
 		}
 })
 
+
+routes.get("/s3test4", async (req, res)=>{
+		try {
+		  var AWS = require('aws-sdk');
+			const s3 = new AWS.S3();
+			const s3Params = {
+				Bucket: "ncrrugbyuat"
+			};
+			
+			
+          	s3.listObjects(s3Params, function(err, data) {
+			  if (err) {
+			 		return res.send({"Error":err})
+			  } else {
+				return res.send({"Success":data});
+			}});
+      
+		} catch (err) {
+		  res.send({"res":err})
+		}
+})
+
 routes.get("*", (req, res, next) => {
     res.send("Un-authorized access");
 });
