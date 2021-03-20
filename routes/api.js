@@ -192,7 +192,7 @@ routes.get("/s3test5", async (req, res)=>{
 				  if (err) {
 			 		return res.send({"Error":err});
 				  } else {
-						return res.send({"Success":data, params});
+						return res.send({"Success":data});
 				  }
 				});
 				 
