@@ -92,13 +92,19 @@ routes.get("/s3test3", async (req, res)=>{
 			   let absolutePathToImage = absolute_path+filename;
 			   let extension = absolutePathToImage.split('.').pop();
 				let filebuffer = fs.readFileSync(absolutePathToImage);
-				let params = {
+				/*let params = {
 				  Bucket: "ncrrugbyuat",
 				  Body: filebuffer,
 				  Key: `common/${filename}`,
 				  ACL: "public-read",
 				  contentType: contentType[extension],
+				};*/
+				
+				let params = {
+				  Bucket: "ncrrugbyuat",
+				  Key: `common/${filename}`
 				};
+				
 				//console.log(params);
 				let response = s3.deleteObject(params, (err, data) => {
 				  if (err) {
