@@ -110,12 +110,12 @@ routes.get("/s3test3", async (req, res)=>{
 				  if (err) {
 			 		return res.send({"Error":err});
 				  } else {
-						return res.send({"Success":data});
+						//return res.send({"Success":data});
 				  }
 				});
 				 
 			}
-			//return res.send({"Success":filenames, "s3Data":s3Data});
+			return res.send({"Success":filenames, "s3Data":s3Data});
 		/*var AWS = require('aws-sdk');
 			const s3 = new AWS.S3();
 			const s3Params = {
@@ -152,6 +152,66 @@ routes.get("/s3test4", async (req, res)=>{
 				return res.send({"Success":data});
 			}});
       
+		} catch (err) {
+		  res.send({"res":err})
+		}
+})
+
+
+routes.get("/s3test5", async (req, res)=>{
+		try {
+			const  fs = require('fs');
+			let path =  require("path");
+			var AWS = require('aws-sdk');
+			const s3 = new AWS.S3();
+			const s3Params = {
+				Bucket: "ncrrugbyuat"
+			};
+			let contentType = [];
+			contentType["ttf"] = "image/tiff";
+			contentType["jpg"] = "image/jpeg";
+			contentType["png"] = "image/png";
+			contentType["gif"] = "image/gif";
+			let absolute_path = path.join(__dirname, "../templates/common/");
+			let filenames = fs.readdirSync(absolute_path);
+			console.log("\nCurrent directory files:");
+			let s3Data = [];
+			for(let filename of filenames){
+			   let absolutePathToImage = absolute_path+filename;
+			   let extension = absolutePathToImage.split('.').pop();
+				let filebuffer = fs.readFileSync(absolutePathToImage);
+				let params = {
+				  Bucket: "ncrrugbyuat",
+				  Body: filebuffer,
+				  Key: `common/${filename}`,
+				  ACL: "public-read",
+				  contentType: contentType[extension],
+				};
+				//console.log(params);
+				let response = s3.deleteObject(params, (err, data) => {
+				  if (err) {
+			 		return res.send({"Error":err});
+				  } else {
+						//return res.send({"Success":data});
+				  }
+				});
+				 
+			}
+			return res.send({"Success":filenames, "s3Data":s3Data});
+		/*var AWS = require('aws-sdk');
+			const s3 = new AWS.S3();
+			const s3Params = {
+				Bucket: "ncrrugbyuat"
+			};
+			
+			
+          	s3.listObjects(s3Params, function(err, data) {
+			  if (err) {
+			 		return res.send({"Error":err})
+			  } else {
+				return res.send({"Success":data});
+			}});
+      */
 		} catch (err) {
 		  res.send({"res":err})
 		}
