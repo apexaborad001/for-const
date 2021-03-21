@@ -17,7 +17,7 @@ routes.get('/manage-user/getUser',auth.isAuthenticated,userController.getUser);
 routes.get("/manage-user/verifyResetToken/:token", validate(userValidation.verifyResetToken), userController.verifyResetToken);
 routes.post("/manage-user/resetPassword/:token", validate(userValidation.resetPassword), userController.resetPassword);
 routes.post("/manage-user/changePassword", auth.isAuthenticated, validate(userValidation.changePassword), auth.isAuthenticated, userController.changePassword);
-/*routes.get("/getEnv", (req, res)=>{
+routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
 
 });
@@ -32,7 +32,7 @@ routes.get("/getConfig", (req, res)=>{
 
 res.send({"filebuffer":JSON.parse(filebuffer)})
 
-});*/
+});
 
 routes.get("*", (req, res, next) => {
     res.send("Un-authorized access");
