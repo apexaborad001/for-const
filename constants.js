@@ -1,6 +1,6 @@
 'use strict'
 module.exports = (req) => {
-  req.BASE_URL_FRONTEND = `https://knownowadmin.mobikasa.net/`;
+  req.BASE_URL_FRONTEND = `https://staging.maymadness7s.com/`;
   req.BASE_URL = `${req.protocol}://${req.hostname}/`; // Get set url
   let constants = {
       "SALT_ROUND": 10,
@@ -67,18 +67,29 @@ module.exports = (req) => {
       "FORGOT_PASSWORD": {
         "SUCCESS": "Password update successfully",
         "FAILURE": "Invalid userName/Password",
+        "FOLLOW_EMAIL":"Please check the email sent to your email ID."
+      },
+      "RESET_TOKEN": {
+        "VERIFIED": "Reset token verified.",
+        "UN_AUTHORIZED": "Unauthorized access.",
+        "EXPIRED": "Reset token expired.",
       },
       "CHANGE_PASSWORD": {
         "PROMT_NEW_PASSWORD": "Please enter a new password, you have already used this password.",
         "SUCCESSFUL": "Password change successfully.",
         "OLD_INCORRECT": "Incorrect old password."
       },
+      "USER": {
+        "NOT_FOUND": "Not a valid user",
+        "PASSWORD_UPDATED": "Password successfully updated.",
+       },
       "DEVICE_TOKEN": {
         "UPDATED": "Device token updated successfully.",
         "CREATED": "Device token created successfully.",
       },
       "MAIL_SUBJECT":{
-		
+		"PASSWORD_RESET":"NcrRugby | Forgot Password",
+		 "WELCOME_MAIL":"NcrRugby | Welcome Aboard"
       },
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",

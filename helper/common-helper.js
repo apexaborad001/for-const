@@ -17,21 +17,21 @@ let sendEmail = async(...args) => {
       var htmlToSend = template(args[4]);
       if (!args[5]) {
         var transporter = nodemailer.createTransport({
-          host: 'email-smtp.us-west-2.amazonaws.com',
-          port: 587,
-          secure: false,
+          host: process.env.EMAIL_SERVICE_HOST,
+          port: process.env.EMAIL_SERVICE_PORT,
+          secure: true,
           auth: {
-            user: "AKIAUP7EH2QWPLGCFZEG",
-            pass: "BHpHlmeOuWfwVyFL7NYj4SXFXMJfp48VFI74+xqdfnMi"
+            user: process.env.EMAIL_SERVICE_USER,
+            pass: process.env.EMAIL_SERVICE_PASSWORD
           },
-          source: process.env.mailFrom
+          source: process.env.MAIL_FROM
         });
       } else {
         var transporter = args[5];
       }
 
       let content = {
-        from: `KnowNOW Health <${process.env.mailFrom}>`, // sender address
+        from: `NcrRugby <${process.env.MAIL_FROM}>`, // sender address
         to: args[1], // list of receivers
         subject: args[2],
       }
@@ -122,7 +122,7 @@ let saveToS3 = async(req, uploaded_payload, bucketdir) => {
       // console.log(payload_absolute_path)
       if (fs.existsSync(payload_absolute_path)) {
         let fileBuffer = fs.readFileSync(payload_absolute_path);;
-
+        fs.unlinkSync(payload_absolute_path);
         let user_created_timespan = bucketdir;
         await awsHelper.makeFolder(user_created_timespan);
         let uploadResponse = await awsHelper.uploadS3(user_created_timespan, fileBuffer, uploaded_payload);

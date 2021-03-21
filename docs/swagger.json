@@ -276,6 +276,8 @@
         }
       }
     },
+    
+        
     "/manage-user/forgotPassword": {
       "post": {
         "tags": [
@@ -287,43 +289,219 @@
           "application/json"
         ],
         "parameters": [{
-            "name": "userName",
-            "in": "formData",
-            "description": "userName of the User",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "oldPassword",
-            "in": "formData",
-            "description": "Old password of the User",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "formData",
-            "description": "Password of the User",
-            "required": true,
-            "type": "string"
-          }
-        ],
+          "name": "userName",
+          "in": "formData",
+          "description": "Username of user",
+          "required": true,
+          "type": "string",
+          "default": "testuser"
+        }],
         "responses": {
           "200": {
-            "description": "Reset link sent in email",
+            "description": "Verification link sent to email",
             "schema": {
               "$ref": "#/definitions/forgotPassword200"
             }
           },
-          "403": {
-            "description": "Email not found",
+          "401": {
+            "description": "User not found",
             "schema": {
-              "$ref": "#/definitions/forgotPassword400"
+              "$ref": "#/definitions/forgotPassword401"
+            }
+          },
+          "500": {
+            "description": "Internal Server error- Cannot save user",
+            "schema": {
+              "$ref": "#/definitions/forgotPassword500"
             }
           }
         }
       }
-    }
+    },
+    "/manage-user/verifyResetToken/{token}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Verify reset token",
+        "operationId": "Verify reset token",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "token",
+          "in": "path",
+          "description": "reset token for reset password",
+          "required": true,
+          "type": "string",
+          "default": ""
+        }],
+        "responses": {
+          "200": {
+            "description": "Token Verified",
+            "schema": {
+              "$ref": "#/definitions/verifyResetToken200"
+            }
+          },
+          "401": {
+            "description": "Token Expired",
+            "schema": {
+              "$ref": "#/definitions/verifyResetToken401"
+            }
+          },
+          "403": {
+            "description": "Unothorised",
+            "schema": {
+              "$ref": "#/definitions/verifyResetToken403"
+            }
+          },
+          "500": {
+            "description": "Something Went Wrong",
+            "schema": {
+              "$ref": "#/definitions/verifyResetToken500"
+            }
+          }
+        }
+      }
+    },
+    "/manage-user/resetPassword/{token}": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Password Updated",
+        "operationId": "Password Updated",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "password",
+          "in": "formData",
+          "description": "new password",
+          "required": true,
+          "type": "string",
+          "default": "123456"
+        }, {
+          "name": "token",
+          "in": "path",
+          "description": "reset token",
+          "required": true,
+          "type": "string",
+          "default": ""
+        }, {
+          "name": "confirmPassword",
+          "in": "formData",
+          "description": "confirm password",
+          "required": true,
+          "type": "string",
+          "default": "123456"
+        }],
+        "responses": {
+          "200": {
+            "description": "Password Updated",
+            "schema": {
+              "$ref": "#/definitions/resetPassword200"
+            }
+          },
+          "400": {
+            "description": "Reset link expired",
+            "schema": {
+              "$ref": "#/definitions/resetPassword400"
+            }
+          },
+          "401": {
+            "description": "Token Expired",
+            "schema": {
+              "$ref": "#/definitions/resetPassword401"
+            }
+          },
+          "500": {
+            "description": "Something Went Wrong",
+            "schema": {
+              "$ref": "#/definitions/resetPassword500"
+            }
+          }
+        }
+      }
+    },
+    "/manage-user/changePassword": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Password Updated",
+        "operationId": "Password Updated",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+         {
+          "name": "access_token",
+          "in": "header",
+          "description": "user access token",
+          "required": true,
+          "type": "string",
+          "default": ""
+        },
+        {
+          "name": "oldPassword",
+          "in": "formData",
+          "description": "old password",
+          "required": true,
+          "type": "string",
+          "default": "123456"
+        },
+        {
+          "name": "newPassword",
+          "in": "formData",
+          "description": "new password",
+          "required": true,
+          "type": "string",
+          "default": "123456"
+        }, 
+        {
+          "name": "confirmPassword",
+          "in": "formData",
+          "description": "confirm password",
+          "required": true,
+          "type": "string",
+          "default": "123456"
+        }],
+        "responses": {
+          "200": {
+            "description": "Password Updated",
+            "schema": {
+              "$ref": "#/definitions/resetPassword200"
+            }
+          },
+          "400": {
+            "description": "Reset link expired",
+            "schema": {
+              "$ref": "#/definitions/resetPassword400"
+            }
+          },
+          "401": {
+            "description": "Token Expired",
+            "schema": {
+              "$ref": "#/definitions/resetPassword401"
+            }
+          },
+          "500": {
+            "description": "Something Went Wrong",
+            "schema": {
+              "$ref": "#/definitions/resetPassword500"
+            }
+          }
+        }
+      }}
+    
+    
+    
+    
+    
+    
+    
+    
     },
     "definitions":{
     "login200":{
