@@ -37,7 +37,7 @@ const editProfile = async(req,res) =>{
                 message: "Your profile has been successfully updated "
             });
         }catch(err){
-            console.log(err)
+            //console.log(err)
            return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
         }
     };
