@@ -3,6 +3,8 @@ const auth = require("../middlewares/auth");
 const validate = require("../middlewares/validate");
 const commonHelper = require("../helper/common-helper");
 const userController = require("../controllers/UserController");
+const webpushNotificationController = require("../controllers/webpushNotification");
+
 const userValidation = require("../validations/userSchema");
 const routes = require('express').Router();
 
@@ -17,6 +19,10 @@ routes.get('/manage-user/getUser',auth.isAuthenticated,userController.getUser);
 routes.get("/manage-user/verifyResetToken/:token", validate(userValidation.verifyResetToken), userController.verifyResetToken);
 routes.post("/manage-user/resetPassword/:token", validate(userValidation.resetPassword), userController.resetPassword);
 routes.post("/manage-user/changePassword", auth.isAuthenticated, validate(userValidation.changePassword), auth.isAuthenticated, userController.changePassword);
+routes.post("/notifications/subscribe", webpushNotificationController.subscribe);
+routes.post("/notifications/sendNotification", webpushNotificationController.sendNotification); 
+routes.delete("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
+
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
 

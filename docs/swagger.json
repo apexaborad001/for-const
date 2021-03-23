@@ -424,6 +424,40 @@
         }
       }
     },
+    "/notifications/unsubscribe": {
+      "delete": {
+        "tags": [
+          "Webpush"
+        ],
+        "description": "Unsubscribe webpush",
+        "operationId": "unsubscribe by id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "unsubscribe successful"
+          },
+          "404": {
+            "description": "User not subscribe to any service"
+          },
+          "500": {
+            "description": "failed to unsubscribe"
+          }
+        }
+      }
+    },
+
     "/manage-user/changePassword": {
       "post": {
         "tags": [
