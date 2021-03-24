@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
     admin: {type: Boolean, required: true},
     isDeleted:{type:Boolean,default:false},
     emailVerified: { type: DataTypes.STRING, field: 'email_verified' },
-    //resetPasswordToken: { type: DataTypes.STRING, field: 'reset_password_token' },
-    //resetPasswordExpires: { type: DataTypes.STRING, field: 'reset_password_expires' }
+    resetPasswordToken: { type: DataTypes.STRING, field: 'reset_password_token' },
+    resetPasswordExpires: { type: DataTypes.STRING, field: 'reset_password_expires' }
   }, {});
   User.associate = (models) => {
        User.hasOne(models.devices);

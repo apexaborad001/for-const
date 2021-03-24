@@ -425,7 +425,7 @@
       }
     },
     "/notifications/unsubscribe": {
-      "delete": {
+      "put": {
         "tags": [
           "Webpush"
         ],
@@ -442,6 +442,13 @@
             "required":false,
             "type":"string",
             "default":""
+         },
+         {
+           "name":"endpoint",
+           "in":"formData",
+           "description":"endpoint",
+           "type":"string",
+           "default":""
          }
         ],
         "responses": {

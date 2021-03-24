@@ -4,8 +4,8 @@ const webpush = require('web-push')
 
 // const { res.send } = require('common/response');
 
-process.env.PUBLIC_VAPID_KEY = "BMqSgX_OqjXubnbzjGt4VAqqD0CNXhwmgXOuhSl7Y8eWnNi9lZphj0KYVnBmti0921aoD4RGo5RFz3mbrD_a86I";
-process.env.PRIVATE_VAPID_KEY = "uWFEn4de5MHNmHZRIafoYSQuuzLSBuCWKEw_o5DJTGY";
+process.env.PUBLIC_VAPID_KEY = "BOFqCABdqdsh8SPrs4JrqRzmGKE9K2KwMk6Jq3WMl3f2bFgpCb4Syy0pb8X0jwH9lwRKrogRZCg7cQTvrSEgVpI";
+process.env.PRIVATE_VAPID_KEY = "ytFPyBAA8YuUUCbQODeGCmT-Y81GTWQ6NdZzsv3ByzQ";
 process.env.SUBJECT = "mailto:developers@example.com"
 
 
@@ -20,7 +20,7 @@ const subscribe = async (req, res) => {
         const user_id = req.body.userId;
         const token = req.body.token;
         // let results;
-        const results = await req.models.notificationSubscriptions.findOne({ where: { [Op.or]: [{ user_id: user_id }, { token: token }], endpoint: endpoint } }) // notificationSubscriptions.findOne({ where: { $or: [{ user_id: user_id }, { token: token }], endpoint: endpoint } });
+        const results = await req.models.notificationSubscriptions.findOne({ where: { [Op.and]: [{ user_id: user_id }, { token: token }], endpoint: endpoint } }) // notificationSubscriptions.findOne({ where: { $or: [{ user_id: user_id }, { token: token }], endpoint: endpoint } });
         console.log('results', results)
         if (!results) {
             let data = {
@@ -50,9 +50,12 @@ const subscribe = async (req, res) => {
 const sendNotification = async (req, res) => {
     try {
         let resMeta = {};
+        let endpoint = req.body.endpoint;
+        let user_id=req.decoded.user_id
         let notification_title = req.body.title || req.query.title;
         let notification_message = req.body.message || req.query.message;
-        const results = await req.models.notificationSubscriptions.findAll({ where: { status: 1 } });
+        const results = await req.models.notificationSubscriptions.findAll({ where:{ [Op.and]: [{ user_id: user_id },{ endpoint: endpoint }],status: 1}});
+        console.log(results)
         for (let row of results) {
             let subscription = { endpoint: row['endpoint'], keys: JSON.parse(row['auth_key']) };
             const payload = JSON.stringify({
@@ -85,13 +88,16 @@ const sendNotification = async (req, res) => {
 }
 const unSubscribe = async (req, res) => {
     try {
-        let userId=req.decoded.user_id
-        const findUser = await req.models.notificationSubscriptions.findOne({ where: {  user_id: userId}});
+        let user_id=req.decoded.user_id
+        let endpoint = req.body.endpoint;
+        const findUser = await req.models.notificationSubscriptions.findAll({ where: {  user_id: user_id }});
+        console.log(findUser)
         if(findUser)        
         {
-        const results = await req.models.notificationSubscriptions.destroy({where: {user_id: userId},});
+        const results = await req.models.notificationSubscriptions.update({ status: "0"},{where: { [Op.and]: [{ user_id: user_id },{ endpoint: endpoint }]}});
         if(results)
         {
+            console.log(results)
         res.status(req.constants.HTTP_SUCCESS).send({
             code: req.constants.HTTP_SUCCESS,
             status: req.constants.SUCCESS,
