@@ -87,7 +87,7 @@ models.sequelize.authenticate()
       let port = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
       app.listen(port, () => {
         console.log(`started1 on port  ${port}`); 
-        cron.updateGames('0-59 * * * * * ');
+        //cron.updateGames('0-59 * * * * * ');
       });
     } catch (err) {
       console.log("cannot catch connection");

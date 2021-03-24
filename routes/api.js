@@ -20,8 +20,8 @@ routes.get("/manage-user/verifyResetToken/:token", validate(userValidation.verif
 routes.post("/manage-user/resetPassword/:token", validate(userValidation.resetPassword), userController.resetPassword);
 routes.post("/manage-user/changePassword", auth.isAuthenticated, validate(userValidation.changePassword), auth.isAuthenticated, userController.changePassword);
 routes.post("/notifications/subscribe", webpushNotificationController.subscribe);
-routes.post("/notifications/sendNotification", webpushNotificationController.sendNotification); 
-routes.delete("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
+routes.post("/notifications/sendNotification",auth.isAuthenticated, webpushNotificationController.sendNotification); 
+routes.put("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
 
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
