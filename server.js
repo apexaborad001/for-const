@@ -75,6 +75,17 @@ app.use(mung.json(function transform(body, req, res, next) {
 
 app.use('/api/v1', dbSwitch, api_routes);
 
+app.get('/hello_world', (req,res)=>{
+  res.send('Hello World');
+})
+
+app.get('/hello_world2', (req,res)=>{
+  res.send('Hello data 2');
+})
+
+app.get('/hello_world3', (req,res)=>{
+  res.send('Hello data 3');
+})
 
 //end middlewares
 //connection checking
@@ -87,7 +98,7 @@ models.sequelize.authenticate()
       let port = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
       app.listen(port, () => {
         console.log(`started1 on port  ${port}`); 
-        //cron.updateGames('0-59 * * * * * ');
+        //cron.updateGames('*/10 * * * * * ');
       });
     } catch (err) {
       console.log("cannot catch connection");

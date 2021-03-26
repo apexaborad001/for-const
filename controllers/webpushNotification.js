@@ -4,8 +4,8 @@ const webpush = require('web-push')
 
 // const { res.send } = require('common/response');
 
-process.env.PUBLIC_VAPID_KEY = "BOFqCABdqdsh8SPrs4JrqRzmGKE9K2KwMk6Jq3WMl3f2bFgpCb4Syy0pb8X0jwH9lwRKrogRZCg7cQTvrSEgVpI";
-process.env.PRIVATE_VAPID_KEY = "ytFPyBAA8YuUUCbQODeGCmT-Y81GTWQ6NdZzsv3ByzQ";
+process.env.PUBLIC_VAPID_KEY = "BMqSgX_OqjXubnbzjGt4VAqqD0CNXhwmgXOuhSl7Y8eWnNi9lZphj0KYVnBmti0921aoD4RGo5RFz3mbrD_a86I";
+process.env.PRIVATE_VAPID_KEY = "uWFEn4de5MHNmHZRIafoYSQuuzLSBuCWKEw_o5DJTGY";
 process.env.SUBJECT = "mailto:developers@example.com"
 
 

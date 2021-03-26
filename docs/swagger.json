@@ -534,14 +534,70 @@
             }
           }
         }
-      }}
-    
-    
-    
-    
-    
-    
-    
+      }},
+      
+    "manage-user-bracket/create": {
+      "post": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "Create User Bracket",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
+           "name":"bracketName",
+           "in":"formData",
+           "description":"bracketName",
+           "type":"string",
+           "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bracket created successfully"
+          },
+          "409":{
+            "description": "Bracket already registered"
+          }
+        }
+      }
+    },
+    "/manage-user-bracket/getById": {
+      "post": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "User Bracket",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+         {
+           "name":"userBracketId",
+           "in":"formData",
+           "description":"userBracketId",
+           "type":"number",
+           "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bracket Details Found successfully"
+          }
+          
+        }
+      }
+    }   
     
     },
     "definitions":{

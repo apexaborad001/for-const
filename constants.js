@@ -94,6 +94,18 @@ module.exports = (req) => {
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",
         "UNSUCCESSFULL": "User not found"
+      },
+      "USER_BRACKET":{
+        "SUCCESS":"Bracket created successfully",
+        "UNSUCCESSFULL": "Bracket already registered"
+      },
+      "USER_BRACKET_TEAMS":{
+        "SUCCESS":"Bracket created successfully",
+        "UNSUCCESSFULL": "User already register",
+        "FOUND":"Bracket Details Found successfully",
+        "NOTFOUND":"Bracket Details Not Found",
+        "UPSERT":"Breaket upserted successfully",
+
       }
 
     }
