@@ -597,7 +597,39 @@
           
         }
       }
-    }   
+    },
+    "/manage-user-bracket/upsertDetails": {
+      "put": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "User Bracket",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"userBracketId",
+            "in":"formData",
+            "description":"userBracketId",
+            "type":"number"
+          },
+          {
+           "name":"userBracketDetails",
+           "in":"body",
+           "schema": {
+            "type":"array",
+            "$ref": "#/definitions/userBracketDetails"
+          }
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bracket created successfully"
+          }
+        }
+      }
+    }
     
     },
     "definitions":{
@@ -739,6 +771,17 @@
             "message": ""
           }
         }
+      }
+    },
+    "userBracketDetails":{
+      "type": "object",
+      "properties":{
+            "teamId":{
+            "type":"string"
+          },
+          "gameId":{
+            "type":"string"
+          }
       }
     }
    }
