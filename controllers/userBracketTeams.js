@@ -43,6 +43,39 @@ const createUserBracket = async (req, res) => {
   }
 };
 
+const getUserBracket = async (req, res) => {
+  try {
+    let userId = req.decoded.user_id
+    let bracket = await req.models.user_breaket.findAll({
+      where: {
+        user_id: userId
+      }
+    });
+    if (bracket) {
+      res.status(req.constants.HTTP_SUCCESS).json({
+        status: req.constants.SUCCESS,
+        code: req.constants.HTTP_SUCCESS,
+        message: req.messages.USER_BRACKET.FOUND,
+        data: bracket
+      });
+    }
+    else {
+      logger.log(req.messages.USER_BRACKET.NOTFOUND, req, 'user_breaket', userId);
+      res.status(req.constants.HTTP_NOT_FOUND).json({
+        status: req.constants.SUCCESS,
+        code: req.constants.HTTP_NOT_FOUND,
+        message: req.messages.USER_BRACKET.NOTFOUND,
+        data: null
+      });
+    }
+  }
+  catch (error) {
+    logger.log('User bracket', req, error, 'user_breaket', req.decoded.user_id);
+    res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
+  }
+};
+
+
 const getBracketDetails = async (req, res) => {
   try {
     let userBracketId = req.body.userBracketId
@@ -106,6 +139,7 @@ const upsertBracketDetails = async (req, res) => {
 
 module.exports = {
   getBracketDetails,
+  getUserBracket,
   upsertBracketDetails,
   createUserBracket
 }

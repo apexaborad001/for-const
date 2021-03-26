@@ -97,7 +97,9 @@ module.exports = (req) => {
       },
       "USER_BRACKET":{
         "SUCCESS":"Bracket created successfully",
-        "UNSUCCESSFULL": "Bracket already registered"
+        "UNSUCCESSFULL": "Bracket already registered",
+        "FOUND":"Bracket found successfully",
+        "NOTFOUND":"Bracket not found"
       },
       "USER_BRACKET_TEAMS":{
         "SUCCESS":"Bracket created successfully",

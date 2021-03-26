@@ -23,12 +23,15 @@ routes.post("/manage-user/resetPassword/:token", validate(userValidation.resetPa
 routes.post("/manage-user/changePassword", auth.isAuthenticated, validate(userValidation.changePassword), auth.isAuthenticated, userController.changePassword);
 routes.post("/notifications/subscribe", webpushNotificationController.subscribe);
 routes.post("/notifications/sendNotification",auth.isAuthenticated, webpushNotificationController.sendNotification); 
-routes.put("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
+routes.post("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
 
 routes.post("/manage-user-bracket/create",auth.isAuthenticated,userBreaketTeamController.createUserBracket);
+routes.get("/manage-user-bracket/getBracketById",auth.isAuthenticated,userBreaketTeamController.getUserBracket);
 
-routes.post("/manage-user-bracket/getById", userBreaketTeamController.getBracketDetails);
-routes.put("/manage-user-bracket/upsertDetails", userBreaketTeamController.upsertBracketDetails);
+routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeamController.getBracketDetails);
+routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
+routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
+
 
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})

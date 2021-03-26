@@ -276,8 +276,7 @@
         }
       }
     },
-    
-        
+      
     "/manage-user/forgotPassword": {
       "post": {
         "tags": [
@@ -425,7 +424,7 @@
       }
     },
     "/notifications/unsubscribe": {
-      "put": {
+      "post": {
         "tags": [
           "Webpush"
         ],
@@ -536,7 +535,7 @@
         }
       }},
       
-    "manage-user-bracket/create": {
+    "/manage-user-bracket/create": {
       "post": {
         "tags": [
           "User Bracket"
@@ -572,6 +571,35 @@
         }
       }
     },
+    "/manage-user-bracket/getBracketById": {
+      "get": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "Get User Bracket By Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bracket found successfully"
+          },
+          "404":{
+            "description": "Bracket not found"
+          }
+        }
+      }
+    },
     "/manage-user-bracket/getById": {
       "post": {
         "tags": [
@@ -582,6 +610,14 @@
           "application/json"
         ],
         "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
          {
            "name":"userBracketId",
            "in":"formData",
@@ -598,8 +634,8 @@
         }
       }
     },
-    "/manage-user-bracket/upsertDetails": {
-      "put": {
+    "/manage-user-bracket/insertDetails": {
+      "post": {
         "tags": [
           "User Bracket"
         ],
@@ -607,29 +643,71 @@
         "produces": [
           "application/json"
         ],
+        "consumes": [
+          "application/json"
+        ],
         "parameters": [
           {
-            "name":"userBracketId",
-            "in":"formData",
-            "description":"userBracketId",
-            "type":"number"
-          },
-          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
            "name":"userBracketDetails",
            "in":"body",
            "schema": {
-            "type":"array",
             "$ref": "#/definitions/userBracketDetails"
           }
          }
         ],
         "responses": {
           "200": {
-            "description": "Bracket created successfully"
+            "description": "Breaket upserted successfully"
+          }
+        }
+      }
+    },
+    "/manage-user-bracket/updateDetails": {
+      "post": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "User Bracket",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         
+          {
+           "name":"userBracketDetails",
+           "in":"body",
+           "schema": {
+            "$ref": "#/definitions/userBracketDetails"
+          }
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Breaket upserted successfully"
           }
         }
       }
     }
+    
     
     },
     "definitions":{
@@ -776,13 +854,20 @@
     "userBracketDetails":{
       "type": "object",
       "properties":{
-            "teamId":{
+          "userBracketId":{
+            "type":"number"
+          },
+          "userBracketDetails":[
+          {
+          "teamId":{
             "type":"string"
           },
           "gameId":{
             "type":"string"
           }
-      }
+          }
+        ]          
+        }
     }
    }
 }

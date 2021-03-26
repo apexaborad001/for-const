@@ -2,7 +2,7 @@ const cron = require("node-cron");
 const request = require('request');
 
 const today = Date.now();
-console.log(JSON.stringify(today))
+//console.log(JSON.stringify(today))
 
 const dbdate = new Date('2021-03-25T05:26:15.231Z');
 const dbdate2 = new Date('2021-03-25T09:26:15.231Z');
