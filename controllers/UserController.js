@@ -47,13 +47,13 @@ const signUp = async(req, res) => {
     try {    
         let email = req.body.email;         
         let password = bcrypt.hashSync(req.body.password);
+        req.body.accepTermConditions = req.body.accepTermConditions || 1;
         let findUser = await req.models.user.findOne({
           where: {
-            [Op.or]:[
-                            {userName: req.body.userName},
-                            {email: req.body.email}
-                          ]
-              
+                [Op.or]:[
+                  {userName: req.body.userName},
+                  {email: req.body.email}
+                ]
           }
         });
         if (findUser) {
@@ -83,29 +83,28 @@ const signUp = async(req, res) => {
           let newUserData = await req.models.user.create(userData);
 			if(req.files){
                 try{
-					let imageRes = await helper.upload(req, "myprofile");
-					imageRes["userId"] = newUserData.id;
-            		let saveImage = new req.models.user_images(imageRes)
-					await saveImage.save()
-			    }catch(err){
+				        	let imageRes = await helper.upload(req, "myprofile");
+				        	imageRes["userId"] = newUserData.id;
+            	  	let saveImage = new req.models.user_images(imageRes)
+				        	await saveImage.save()
+			           }catch(err){
                     console.log(err)
                 }    
             }
-			      let token = email + newUserData.id;
+			let token = email + newUserData.id;
       let verifyEmailToken = await helper.generateVerificationEmail(token);
       let verifyEmailLink = `${req.BASE_URL_FRONTEND}` + "verify-email" + "/" + verifyEmailToken;
       await req.models.user.update({ verifyEmailToken: verifyEmailToken}, { where: { id: newUserData.id } })
       let template = "WelcomeEmail.html";
-
 			let to_id = email,
 			subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
 			template_name = template,
 			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
 			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
 	    return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
-         }               
+    }               
     } catch (error) {
-      logger.log('Create Admin', req, error, 'user', email);
+      logger.log('Create Admin', req, error, 'user', 0);
       res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
     }
   };
@@ -126,14 +125,15 @@ const signUp = async(req, res) => {
       	});
       	response = JSON.parse(JSON.stringify(response, null, 4));
         
-        if(response.emailVerified != 1){
-          return res.status(req.constants.HTTP_NOT_EXISTS).json({
-		        status: req.constants.ERROR,
-		        code: req.constants.HTTP_NOT_EXISTS,
-		        message: "please activate your account"
-		      });
-        }
+       
       	if(response){
+          if(response.emailVerified != 1){
+            return res.status(req.constants.HTTP_NOT_EXISTS).json({
+              status: req.constants.ERROR,
+              code: req.constants.HTTP_NOT_EXISTS,
+              message: "Please click the activation link we sent to your email"
+            });
+          }
         let otp_verified = response.otpVerified;
         let comparedPassword = await bcrypt.compareSync(password, response.password);
         if (comparedPassword) {
@@ -283,7 +283,8 @@ const getUser = async(req, res) => {
   const forgotPassword = async(req, res) => {
     try {
       let userName = req.body.userName;
-      let userInfoQuery = `SELECT id,email, fullName from users where userName =  '${userName}'`
+      let email = req.body.email;
+      let userInfoQuery = `SELECT id,email, fullName from users where userName =  '${userName}' or email =  '${email}'`
       let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
       if (userInfo.length > 0) {
           userInfo = userInfo[0];
@@ -307,7 +308,7 @@ const getUser = async(req, res) => {
         return res.status(req.constants.HTTP_NOT_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.USER.NOT_FOUND })
       }
     } catch (err) {
-      logger.log('Forgot Password', req, err, 'user', req.decoded.user_id);
+      logger.log('Forgot Password', req, err, 'user', 0);
       return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
     }
   }
@@ -415,12 +416,9 @@ const getUser = async(req, res) => {
  
   const verifyEmailToken = async(req,res) =>{
     try{
-         let verifyEmailToken = req.params.verifyEmailToken;
-        let tokenExists = await req.models.user.findOne({ where: {verifyEmailToken:verifyEmailToken}})
-       //  console.log(tokenExists)
+          let verifyEmailToken = req.params.verifyEmailToken;
+          let tokenExists = await req.models.user.findOne({ where: {verifyEmailToken:verifyEmailToken}})
          if(tokenExists){
-
-           
              let isUpdated = await req.models.user.update({
               emailVerified : 1,
               verifyEmailToken:" "
@@ -429,28 +427,26 @@ const getUser = async(req, res) => {
                 id:tokenExists.id
               }
             });
-          //  console.log(isUpdated)
-
             return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
          }else{
 		      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: "Invalid token details" })
          }
-         } catch (err) { //console.log(err);
-      logger.log('Change Password', req, err, 'user', req.decoded.user_id);
+      } catch (err) {
+      //logger.log('Change Password', req, err, 'user', verifyEmailToken);
       return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
-    }
+      }
     }
   
 module.exports = {
-login,
-signUp, 
-editProfile,
-logout,
-getUser,
-forgotPassword,
-verifyResetToken,
-resetPassword,
-changePassword,
-verifyEmailToken
+  login,
+  signUp, 
+  editProfile,
+  logout,
+  getUser,
+  forgotPassword,
+  verifyResetToken,
+  resetPassword,
+  changePassword,
+  verifyEmailToken
 };
 
