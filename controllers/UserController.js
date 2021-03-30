@@ -99,7 +99,7 @@ const signUp = async(req, res) => {
 			let to_id = email,
 			subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
 			template_name = template,
-			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
+			replacements = { user: req.body.firstName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
 			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
 	    return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
     }               
@@ -138,12 +138,12 @@ const signUp = async(req, res) => {
         let comparedPassword = await bcrypt.compareSync(password, response.password);
         if (comparedPassword) {
 		      if (response.status !== req.constants.BLOCKED) { 
-		        let accessToken = await helper.createAccessToken(response.email, response.id, req.database, response.fullName, req.models); 
+		        let accessToken = await helper.createAccessToken(response.email, response.id, req.database, response.firstName, req.models); 
 				res.set({
 					'access_token': accessToken
 				});
 				let data = {
-					fullName:response.fullName,
+					firstName:response.firstName,
 					email:response.email
 				}
 				return res.status(req.constants.HTTP_SUCCESS).send({
@@ -284,7 +284,7 @@ const getUser = async(req, res) => {
     try {
       let userName = req.body.userName;
       let email = req.body.email;
-      let userInfoQuery = `SELECT id,email, fullName from users where userName =  '${userName}' or email =  '${email}'`
+      let userInfoQuery = `SELECT id,email, firstName from users where userName =  '${userName}' or email =  '${email}'`
       let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
       if (userInfo.length > 0) {
           userInfo = userInfo[0];
@@ -293,7 +293,7 @@ const getUser = async(req, res) => {
           let resetPasswordExpires = (new Date()).getTime();
           await req.models.user.update({ resetPasswordToken: resetPasswordToken, resetPasswordExpires: resetPasswordExpires }, { where: { id: userInfo.id } })
           let resetLink = req.BASE_URL_FRONTEND + "reset-password" + "/" + resetPasswordToken;
-          let name = userInfo.fullName;
+          let name = userInfo.firstName;
           let template = "ForgotPassword.html";
           let to_id = userInfo.email,
             subject = req.messages.MAIL_SUBJECT.PASSWORD_RESET,
