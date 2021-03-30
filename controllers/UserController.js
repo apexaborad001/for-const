@@ -15,10 +15,11 @@ const editProfile = async(req,res) =>{
             }
             await userData.save();
             let data = userData;
+            return res.status(200).json({ "imf":req.files });
+
             if(req.files){
                 try{
 					let imageRes = await helper.upload(req, "myprofile");
-          return res.status(200).json({ "imf":imageRes });
 
 					imageRes["userId"] = req.decoded.user_id;
 					await req.models.user_images.destroy({
