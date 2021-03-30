@@ -49,24 +49,36 @@ const signUp = async(req, res) => {
         let password = bcrypt.hashSync(req.body.password);
         let findUser = await req.models.user.findOne({
           where: {
-            userName: req.body.userName
+            [Op.or]:[
+                            {userName: req.body.userName},
+                            {email: req.body.email}
+                          ]
+              
           }
         });
         if (findUser) {
           return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS });
         } else {
           let userData = {
-				password: password,
-				email: email,
-				userName: req.body.userName,
-				fullName: req.body.fullName,
-				phoneNumber: req.body.phoneNumber,
-				countryCode: req.body.countryCode,
-				gender: req.body.gender,
-				otp_verified:1,
-				email_verified:1,
-				status:1
-          };
+            password: password,
+            email: email,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            userName: req.body.userName,
+            phoneNumber: req.body.phoneNumber,
+            countryCode: req.body.countryCode,
+            gender: req.body.gender,
+            role: req.body.role,
+            stateId: req.body.stateId,
+            countryId: req.body.countryId,
+            date_of_birth:req.body.date_of_birth,
+            isSubscribed:req.body.isSubscribed,
+            accepTermConditions:req.body.accepTermConditions,
+            otp_verified:1,
+            otp_verified:1,
+            email_verified:0,
+            status:1
+        };
           let newUserData = await req.models.user.create(userData);
 			if(req.files){
                 try{
@@ -78,12 +90,17 @@ const signUp = async(req, res) => {
                     console.log(err)
                 }    
             }
-			let template = "WelcomeEmail.html";
+			      let token = email + newUserData.id;
+      let verifyEmailToken = await helper.generateVerificationEmail(token);
+      let verifyEmailLink = `${req.BASE_URL_FRONTEND}` + "verify-email" + "/" + verifyEmailToken;
+      await req.models.user.update({ verifyEmailToken: verifyEmailToken}, { where: { id: newUserData.id } })
+      let template = "WelcomeEmail.html";
+
 			let to_id = email,
 			subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
 			template_name = template,
-			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY") };
-			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
+			//helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
 	  	  return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
          }               
     } catch (error) {
@@ -381,7 +398,33 @@ const getUser = async(req, res) => {
     }
   }
  
-  
+  const verifyEmailToken = async(req,res) =>{
+    try{
+         let verifyEmailToken = req.params.verifyEmailToken;
+        let tokenExists = await req.models.user.findOne({verifyEmailToken:verifyEmailToken})
+       //  console.log(tokenExists)
+         if(tokenExists){
+
+           
+             let isUpdated = await req.models.user.update({
+              emailVerified : 1,
+              verifyEmailToken:" "
+            }, {
+              where: {
+                id:tokenExists.id
+              }
+            });
+          //  console.log(isUpdated)
+
+                     return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
+         }else{
+		      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+         }
+         } catch (err) { //console.log(err);
+      logger.log('Change Password', req, err, 'user', req.decoded.user_id);
+      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+    }
+    }
   
 module.exports = {
 login,
@@ -392,6 +435,7 @@ getUser,
 forgotPassword,
 verifyResetToken,
 resetPassword,
-changePassword
-
+changePassword,
+verifyEmailToken
 };
+

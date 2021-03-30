@@ -740,6 +740,32 @@
           }
         }
       }
+    },
+    "/commonData": {
+      "get": {
+        "tags": [
+          "Common"
+        ],
+        "description": "Common",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data fetched successfully"
+          }
+        }
+      }
     }
     
     

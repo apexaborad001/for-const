@@ -190,7 +190,12 @@ let saveToS3 = async(req, uploaded_payload, bucketdir) => {
   };
 
 
-
+  const generateVerificationEmail = async(token)=>{
+    const crypto = require("crypto");
+    let verifyEmailToken = crypto.createHash('sha256').update(token).digest('hex');
+    return verifyEmailToken
+  }
+  
 module.exports = {
   sendEmail: (...args) => sendEmail(...args),
   getCurrentUTCDate,
@@ -198,5 +203,6 @@ module.exports = {
   saveToS3,
   apiKeyGeneration,
   createAccessToken,
-  upload
+  upload,
+  generateVerificationEmail
 }

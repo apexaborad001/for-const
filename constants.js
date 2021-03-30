@@ -111,6 +111,10 @@ module.exports = (req) => {
       "SCORE":{
         "SUCCESS":"Round wise score found",
         "UNSUCCESSFULL": "Round wise score not found",
+      },
+      "COMMONDATA":{
+        "SUCCESS":"Data fetched successfully",
+        "UNSUCCESSFULL": "Failed to fetched data",
       }
 
     }

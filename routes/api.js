@@ -4,7 +4,8 @@ const validate = require("../middlewares/validate");
 const commonHelper = require("../helper/common-helper");
 const userController = require("../controllers/UserController");
 const webpushNotificationController = require("../controllers/webpushNotification");
-const userBreaketTeamController=require("../controllers/userBracketTeams")
+const commondataController = require("../controllers/commonController");
+const userBreaketTeamController = require("../controllers/userBracketTeams");
 
 
 const userValidation = require("../validations/userSchema");
@@ -33,6 +34,9 @@ routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreak
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 
 routes.get("/score/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
+routes.get("/commonData",auth.isAuthenticated,commondataController.getCommonData);
+
+routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
 
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
