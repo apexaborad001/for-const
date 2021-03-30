@@ -67,7 +67,7 @@ let sendEmail = async(...args) => {
 };
 
 
-let upload = async(req, imageType='')=>{
+let upload = async(req, imageType='')=>{ return res.status(200).json({ "file_to_upload":imageType });
           const fileUpload = require('express-fileupload');
           const path = require('path');
           const fs = require("fs");
