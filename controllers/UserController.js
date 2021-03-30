@@ -15,11 +15,9 @@ const editProfile = async(req,res) =>{
             }
             await userData.save();
             let data = userData;
-
             if(req.files){
-                try{ return res.status(200).json({ "myprofile":req.files.image });
+                try{
 					let imageRes = await helper.upload(req, "myprofile");
-          return res.status(200).json({ "imageRes":imageRes,"test":10 });
 					imageRes["userId"] = req.decoded.user_id;
 					await req.models.user_images.destroy({
                     	where:{
@@ -30,8 +28,6 @@ const editProfile = async(req,res) =>{
 					await saveImage.save()
                 }catch(err){
                     console.log(err)
-                    return res.status(200).json({ "err":err });
-
                 }
             }
             return res.status(req.constants.HTTP_SUCCESS).json({ 
@@ -106,7 +102,7 @@ const signUp = async(req, res) => {
 			template_name = template,
 			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
 			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
-	  	  return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
+	  	  return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS, "imageRes":imageRes, "files":req.files});  
          }               
     } catch (error) {
       logger.log('Create Admin', req, error, 'user', req.decoded.user_id);
