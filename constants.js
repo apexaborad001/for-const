@@ -107,7 +107,10 @@ module.exports = (req) => {
         "FOUND":"Bracket Details Found successfully",
         "NOTFOUND":"Bracket Details Not Found",
         "UPSERT":"Breaket upserted successfully",
-
+      },
+      "SCORE":{
+        "SUCCESS":"Round wise score found",
+        "UNSUCCESSFULL": "Round wise score not found",
       }
 
     }
