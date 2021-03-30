@@ -288,7 +288,13 @@ const getUser = async(req, res) => {
       let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
       if (userInfo.length > 0) {
           userInfo = userInfo[0];
-          let token = userName + userInfo.id;
+          let token = "";
+          if(userName){
+            token = userName + userInfo.id;
+          }else{
+            token = email + userInfo.id;
+          }
+          
           let resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
           let resetPasswordExpires = (new Date()).getTime();
           await req.models.user.update({ resetPasswordToken: resetPasswordToken, resetPasswordExpires: resetPasswordExpires }, { where: { id: userInfo.id } })
