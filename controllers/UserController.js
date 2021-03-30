@@ -430,7 +430,7 @@ const getUser = async(req, res) => {
             });
           //  console.log(isUpdated)
 
-                     return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
+                     return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully", data:tokenExists })
          }else{
 		      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
          }
