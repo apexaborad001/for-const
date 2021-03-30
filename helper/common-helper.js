@@ -74,7 +74,7 @@ let upload = async(req, imageType='')=>{
 
           return new Promise((resolve, reject)=> {
             try{
-              let file_to_upload = req.files ? req.files.image : '';
+              let file_to_upload = req.files ? req.files.profile_image : '';
               // let file_to_upload = req.files.image
               //console.log(req.files)
               
