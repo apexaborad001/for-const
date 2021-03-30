@@ -2,25 +2,36 @@
 const Joi = require('joi');
 const signUp = Joi.object({
       body:{
-        fullName: Joi.string().required(),
-        userName: Joi.string().alphanum().min(3).max(50).required(),
-        email:Joi.string().email(),
+
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
+      userName: Joi.string().alphanum().min(3).max(50).required(),
+      email:Joi.string().email().required(),
+      countryCode:Joi.any(),
+      accepTermConditions:Joi.any(),
+      isSubscribed:Joi.any().required(),
+      stateId:Joi.any().required(),
+      countryId:Joi.any().required(),     
+      date_of_birth:Joi.date().iso().required(),
+      confirmPassword: Joi.any().valid(Joi.ref('password')).required(),
+      role:Joi.number().required(),
+      phoneNumber: Joi.any(),       
         password: Joi.string().min(8).required(),
-        phoneNumber: Joi.string().required(),
         gender: Joi.string().required(),
         admin: Joi.number().min(0).max(1).default(0),
-        countryCode:Joi.any()       
       }
   });
 const login = Joi.object({
       body: {
         password: Joi.string().required(),
-        userName: Joi.string().required(),
+        userName: Joi.any(),
+        email:Joi.any(),
       }
     });
 const forgotPassword =  Joi.object({
       body: {
-        userName: Joi.string().required(),
+        userName: Joi.any(),
+        email:Joi.any(),
       }
     });
 const verifyResetToken =  Joi.object({
