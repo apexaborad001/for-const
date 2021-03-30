@@ -67,7 +67,7 @@ let sendEmail = async(...args) => {
 };
 
 
-let upload = async(req, imageType='')=>{ return res.status(200).json({ "file_to_upload":imageType });
+let upload = async(req, imageType='')=>{
           const fileUpload = require('express-fileupload');
           const path = require('path');
           const fs = require("fs");
@@ -91,8 +91,6 @@ let upload = async(req, imageType='')=>{ return res.status(200).json({ "file_to_
               //var orignal_name = file_to_upload.name;
               file_to_upload.mv(absolute_path + '/' + orignal_name, async(err) => {
                 if (err) {
-                  return res.status(200).json({ "file_to_upload":err });
-
                   reject(err)
                   
                 } else {
@@ -103,8 +101,6 @@ let upload = async(req, imageType='')=>{ return res.status(200).json({ "file_to_
                     // console.log(a)
                     // console.log(orignal_name)
                     let imageRes =  {"imagePath":imgdir+"/"+orignal_name, "imageType":imageType, "name":orignal_name};
-                    return res.status(200).json({ "saveToS3imageRes":imageRes });
-
                     resolve(imageRes)
                   }catch(err){
                     console.log(err)
@@ -136,7 +132,7 @@ let saveToS3 = async(req, uploaded_payload, bucketdir) => {
       }
 
     } catch (err) {
-      return res.status(200).json({ "saveToS3":err });
+
       reject(err);
       // throw new Error("Image not uploaded" + err);
     }

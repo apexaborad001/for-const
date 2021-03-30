@@ -17,7 +17,7 @@ const editProfile = async(req,res) =>{
             let data = userData;
 
             if(req.files){
-                try{
+                try{ return res.status(200).json({ "myprofile":"err" });
 					let imageRes = await helper.upload(req, "myprofile");
           return res.status(200).json({ "imageRes":imageRes,"test":10 });
 					imageRes["userId"] = req.decoded.user_id;
