@@ -102,10 +102,10 @@ const signUp = async(req, res) => {
 			template_name = template,
 			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
 			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
-	  	  return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS, "imageRes":imageRes, "files":req.files});  
+	    return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
          }               
     } catch (error) {
-      logger.log('Create Admin', req, error, 'user', req.decoded.user_id);
+      logger.log('Create Admin', req, error, 'user', email);
       res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
     }
   };
