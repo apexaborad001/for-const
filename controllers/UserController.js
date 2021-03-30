@@ -111,13 +111,27 @@ const signUp = async(req, res) => {
   
     
   const login =  async(req, res) => { 
-    let userName = req.body.userName;
+    let userName = req.body.userName || "";
+    let email = req.body.email || "";
     let password = req.body.password;
     try {
         var response = await req.models.user.findOne({
-        	where: { userName: userName, isDeleted : 0 },
+        	where: { isDeleted : 0, 
+            [Op.or]:[
+              {userName: userName},
+              {email: email}
+            ]
+          },
       	});
       	response = JSON.parse(JSON.stringify(response, null, 4));
+        
+        if(response.emailVerified != 1){
+          return res.status(req.constants.HTTP_NOT_EXISTS).json({
+		        status: req.constants.ERROR,
+		        code: req.constants.HTTP_NOT_EXISTS,
+		        message: "please activate your account"
+		      });
+        }
       	if(response){
         let otp_verified = response.otpVerified;
         let comparedPassword = await bcrypt.compareSync(password, response.password);
