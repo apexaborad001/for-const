@@ -9,7 +9,7 @@ const editProfile = async(req,res) =>{
         try{
             const user_id = req.decoded.user_id;
             let userData = await req.models.user.findOne({attributes:{exclude:["password"]}, where:{id:user_id}});
-            let keyToUpdate = ["fullName", "gender", "phoneNumber", "email"];
+            let keyToUpdate = ["firstName", "lastName", "gender", "phoneNumber", "email", "date_of_birth"];
             for(let key of keyToUpdate){ 
             	if(req.body[key]) userData[key] = req.body[key]
             }
