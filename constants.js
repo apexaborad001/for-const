@@ -94,6 +94,27 @@ module.exports = (req) => {
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",
         "UNSUCCESSFULL": "User not found"
+      },
+      "USER_BRACKET":{
+        "SUCCESS":"Bracket created successfully",
+        "UNSUCCESSFULL": "Bracket already registered",
+        "FOUND":"Bracket found successfully",
+        "NOTFOUND":"Bracket not found"
+      },
+      "USER_BRACKET_TEAMS":{
+        "SUCCESS":"Bracket created successfully",
+        "UNSUCCESSFULL": "User already register",
+        "FOUND":"Bracket Details Found successfully",
+        "NOTFOUND":"Bracket Details Not Found",
+        "UPSERT":"Breaket upserted successfully",
+      },
+      "SCORE":{
+        "SUCCESS":"Round wise score found",
+        "UNSUCCESSFULL": "Round wise score not found",
+      },
+      "COMMONDATA":{
+        "SUCCESS":"Data fetched successfully",
+        "UNSUCCESSFULL": "Failed to fetched data",
       }
 
     }

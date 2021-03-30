@@ -656,9 +656,17 @@
             "default":""
          },
          {
+          "name":"userBracketId",
+          "in":"formData",
+          "description":"userBracketId",
+          "type":"number",
+          "default":""
+        },
+         {
            "name":"userBracketDetails",
            "in":"body",
            "schema": {
+            "type": "array",
             "$ref": "#/definitions/userBracketDetails"
           }
          }
@@ -703,6 +711,58 @@
         "responses": {
           "200": {
             "description": "Breaket upserted successfully"
+          }
+        }
+      }
+    },
+    "/score/getRoundWiseScore": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "description": "Scores",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Round wise score found"
+          }
+        }
+      }
+    },
+    "/commonData": {
+      "get": {
+        "tags": [
+          "Common"
+        ],
+        "description": "Common",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data fetched successfully"
           }
         }
       }
@@ -854,19 +914,12 @@
     "userBracketDetails":{
       "type": "object",
       "properties":{
-          "userBracketId":{
-            "type":"number"
-          },
-          "userBracketDetails":[
-          {
           "teamId":{
             "type":"string"
           },
           "gameId":{
             "type":"string"
           }
-          }
-        ]          
         }
     }
    }

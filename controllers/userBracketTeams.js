@@ -3,6 +3,7 @@ const Op = Sequelize.Op;
 const helper = require('../helper/common-helper');
 const logger = require('../helper/logger-helper');
 const bcrypt = require('bcrypt-nodejs');
+const userBracketTeams = require('../models/user_breakets');
 
 const createUserBracket = async (req, res) => {
   try {
@@ -43,6 +44,45 @@ const createUserBracket = async (req, res) => {
   }
 };
 
+const getRoundWiseScore = async (req, res) => {
+  try {
+    let userId = req.decoded.user_id
+    const sql = `SELECT round,user_bracket_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id  left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id where user_breakets.user_id='` + userId + `' GROUP BY round,user_id,user_bracket_id;`
+    const test = await req.database.query(sql, {
+      raw: true,
+      model: userBracketTeams,
+      mapToModel: false
+    })
+
+    let scoreround = [];
+    scoreround.push(test)
+    if (test.round == null && test.score == null) {
+      for (i = test.length + 1; i <= 5; i++) {
+        let obj = { round: i, score: 0, user_bracket_id: test[0].user_bracket_id }
+        console.log(obj)
+        scoreround.push(obj)
+      }
+    }
+
+
+    res.status(req.constants.HTTP_SUCCESS).json({
+      code: req.constants.HTTP_SUCCESS,
+      status: req.constants.SUCCESS,
+      message: req.messages.SCORE.SUCCESS,
+      data: scoreround,
+    })
+  }
+  catch (err) {
+    logger.log('Score', req, err, 'user_breaket_team', req.decoded.user_id);
+    res.status(req.constants.HTTP_SERVER_ERROR).json({
+      status: req.constants.ERROR,
+      code: req.constants.HTTP_SERVER_ERROR,
+      message: req.messages.INTERNAL500 + err
+    })
+  }
+};
+
+
 const getUserBracket = async (req, res) => {
   try {
     let userId = req.decoded.user_id
@@ -75,7 +115,6 @@ const getUserBracket = async (req, res) => {
   }
 };
 
-
 const getBracketDetails = async (req, res) => {
   try {
     let userBracketId = req.body.userBracketId
@@ -83,7 +122,7 @@ const getBracketDetails = async (req, res) => {
       where: {
         user_bracket_id: userBracketId
       },
-      attributes: { exclude: ['password','createdAt','updatedAt'] },
+      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
     });
     if (findUserBrackets && findUserBrackets.length) {
       res.status(req.constants.HTTP_SUCCESS).json({
@@ -128,7 +167,7 @@ const upsertBracketDetails = async (req, res) => {
       }
     })
     const upsertBracket = await req.models.user_breaket_team.bulkCreate(mappedUserBracketDetais);
-    res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT,data:upsertBracket });
+    res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
 
   }
   catch (error) {
@@ -141,5 +180,6 @@ module.exports = {
   getBracketDetails,
   getUserBracket,
   upsertBracketDetails,
-  createUserBracket
+  createUserBracket,
+  getRoundWiseScore
 }
