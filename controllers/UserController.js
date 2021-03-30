@@ -15,12 +15,11 @@ const editProfile = async(req,res) =>{
             }
             await userData.save();
             let data = userData;
-            return res.status(200).json({ "imf":req.files });
 
             if(req.files){
                 try{
 					let imageRes = await helper.upload(req, "myprofile");
-
+          return res.status(200).json({ "imageRes":imageRes,"test":10 });
 					imageRes["userId"] = req.decoded.user_id;
 					await req.models.user_images.destroy({
                     	where:{
@@ -31,6 +30,8 @@ const editProfile = async(req,res) =>{
 					await saveImage.save()
                 }catch(err){
                     console.log(err)
+                    return res.status(200).json({ "err":err });
+
                 }
             }
             return res.status(req.constants.HTTP_SUCCESS).json({ 
