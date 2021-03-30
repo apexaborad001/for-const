@@ -96,7 +96,7 @@ let upload = async(req, imageType='')=>{
                 } else {
                   //Action as required
                   try{
-                    let imgdir = "common";
+                    let imgdir = "profile";
                     let a = await saveToS3(req, orignal_name, imgdir);
                     // console.log(a)
                     // console.log(orignal_name)
