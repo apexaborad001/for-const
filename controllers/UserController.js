@@ -415,7 +415,7 @@ const getUser = async(req, res) => {
   const verifyEmailToken = async(req,res) =>{
     try{
          let verifyEmailToken = req.params.verifyEmailToken;
-        let tokenExists = await req.models.user.findOne({verifyEmailToken:verifyEmailToken})
+        let tokenExists = await req.models.user.findOne({ where: {verifyEmailToken:verifyEmailToken}})
        //  console.log(tokenExists)
          if(tokenExists){
 
