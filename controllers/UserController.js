@@ -100,7 +100,7 @@ const signUp = async(req, res) => {
 			subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
 			template_name = template,
 			replacements = { user: req.body.fullName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
-			//helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
 	  	  return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
          }               
     } catch (error) {

@@ -19,7 +19,7 @@ let sendEmail = async(...args) => {
         var transporter = nodemailer.createTransport({
           host: process.env.EMAIL_SERVICE_HOST,
           port: process.env.EMAIL_SERVICE_PORT,
-          secure: true,
+          secure: false,
           auth: {
             user: process.env.EMAIL_SERVICE_USER,
             pass: process.env.EMAIL_SERVICE_PASSWORD
