@@ -79,6 +79,7 @@ const signUp = async(req, res) => {
             email_verified:0,
             status:1
         };
+        
           let newUserData = await req.models.user.create(userData);
 			if(req.files){
                 try{

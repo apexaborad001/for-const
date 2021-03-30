@@ -12,7 +12,7 @@ const signUp = Joi.object({
       isSubscribed:Joi.any().required(),
       stateId:Joi.any().required(),
       countryId:Joi.any().required(),     
-      date_of_birth:Joi.date().iso().required(),
+      date_of_birth:Joi.date().required(),
       confirmPassword: Joi.any().valid(Joi.ref('password')).required(),
       role:Joi.number().required(),
       phoneNumber: Joi.any(),       

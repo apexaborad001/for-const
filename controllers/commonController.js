@@ -6,9 +6,9 @@ const userBracketTeams = require('../models/user_breakets');
 
 const getCommonData = async (req, res) => {
     try {
-        const getCountries = `SELECT * FROM countries`
+        const getCountries = `SELECT id, name FROM countries`
         const getRoles = `SELECT id,role FROM roles`
-        const getStates = `SELECT * FROM states`
+        const getStates = `SELECT id, name FROM states`
 
         const getCountriesData = await req.database.query(getCountries, {
             raw: true,
