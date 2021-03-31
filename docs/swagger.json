@@ -766,7 +766,34 @@
           }
         }
       }
+    },
+    "/getRank": {
+      "get": {
+        "tags": [
+          "Rank"
+        ],
+        "description": "Rank",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rank fetched successfully"
+          }
+        }
+      }
     }
+    
     
     
     },

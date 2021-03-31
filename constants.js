@@ -115,6 +115,9 @@ module.exports = (req) => {
       "COMMONDATA":{
         "SUCCESS":"Data fetched successfully",
         "UNSUCCESSFULL": "Failed to fetched data",
+      },
+      "RANK":{
+        "SUCCESS":"Rank fetched successfully"
       }
 
     }
