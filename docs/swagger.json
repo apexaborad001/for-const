@@ -811,10 +811,10 @@
         }
       }
     },
-    "/score/getRoundWiseScore": {
+    "/leaderboard/getRoundWiseScore": {
       "get": {
         "tags": [
-          "Score"
+          "leaderboard"
         ],
         "description": "Scores",
         "produces": [
@@ -863,10 +863,10 @@
         }
       }
     },
-    "/getRank": {
+    "/leaderboard/getRank": {
       "get": {
         "tags": [
-          "Rank"
+          "leaderboard"
         ],
         "description": "Rank",
         "produces": [
