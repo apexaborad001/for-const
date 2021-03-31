@@ -128,6 +128,18 @@ const signUp = async(req, res) => {
        
       	if(response){
           if(response.emailVerified != 1){
+            let token = response.email + response.id;
+            let verifyEmailToken = await helper.generateVerificationEmail(token);
+            let verifyEmailLink = `${req.BASE_URL_FRONTEND}` + "verify-email" + "/" + verifyEmailToken;
+            await req.models.user.update({ verifyEmailToken: verifyEmailToken}, { where: { id: response.id } })
+            let template = "WelcomeEmail.html";
+            let to_id = response.email,
+            subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
+            template_name = template,
+            replacements = { user: req.body.firstName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
+            helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+
+
             return res.status(req.constants.HTTP_NOT_EXISTS).json({
               status: req.constants.ERROR,
               code: req.constants.HTTP_NOT_EXISTS,
