@@ -54,16 +54,30 @@ const getRoundWiseScore = async (req, res) => {
       model: userBracketTeams,
       mapToModel: false
     })
-    console.log(roundWiseQueryResult.length)
+    console.log(roundWiseQueryResult)
     let scoreRoundFinalArray = [];
     let lastRoundBracketId;
     let roundCounter = 0;
+    let differentBracketFlag= false;
     for (let i = 0; i < roundWiseQueryResult.length; i++) {
       let ele = roundWiseQueryResult[i];
       let roundEle = ele;
+      differentBracketFlag = false;
       roundCounter++;
       if (!lastRoundBracketId) lastRoundBracketId = ele.user_bracket_id;
-      if ((lastRoundBracketId != ele.user_bracket_id) || !(ele.round && ele.score) || (i === (roundWiseQueryResult.length-1))) {
+      if(lastRoundBracketId != ele.user_bracket_id){
+        differentBracketFlag = true;
+        if (roundCounter < roundArray.length) {
+          for (let i = roundCounter; i < roundArray.length; i++) {
+            if (i !== ele.round) roundEle = { round: i, user_bracket_id: lastRoundBracketId, score: 0 }
+            else roundEle = ele;
+            scoreRoundFinalArray.push(roundEle)
+          }
+        }
+        roundCounter = 0;
+      }
+      roundEle = ele;
+      if (!(ele.round && ele.score) || (i === (roundWiseQueryResult.length-1))) {
         lastRoundBracketId = null;
         if (roundCounter < roundArray.length) {
           for (let i = roundCounter; i < roundArray.length; i++) {
@@ -75,6 +89,7 @@ const getRoundWiseScore = async (req, res) => {
         roundCounter = 0;
       }
       else {
+        if(differentBracketFlag)roundCounter++; 
         scoreRoundFinalArray.push(roundEle)
         lastRoundBracketId = ele.user_bracket_id;
       }
@@ -98,7 +113,7 @@ const getRoundWiseScore = async (req, res) => {
 
 const getRank = async (req, res) => {
   try {
-    const sql = `SELECT user_id,user_bracket_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id GROUP BY user_bracket_id;`
+    const sql = `SELECT user_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id GROUP BY user_id order by score desc;`
     const getRankQueryResult = await req.database.query(sql, {
       raw: true,
       model: userBracketTeams,
