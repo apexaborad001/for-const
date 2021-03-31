@@ -6,6 +6,7 @@ const userController = require("../controllers/UserController");
 const webpushNotificationController = require("../controllers/webpushNotification");
 const commondataController = require("../controllers/commonController");
 const userBreaketTeamController = require("../controllers/userBracketTeams");
+const bracketManagerController = require("../controllers/bracketManager.js");
 
 
 const userValidation = require("../validations/userSchema");
@@ -37,7 +38,7 @@ routes.get("/score/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamContro
 routes.get("/commonData", commondataController.getCommonData);
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
-
+routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
 
