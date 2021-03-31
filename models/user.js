@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     emailVerified: { type: DataTypes.INTEGER, field: 'email_verified' },
     resetPasswordToken: { type: DataTypes.STRING, field: 'reset_password_token' },
     resetPasswordExpires: { type: DataTypes.STRING, field: 'reset_password_expires' },
-    date_of_birth:DataTypes.STRING
+    date_of_birth:DataTypes.DATE
 
   }, {});
   User.associate = (models) => {

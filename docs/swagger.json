@@ -39,53 +39,118 @@
           "application/json"
         ],
         "parameters": [{
-            "name": "fullName",
+            "name": "firstName",
             "in": "formData",
-            "description": "User name",
+            "description": "first name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default":"surendra"
+
+          },
+          {
+            "name": "lastName",
+            "in": "formData",
+            "description": "last name",
+            "required": true,
+            "type": "string",
+            "default":"test"
           },
           {
             "name": "userName",
             "in": "formData",
-            "description": "User name",
+            "description": "user name",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default":"testuser"
           },
           {
             "name": "password",
             "in": "formData",
             "description": "Password",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default":"1234678"
+          },
+          {
+            "name": "confirmPassword",
+            "in": "formData",
+            "description": "Password",
+            "required": true,
+            "type": "string",
+            "default":"1234678"
           },
           {
             "name": "email",
             "in": "formData",
             "description": "Email",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default":"test@gmail.com"
           },
           {
             "name": "phoneNumber",
             "in": "formData",
             "description": "Telephone Number",
-            "required": true,
-            "type": "string"
+            "required": false,
+            "type": "string",
+            "default":"1234569874"
           },
           {
             "name": "gender",
             "in": "formData",
-            "description": "male/female/others",
+            "description": "Gender male/female/others",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "default":"male"
           },
           {
             "name":"countryCode",
             "in":"formData",
-            "description":"+91",
+            "description":"Mobile Code",
             "required":false,
-            "type": "string"
+            "type": "string",
+            "default":"+91"
+          },
+          {
+            "name":"role",
+            "in":"formData",
+            "description":"role",
+            "required":false,
+            "type": "string",
+            "default":"1"
+            
+          },
+          {
+            "name":"stateId",
+            "in":"formData",
+            "description":"stateId",
+            "required":false,
+            "type": "string",
+            "default":"1"
+          },
+          {
+            "name":"countryId",
+            "in":"formData",
+            "description":"countryId",
+            "required":true,
+            "type": "string",
+            "default":"1"
+          },
+          {
+            "name":"isSubscribed",
+            "in":"formData",
+            "description":"isSubscribed",
+            "required":true,
+            "type": "string",
+            "default":"1"
+          },
+          {
+            "name":"date_of_birth",
+            "in":"formData",
+            "description":"DOB",
+            "required":true,
+            "type": "string",
+            "default":"2001-01-23"
           },
           {
             "name": "profile_image",
@@ -174,6 +239,40 @@
         }
       }
     },    
+    "/manage-user/verifyEmailToken/{token}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Verify reset token",
+        "operationId": "Verify reset token",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [{
+          "name": "token",
+          "in": "path",
+          "description": "reset token for reset password",
+          "required": true,
+          "type": "string",
+          "default": ""
+        }],
+        "responses": {
+          "200": {
+            "description": "Token Verified"
+          },
+          "401": {
+            "description": "Token Expired"
+          },
+          "403": {
+            "description": "Unothorised"
+          },
+          "500": {
+            "description": "Something Went Wrong"
+          }
+        }
+      }
+    },
     
     "/manage-user/login": {
       "post": {
@@ -189,7 +288,14 @@
             "name": "userName",
             "in": "formData",
             "description": "Username of the User",
-            "required": true,
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "email",
+            "in": "formData",
+            "description": "Email of the User",
+            "required": false,
             "type": "string"
           },
           {
@@ -202,16 +308,11 @@
         ],
         "responses": {
           "200": {
-            "description": "Logged In Successfully",
-            "schema": {
-              "$ref": "#/definitions/login200"
-            }
+            "description": "Logged In Successfully"
+  
           },
           "403": {
-            "description": "Logged In Unauthorised",
-            "schema": {
-              "$ref": "#/definitions/login403"
-            }
+            "description": "Logged In Unauthorised"
           }
         }
       }
@@ -291,7 +392,14 @@
           "name": "userName",
           "in": "formData",
           "description": "Username of user",
-          "required": true,
+          "required": false,
+          "type": "string",
+          "default": "testuser"
+        },{
+          "name": "email",
+          "in": "formData",
+          "description": "Email of user",
+          "required": false,
           "type": "string",
           "default": "testuser"
         }],
@@ -337,28 +445,16 @@
         }],
         "responses": {
           "200": {
-            "description": "Token Verified",
-            "schema": {
-              "$ref": "#/definitions/verifyResetToken200"
-            }
+            "description": "Token Verified"
           },
           "401": {
-            "description": "Token Expired",
-            "schema": {
-              "$ref": "#/definitions/verifyResetToken401"
-            }
+            "description": "Token Expired"
           },
           "403": {
-            "description": "Unothorised",
-            "schema": {
-              "$ref": "#/definitions/verifyResetToken403"
-            }
+            "description": "Unothorised"
           },
           "500": {
-            "description": "Something Went Wrong",
-            "schema": {
-              "$ref": "#/definitions/verifyResetToken500"
-            }
+            "description": "Something Went Wrong"
           }
         }
       }
