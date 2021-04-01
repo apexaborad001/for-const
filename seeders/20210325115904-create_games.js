@@ -309,7 +309,7 @@ module.exports = {
         "team_1_id": 49,
         "team_2_id": 64,
         "round": 1,
-        "position": 1,
+        "position": 9,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -321,7 +321,7 @@ module.exports = {
         "team_1_id": 56,
         "team_2_id": 57,
         "round": 1,
-        "position": 2,
+        "position": 10,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -333,7 +333,7 @@ module.exports = {
         "team_1_id": 53,
         "team_2_id": 60,
         "round": 1,
-        "position": 3,
+        "position": 11,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -345,7 +345,7 @@ module.exports = {
         "team_1_id": 52,
         "team_2_id": 61,
         "round": 1,
-        "position": 4,
+        "position": 12,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -357,7 +357,7 @@ module.exports = {
         "team_1_id": 54,
         "team_2_id": 59,
         "round": 1,
-        "position": 5,
+        "position": 13,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -369,7 +369,7 @@ module.exports = {
         "team_1_id": 51,
         "team_2_id": 62,
         "round": 1,
-        "position": 6,
+        "position": 14,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -381,7 +381,7 @@ module.exports = {
         "team_1_id": 55,
         "team_2_id": 58,
         "round": 1,
-        "position": 7,
+        "position": 15,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -393,7 +393,7 @@ module.exports = {
         "team_1_id": 50,
         "team_2_id": 63,
         "round": 1,
-        "position": 8,
+        "position": 16,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -447,7 +447,7 @@ module.exports = {
  {
         "game_id": 37,
          "round": 2,
-        "position":1 ,
+        "position":5 ,
         "bracket_id": 3,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -457,7 +457,7 @@ module.exports = {
  {
         "game_id": 38,
         "round": 2,
-        "position": 2,
+        "position": 6,
         "bracket_id": 3,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -467,7 +467,7 @@ module.exports = {
  {
         "game_id": 39,
          "round": 2,
-        "position":3 ,
+        "position":7 ,
         "bracket_id": 3,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -477,7 +477,7 @@ module.exports = {
  {
         "game_id": 40,
         "round": 2,
-        "position": 4,
+        "position": 8,
         "bracket_id": 3,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -529,7 +529,7 @@ module.exports = {
  {
         "game_id": 45,
          "round": 2,
-        "position":1 ,
+        "position":5 ,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -540,7 +540,7 @@ module.exports = {
  {
         "game_id": 46,
         "round": 2,
-        "position": 2,
+        "position": 6,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -550,7 +550,7 @@ module.exports = {
  {
         "game_id": 47,
          "round": 2,
-        "position":3 ,
+        "position":7 ,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -560,7 +560,7 @@ module.exports = {
  {
         "game_id": 48,
         "round": 2,
-        "position": 4,
+        "position": 8,
         "bracket_id": 4,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -591,7 +591,7 @@ module.exports = {
 {
   "game_id": 51,
    "round": 3,
-  "position":1 ,
+  "position":3 ,
   "bracket_id": 3,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -601,7 +601,7 @@ module.exports = {
 {
   "game_id": 52,
   "round": 3,
-  "position": 2,
+  "position": 4,
   "bracket_id": 3,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -632,7 +632,7 @@ module.exports = {
 {
   "game_id": 55,
    "round": 3,
-  "position":1 ,
+  "position":3 ,
   "bracket_id": 4,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -642,7 +642,7 @@ module.exports = {
 {
   "game_id": 56,
   "round": 3,
-  "position": 2,
+  "position": 4,
   "bracket_id": 4,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -675,7 +675,7 @@ module.exports = {
 {
   "game_id": 58,
   "round": 4,
-  "position": 1,
+  "position": 2,
   "bracket_id": 3,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -685,7 +685,7 @@ module.exports = {
 {
   "game_id": 59,
    "round": 4,
-  "position":1 ,
+  "position":3 ,
   "bracket_id": 2,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -695,7 +695,7 @@ module.exports = {
 {
   "game_id": 60,
   "round": 4,
-  "position": 1,
+  "position": 4,
   "bracket_id": 4,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
@@ -731,31 +731,14 @@ module.exports = {
 
 {
    "game_id": 63,
-   "round": 5,
-   "position":3 ,
+   "round": 6,
+   "position":1 ,
    "bracket_id": 5,
    "game_start_time": "2021-05-02T10:00:00-05:00",
    "game_end_time": "2021-05-02T10:00:00-05:00",
    createdAt: new Date(),
    updatedAt: new Date(),
 },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
                 

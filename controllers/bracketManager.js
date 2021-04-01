@@ -67,9 +67,101 @@ const getGameLists = async(req, res) =>{
         }
     };
 
- 
+const updateWinner = async (req, res)=>{
+    try{
+        let game_id = req.query.game_id || 0;
+        let winner_id = req.query.winner_id || 0;
+        
+        let sql = "select tgms.*, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, wbr.point as wbr_point, lbr.nextbracketid as";
+        sql +=  " lbr_nextbracketid, lbr.nextround as lbr_nextround, lbr.point as lbr_point from tournament_games tgms left join winner_brackt_relation wbr";
+        sql +=  " on wbr.bracket_id =tgms.bracket_id and wbr.round = tgms.round left join loser_brackt_relation lbr on lbr.bracket_id =tgms.bracket_id and";
+        sql +=  ` lbr.round = tgms.round  where game_id=${game_id}`;
+        let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+        bracketData = bracketData[0];
+        let loser_id = 0;
+        if(bracketData && bracketData["team_1_id"] == winner_id){
+            loser_id = bracketData["team_2_id"] ;
+        }else if(bracketData && bracketData["team_2_id"] == winner_id){
+            loser_id = bracketData["team_1_id"] ;
+        }else{
+            return res.status(req.constants.HTTP_NOT_EXISTS).json({
+                status: req.constants.ERROR,
+                code: req.constants.HTTP_NOT_EXISTS,
+                message: "Invalid winner details"
+              })
+        }
+        let nextPostion = 0 ;
+        let is_odd = true;
+        let wbr_nextbracketid = bracketData["wbr_nextbracketid"];
+        let wbr_nextround = bracketData["wbr_nextround"];
+        let lbr_nextbracketid = bracketData["lbr_nextbracketid"];
+        let lbr_nextround = bracketData["lbr_nextround"];
+
+        if(bracketData["position"]%2 == 0){
+                nextPostion = bracketData["position"]/2;    
+                is_odd = false;      
+        }else {
+                nextPostion = (bracketData["position"]+1)/2; 
+        }
+        
+        const t = await req.database.transaction();
+         try {
+            let temaUpdate = {};
+            let temaUpdate2 = {};
+            if(is_odd){
+                temaUpdate = {team_1_id:winner_id};
+                temaUpdate2 = {team_1_id:loser_id};
+            }else{
+                temaUpdate = {team_2_id:winner_id};
+                temaUpdate2 = {team_2_id:loser_id};
+            }
+            if(wbr_nextbracketid){
+                const team1Updated = await req.models.tournament_game.update(temaUpdate,{
+                    where: { 
+                        bracket_id : wbr_nextbracketid, 
+                        position:nextPostion,
+                        round:wbr_nextround
+                }
+                }, { transaction: t });
+            }
+            if(lbr_nextbracketid){
+                const team2Updated = await req.models.tournament_game.update(temaUpdate2,{
+                    where: { 
+                        bracket_id : lbr_nextbracketid, 
+                        position:nextPostion,
+                        round:lbr_nextround
+                  }
+                }, { transaction: t })
+            }
+            await req.models.tournament_game.update({winner_id:winner_id, looser_id:loser_id, winner_score:bracketData["wbr_point"]},{
+                where: { 
+                   id:bracketData["id"]
+              }
+            }, { transaction: t })
+
+            await t.commit();
+            return res.status(req.constants.HTTP_SUCCESS).json({ 
+                status: req.constants.SUCCESS, 
+                code: req.constants.HTTP_SUCCESS,
+                message: "Winner updated successfully"
+            });
+          } catch (error) { 
+            await t.rollback();
+            return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
+
+          }
+          
+
+        
+
+
+    }catch(err){
+       return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
+    }
+}
   
   
 module.exports = {
-    getGameLists
+    getGameLists,
+    updateWinner
 };

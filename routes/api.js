@@ -41,6 +41,9 @@ routes.get("/commonData", commondataController.getCommonData);
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
+routes.get('/updateWinner', bracketManagerController.updateWinner);
+
+
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
 
