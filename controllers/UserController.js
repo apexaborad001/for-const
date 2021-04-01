@@ -447,7 +447,7 @@ const getUser = async(req, res) => {
             });
             return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
          }else{
-		      return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: "Invalid token details" })
+		      return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Invalid token details" })
          }
       } catch (err) {
       //logger.log('Change Password', req, err, 'user', verifyEmailToken);
