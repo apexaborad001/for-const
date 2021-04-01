@@ -34,13 +34,15 @@ routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeam
 routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 
-routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
+routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
 routes.get("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 
 routes.get("/commonData", commondataController.getCommonData);
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
+routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
+
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
 
