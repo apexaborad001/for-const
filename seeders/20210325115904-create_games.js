@@ -684,7 +684,7 @@ module.exports = {
 },
 {
   "game_id": 59,
-   "round": 4,
+   "round": 1,
   "position":3 ,
   "bracket_id": 2,
   "game_start_time": "2021-05-02T10:00:00-05:00",
@@ -695,7 +695,7 @@ module.exports = {
 {
   "game_id": 60,
   "round": 4,
-  "position": 4,
+  "position": 2,
   "bracket_id": 4,
   "game_start_time": "2021-05-02T10:00:00-05:00",
   "game_end_time": "2021-05-02T10:00:00-05:00",
