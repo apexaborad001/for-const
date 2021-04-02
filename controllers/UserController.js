@@ -112,7 +112,7 @@ const signUp = async(req, res) => {
     
   const login =  async(req, res) => { 
     let userName = req.body.userName || "";
-    let email = req.body.email || "";
+    let email = userName;
     let password = req.body.password;
     try {
         var response = await req.models.user.findOne({
@@ -295,7 +295,7 @@ const getUser = async(req, res) => {
   const forgotPassword = async(req, res) => {
     try {
       let userName = req.body.userName;
-      let email = req.body.email;
+      let email = userName;
       let userInfoQuery = `SELECT id,email, firstName from users where userName =  '${userName}' or email =  '${email}'`
       let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
       if (userInfo.length > 0) {
