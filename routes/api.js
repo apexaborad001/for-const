@@ -40,6 +40,7 @@ routes.get("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController
 routes.get("/cupWiseDetails",bracketManagerController.cupWiseDetails);
 
 
+
 routes.get("/commonData", commondataController.getCommonData);
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
