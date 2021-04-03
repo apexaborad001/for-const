@@ -37,11 +37,17 @@ routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreak
 routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
 routes.get("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 
+routes.get("/cupWiseDetails",bracketManagerController.cupWiseDetails);
+
+
 routes.get("/commonData", commondataController.getCommonData);
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
+routes.get('/updateWinner', bracketManagerController.updateWinner);
+
+
 
 routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
