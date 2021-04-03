@@ -20,6 +20,9 @@ module.exports = {
       nextround: {
         type: Sequelize.TINYINT
       },
+      position_relation: {
+        type: Sequelize.STRING
+      },
       point: {
         type: Sequelize.INTEGER
       },

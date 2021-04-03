@@ -112,7 +112,7 @@ const signUp = async(req, res) => {
     
   const login =  async(req, res) => { 
     let userName = req.body.userName || "";
-    let email = req.body.email || "";
+    let email = userName;
     let password = req.body.password;
     try {
         var response = await req.models.user.findOne({
@@ -295,7 +295,7 @@ const getUser = async(req, res) => {
   const forgotPassword = async(req, res) => {
     try {
       let userName = req.body.userName;
-      let email = req.body.email;
+      let email = userName;
       let userInfoQuery = `SELECT id,email, firstName from users where userName =  '${userName}' or email =  '${email}'`
       let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
       if (userInfo.length > 0) {
@@ -447,7 +447,7 @@ const getUser = async(req, res) => {
             });
             return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
          }else{
-		      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: "Invalid token details" })
+		      return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Invalid token details" })
          }
       } catch (err) {
       //logger.log('Change Password', req, err, 'user', verifyEmailToken);

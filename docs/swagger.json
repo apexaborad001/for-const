@@ -287,14 +287,7 @@
         "parameters": [{
             "name": "userName",
             "in": "formData",
-            "description": "Username of the User",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "email",
-            "in": "formData",
-            "description": "Email of the User",
+            "description": "Username/Email of the User",
             "required": false,
             "type": "string"
           },
@@ -391,14 +384,7 @@
         "parameters": [{
           "name": "userName",
           "in": "formData",
-          "description": "Username of user",
-          "required": false,
-          "type": "string",
-          "default": "testuser"
-        },{
-          "name": "email",
-          "in": "formData",
-          "description": "Email of user",
+          "description": "Username/Email of user",
           "required": false,
           "type": "string",
           "default": "testuser"
@@ -851,6 +837,32 @@
             "name":"access_token",
             "in":"header",
             "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Data fetched successfully"
+          }
+        }
+      }
+    },
+    "/getGameLists": {
+      "get": {
+        "tags": [
+          "Common"
+        ],
+        "description": "Get Game Lists",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"gender",
+            "in":"query",
+            "description":"Teams Gender",
             "required":false,
             "type":"string",
             "default":""
