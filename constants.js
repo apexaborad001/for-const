@@ -102,7 +102,7 @@ module.exports = (req) => {
       },
       "USER_BRACKET":{
         "SUCCESS":"Bracket created successfully",
-        "UNSUCCESSFULL": "Bracket already registered",
+        "UNSUCCESSFULL": "You already register a bracket",
         "FOUND":"Bracket found successfully",
         "NOTFOUND":"Bracket not found"
       },

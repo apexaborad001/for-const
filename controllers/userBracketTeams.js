@@ -13,7 +13,6 @@ const createUserBracket = async (req, res) => {
     let bracket = await req.models.user_breaket.findOne({
       where: {
         user_id: userId,
-        name: bracketName
       }
     });
     if (bracket) {
@@ -90,6 +89,16 @@ const getRoundWiseScore = async (req, res) => {
       }
       else {
         if(differentBracketFlag)roundCounter++; 
+        if (roundCounter !== ele.round) {
+          if (roundCounter < ele.round) {
+            let roundEle1;
+            for (let i = roundCounter; i < ele.round; i++) {
+              roundCounter++;
+              roundEle1 = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 }
+              scoreRoundFinalArray.push(roundEle1)
+            }
+          }
+        }
         scoreRoundFinalArray.push(roundEle)
         lastRoundBracketId = ele.user_bracket_id;
       }
