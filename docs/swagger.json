@@ -188,7 +188,7 @@
           "application/json"
         ],
         "parameters": [
-         {
+          {
             "name":"access_token",
             "in":"header",
             "description":"access_token",
@@ -196,33 +196,96 @@
             "type":"string",
             "default":""
          },
-         {
-            "name": "fullName",
+          {
+            "name": "firstName",
             "in": "formData",
-            "description": "User name",
-            "required": false,
-            "type": "string"
+            "description": "first name",
+            "required": true,
+            "type": "string",
+            "default":"surendra"
+
+          },
+          {
+            "name": "lastName",
+            "in": "formData",
+            "description": "last name",
+            "required": true,
+            "type": "string",
+            "default":"test"
           },
           {
             "name": "email",
             "in": "formData",
             "description": "Email",
-            "required": false,
-            "type": "string"
+            "required": true,
+            "type": "string",
+            "default":"test@gmail.com"
+          },
+   
+          {
+            "name": "gender",
+            "in": "formData",
+            "description": "Gender male/female/others",
+            "required": true,
+            "type": "string",
+            "default":"male"
           },
           {
             "name": "phoneNumber",
             "in": "formData",
             "description": "Telephone Number",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "default":"1234569874"
           },
           {
-            "name": "gender",
-            "in": "formData",
-            "description": "male/female/others",
-            "required": false,
-            "type": "string"
+            "name":"countryCode",
+            "in":"formData",
+            "description":"Mobile Code",
+            "required":false,
+            "type": "string",
+            "default":"+91"
+          },
+          {
+            "name":"role",
+            "in":"formData",
+            "description":"role",
+            "required":false,
+            "type": "string",
+            "default":"1"
+            
+          },
+          {
+            "name":"stateId",
+            "in":"formData",
+            "description":"stateId",
+            "required":false,
+            "type": "string",
+            "default":"1"
+          },
+          {
+            "name":"countryId",
+            "in":"formData",
+            "description":"countryId",
+            "required":false,
+            "type": "string",
+            "default":"1"
+          },
+          {
+            "name":"isSubscribed",
+            "in":"formData",
+            "description":"isSubscribed",
+            "required":false,
+            "type": "string",
+            "default":"1"
+          },
+          {
+            "name":"date_of_birth",
+            "in":"formData",
+            "description":"DOB",
+            "required":false,
+            "type": "string",
+            "default":"2001-01-23"
           },
           {
             "name": "profile_image",
@@ -901,7 +964,49 @@
         }
       }
     }
-    
+    ,
+    "/sendInvite": {
+      "post": {
+        "tags": [
+          "Common"
+        ],
+        "description": "send invite to friend",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
+          "name":"mail_to",
+          "in":"formData",
+          "description":"mail_to",
+          "required":false,
+          "type":"string",
+          "default":"surendra@gmail.com"
+        },
+       {
+        "name":"comment",
+        "in":"formData",
+        "description":"comment",
+        "required":false,
+        "type":"string",
+        "default":""
+       }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rank fetched successfully"
+          }
+        }
+      }
+    }
     
     
     },

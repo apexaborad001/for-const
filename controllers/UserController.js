@@ -8,8 +8,22 @@ const crypto = require("crypto");
 const editProfile = async(req,res) =>{  
         try{
             const user_id = req.decoded.user_id;
+            let is_email_updated = false;
             let userData = await req.models.user.findOne({attributes:{exclude:["password"]}, where:{id:user_id}});
-            let keyToUpdate = ["firstName", "lastName", "gender", "phoneNumber", "email", "date_of_birth"];
+            if(req.body.email !=userData.email){
+              let findUser = await req.models.user.findOne({
+                attributes: ['id'],
+                where: {
+                  email: req.body.email
+                }
+              });
+              if (findUser) {
+                return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.USER_PROFILE.ALREADY_EXISTS });
+              }
+              is_email_updated = true;
+              userData['emailVerified'] = 0;
+            }
+            let keyToUpdate = ["firstName", "lastName", "email", "countryCode", "isSubscribed", "stateId", "countryId", "date_of_birth", "role", "phoneNumber", "gender"];
             for(let key of keyToUpdate){ 
             	if(req.body[key]) userData[key] = req.body[key]
             }
@@ -17,28 +31,40 @@ const editProfile = async(req,res) =>{
             let data = userData;
             if(req.files){
                 try{
-					let imageRes = await helper.upload(req, "myprofile");
-					imageRes["userId"] = req.decoded.user_id;
-					await req.models.user_images.destroy({
+					            let imageRes = await helper.upload(req, "myprofile");
+				            	imageRes["userId"] = req.decoded.user_id;
+					            await req.models.user_images.destroy({
                     	where:{
                     		userId:req.decoded.user_id
                     	}
                     })
-					let saveImage = new req.models.user_images(imageRes)
-					await saveImage.save()
+				          	let saveImage = new req.models.user_images(imageRes)
+				          	await saveImage.save()
                 }catch(err){
                     console.log(err)
                 }
             }
+            if(is_email_updated){
+              let token = userData.email + userData.id;
+              let verifyEmailToken = await helper.generateVerificationEmail(token);
+              let verifyEmailLink = `${req.BASE_URL_FRONTEND}` + "verify-email" + "/" + verifyEmailToken;
+              await req.models.user.update({ verifyEmailToken: verifyEmailToken}, { where: { id: userData.id } })
+              let template = "VerifyEmail.html";
+              let to_id = userData.email,
+              subject = req.messages.MAIL_SUBJECT.ACTIVATE_MAIL,
+              template_name = template,
+              replacements = { user: req.body.firstName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
+              helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);        
+            }
+
             return res.status(req.constants.HTTP_SUCCESS).json({ 
                 status: req.constants.SUCCESS, 
                 code: req.constants.HTTP_SUCCESS,
-                data: data, 
-                message: "Your profile has been successfully updated "
+                message: req.messages.USER_PROFILE.UPDATE_SUCCESS
             });
         }catch(err){
             //console.log(err)
-           return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
+           return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
         }
     };
 
@@ -128,7 +154,7 @@ const signUp = async(req, res) => {
        
       	if(response){
           if(response.emailVerified != 1){
-            let token = response.email + response.id;
+            /*let token = response.email + response.id;
             let verifyEmailToken = await helper.generateVerificationEmail(token);
             let verifyEmailLink = `${req.BASE_URL_FRONTEND}` + "verify-email" + "/" + verifyEmailToken;
             await req.models.user.update({ verifyEmailToken: verifyEmailToken}, { where: { id: response.id } })
@@ -137,7 +163,7 @@ const signUp = async(req, res) => {
             subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
             template_name = template,
             replacements = { user: req.body.firstName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
-            helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+            helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);*/
 
 
             return res.status(req.constants.HTTP_NOT_EXISTS).json({
