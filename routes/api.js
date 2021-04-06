@@ -52,6 +52,8 @@ routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.ver
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
 routes.get('/updateWinner', bracketManagerController.updateWinner);
+routes.post('/updateMultiWinner', bracketManagerController.updateMultiWinner);
+
 
 /*routes.get("/getEnv", (req, res)=>{
 

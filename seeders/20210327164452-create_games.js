@@ -709,7 +709,7 @@ module.exports = {
       {
         "game_id": 128,
         "round": 3,
-        "position": 1,
+        "position": 2,
         "bracket_id": 28,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
