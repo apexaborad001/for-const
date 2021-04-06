@@ -20,6 +20,21 @@ const signUp = Joi.object({
         admin: Joi.number().min(0).max(1).default(0),
       }
 });
+const editProfile = Joi.object({
+  body:{
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
+    email:Joi.string().email().required(),
+    countryCode:Joi.any(),
+    isSubscribed:Joi.any(),
+    stateId:Joi.any(),
+    countryId:Joi.any(),     
+    date_of_birth:Joi.date(),
+    role:Joi.number(),
+    phoneNumber: Joi.any(),       
+    gender: Joi.string().required()
+  }
+});
 const login = Joi.object({
       body: {
         password: Joi.string().required(),
@@ -64,5 +79,6 @@ module.exports = {
   forgotPassword,
   verifyResetToken,
   resetPassword,
-  changePassword
+  changePassword,
+  editProfile
 }

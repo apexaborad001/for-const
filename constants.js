@@ -51,7 +51,7 @@ module.exports = (req) => {
         "NOT_FOUND": "No such user found."
       },
       "SIGNUP": {
-        "ALREADY_EXISTS": "Username already used in successfully.",
+        "ALREADY_EXISTS": "Username already used.",
         "SUCCESS": "Account created successfully.",
         "NOT_VERIFIED": "Please verify your account.",
         "BLOCKED": "Your account is not active yet. Please contact Admin for activation.",
@@ -88,12 +88,17 @@ module.exports = (req) => {
         "CREATED": "Device token created successfully.",
       },
       "MAIL_SUBJECT":{
-		"PASSWORD_RESET":"NcrRugby | Forgot Password",
-		 "WELCOME_MAIL":"NcrRugby | Welcome Aboard"
+		    "PASSWORD_RESET":"NcrRugby | Forgot Password",
+		    "WELCOME_MAIL":"NcrRugby | Welcome Aboard",
+        "INVITEFRIEND":"NcrRugby | May Madness 7s Rugby",
+        "CONTACTUS":"NcrRugby | CONTACTUS",
+        "ACTIVATE_MAIL":"NcrRugby | Activate Your Account"
       },
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",
-        "UNSUCCESSFULL": "User not found"
+        "UNSUCCESSFULL": "User not found",
+        "UPDATE_SUCCESS":"User profile updated successfully",
+        "ALREADY_EXISTS": "Username already used"
       },
       "USER_BRACKET":{
         "SUCCESS":"Bracket created successfully",
@@ -115,6 +120,8 @@ module.exports = (req) => {
       "COMMONDATA":{
         "SUCCESS":"Data fetched successfully",
         "UNSUCCESSFULL": "Failed to fetched data",
+        "CONTACTUS_SUCCESS":"Thank you for your request",
+        "INVITE_SUCCESS":"Your invite send successfully"
       },
       "RANK":{
         "SUCCESS":"Rank Data fetched successfully"

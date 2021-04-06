@@ -10,11 +10,13 @@ const bracketManagerController = require("../controllers/bracketManager.js");
 
 
 const userValidation = require("../validations/userSchema");
+const commonValidation = require("../validations/commonSchema");
+
 const routes = require('express').Router();
 
 routes.post('/manage-user/signUp', validate(userValidation.signUp),userController.signUp);
 routes.post('/manage-user/login',validate(userValidation.login),userController.login);
-routes.post('/manage-user/editProfile', auth.isAuthenticated, userController.editProfile);
+routes.post('/manage-user/editProfile', validate(userValidation.editProfile), auth.isAuthenticated, userController.editProfile);
 routes.post('/manage-user/forgotPassword', validate(userValidation.forgotPassword), userController.forgotPassword);
 routes.post('/manage-user/logout', auth.isAuthenticated, userController.logout);
 routes.get('/manage-user/getUser',auth.isAuthenticated,userController.getUser);
@@ -38,15 +40,17 @@ routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeam
 routes.get("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 
 routes.get("/commonData", commondataController.getCommonData);
+routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
+routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.inviteFriend), commondataController.inviteFriends);
+
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
 routes.get('/updateWinner', bracketManagerController.updateWinner);
 
+/*routes.get("/getEnv", (req, res)=>{
 
-
-routes.get("/getEnv", (req, res)=>{
 res.send({"env":process.env})
 
 });
@@ -62,7 +66,7 @@ routes.get("/getConfig", (req, res)=>{
 res.send({"filebuffer":JSON.parse(filebuffer)})
 
 });
-
+*/
 
 
 routes.get("/s3test5", async (req, res)=>{
