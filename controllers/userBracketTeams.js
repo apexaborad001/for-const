@@ -4,7 +4,8 @@ const helper = require('../helper/common-helper');
 const logger = require('../helper/logger-helper');
 const bcrypt = require('bcrypt-nodejs');
 const userBracketTeams = require('../models/user_breakets');
-const roundArray = [1, 2, 3, 4, 5, 6]
+const roundAndDifferentBracketJson = [{id:2, "bracketName": "Survivor Cup", round: 1 }, {id:3, "bracketName": "Champions Cup", round: 2 }, { id:4,"bracketName": "Challenge Cup", round: 1 }]
+const { roundWiseScoreDetails, getRoundWiseDetailsInFormat } = require('../util')
 
 const createUserBracket = async (req, res) => {
   try {
@@ -48,70 +49,28 @@ const getRoundWiseScore = async (req, res) => {
   try {
     let userId = req.decoded.user_id
     const sql = `SELECT round,user_bracket_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id  left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id where user_breakets.user_id='` + userId + `' GROUP BY round,user_id,user_bracket_id order by user_bracket_id,round;`
-    const roundWiseQueryResult = await req.database.query(sql, {
-      raw: true,
-      model: userBracketTeams,
-      mapToModel: false
-    })
-    console.log(roundWiseQueryResult)
-    let scoreRoundFinalArray = [];
-    let lastRoundBracketId;
-    let roundCounter = 0;
-    let differentBracketFlag= false;
-    for (let i = 0; i < roundWiseQueryResult.length; i++) {
-      let ele = roundWiseQueryResult[i];
-      let roundEle = ele;
-      differentBracketFlag = false;
-      roundCounter++;
-      if (!lastRoundBracketId) lastRoundBracketId = ele.user_bracket_id;
-      if(lastRoundBracketId != ele.user_bracket_id){
-        differentBracketFlag = true;
-        if (roundCounter < roundArray.length) {
-          for (let i = roundCounter; i < roundArray.length; i++) {
-            if (i !== ele.round) roundEle = { round: i, user_bracket_id: lastRoundBracketId, score: 0 }
-            else roundEle = ele;
-            scoreRoundFinalArray.push(roundEle)
-          }
-        }
-        roundCounter = 0;
-      }
-      roundEle = ele;
-      if (!(ele.round && ele.score) || (i === (roundWiseQueryResult.length-1))) {
-        lastRoundBracketId = null;
-        if (roundCounter < roundArray.length) {
-          for (let i = roundCounter; i < roundArray.length; i++) {
-            if (i !== ele.round) roundEle = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 }
-            else roundEle = ele;
-            scoreRoundFinalArray.push(roundEle)
-          }
-        }
-        roundCounter = 0;
-      }
-      else {
-        if(differentBracketFlag)roundCounter++; 
-        if (roundCounter !== ele.round) {
-          if (roundCounter < ele.round) {
-            let roundEle1;
-            for (let i = roundCounter; i < ele.round; i++) {
-              roundCounter++;
-              roundEle1 = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 }
-              scoreRoundFinalArray.push(roundEle1)
-            }
-          }
-        }
-        scoreRoundFinalArray.push(roundEle)
-        lastRoundBracketId = ele.user_bracket_id;
-      }
+    const roundWiseQueryResult = await req.database.query(sql,  { type: req.database.QueryTypes.SELECT })
+    const mainBracketScore = await getRoundWiseDetailsInFormat(roundWiseQueryResult)
+    const roundWiseScoreObject = {};
+    roundWiseScoreObject['Main Bracket'] = mainBracketScore;
+
+    for (const roundAndBracket of roundAndDifferentBracketJson) {
+      const round = roundAndBracket.round;
+      const bracketName = roundAndBracket.bracketName;
+      const bracketId = roundAndBracket.id;
+      let roundWiseScore = await roundWiseScoreDetails(req, "looser_id", round, bracketName, bracketId, userId);
+      roundWiseScoreObject[bracketName] = roundWiseScore
     }
+    logger.log('getRoundWiseScore', req, '', 'user_breaket_team', req.decoded.user_id);
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
       status: req.constants.SUCCESS,
       message: req.messages.SCORE.SUCCESS,
-      data: scoreRoundFinalArray,
+      data: roundWiseScoreObject,
     })
   }
   catch (err) {
-    logger.log('Score', req, err, 'user_breaket_team', req.decoded.user_id);
+    logger.log('getRoundWiseScore', req, err, 'user_breaket_team', req.decoded.user_id);
     res.status(req.constants.HTTP_SERVER_ERROR).json({
       status: req.constants.ERROR,
       code: req.constants.HTTP_SERVER_ERROR,
@@ -120,27 +79,34 @@ const getRoundWiseScore = async (req, res) => {
   }
 };
 
+
 const getRank = async (req, res) => {
   try {
     const sql = `SELECT user_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id GROUP BY user_id order by score desc;`
-    const getRankQueryResult = await req.database.query(sql, {
-      raw: true,
-      model: userBracketTeams,
-      mapToModel: false
-    })
-    let rank = [];
-    getRankQueryResult.forEach(ele => {
-      console.log(ele)
-      if (!ele.score) {
-        ele = { user_id: ele.user_id, user_bracket_id: ele.user_bracket_id, score: 0 }
-      }
-      rank.push(ele)
-    })
+    const userWiseMainBracketScore = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+    
+    let userWiseAllBracketScore=[];
+    let allUserBrackets = await req.database.query(`select * from user_breakets`, { type: req.database.QueryTypes.SELECT })
+
+    for (const userBracket of allUserBrackets) {
+      let userBracketScore = 0;
+      const userIdd = userBracket.user_id;
+      for (const roundAndBracket of roundAndDifferentBracketJson) {
+        const round = roundAndBracket.round;
+        const bracketName = roundAndBracket.bracketName;
+        const sqlQuery = `SELECT sum(winner_score) as score FROM ncrrugby.tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name="${bracketName}" and winner_id IN (SELECT team_id FROM ncrrugby.user_breaket_teams INNER JOIN ncrrugby.tournament_games ON ncrrugby.user_breaket_teams.game_id=ncrrugby.tournament_games.game_id and ncrrugby.user_breaket_teams.team_id=ncrrugby.tournament_games.looser_id inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id where tournament_games.round=${round} and user_id=${userIdd}) `
+        let bracketWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
+        userBracketScore = userBracketScore +( bracketWiseScore && bracketWiseScore.length ? parseInt(bracketWiseScore[0].score) : 0);
+      } 
+      const mainBracketScore = userWiseMainBracketScore.filter(ele=>ele.user_id ==userIdd && ele.score)
+      userBracketScore = userBracketScore+ (mainBracketScore && mainBracketScore.length ? parseInt(mainBracketScore[0].score) :0)
+      userWiseAllBracketScore.push({ user_id: userIdd, score: userBracketScore })
+    }
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
       status: req.constants.SUCCESS,
       message: req.messages.RANK.SUCCESS,
-      data: rank,
+      data: userWiseAllBracketScore,
     })
   }
   catch (err) {

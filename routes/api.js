@@ -37,10 +37,6 @@ routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreak
 routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
 routes.get("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 
-routes.get("/cupWiseDetails",bracketManagerController.cupWiseDetails);
-
-
-
 routes.get("/commonData", commondataController.getCommonData);
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);

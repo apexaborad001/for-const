@@ -109,7 +109,7 @@ module.exports = (req) => {
         "UPSERT":"Breaket upserted successfully",
       },
       "SCORE":{
-        "SUCCESS":"Round wise score found",
+        "SUCCESS":"Round Wise Score fetched successfully",
         "UNSUCCESSFULL": "Round wise score not found",
       },
       "COMMONDATA":{
@@ -117,7 +117,7 @@ module.exports = (req) => {
         "UNSUCCESSFULL": "Failed to fetched data",
       },
       "RANK":{
-        "SUCCESS":"Rank fetched successfully"
+        "SUCCESS":"Rank Data fetched successfully"
       }
 
     }
