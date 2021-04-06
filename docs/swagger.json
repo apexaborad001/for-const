@@ -979,7 +979,7 @@
             "name":"access_token",
             "in":"header",
             "description":"access_token",
-            "required":false,
+            "required":true,
             "type":"string",
             "default":""
          },
@@ -987,7 +987,7 @@
           "name":"mail_to",
           "in":"formData",
           "description":"mail_to",
-          "required":false,
+          "required":true,
           "type":"string",
           "default":"surendra@gmail.com"
         },
@@ -995,19 +995,68 @@
         "name":"comment",
         "in":"formData",
         "description":"comment",
-        "required":false,
+        "required":true,
         "type":"string",
         "default":""
        }
         ],
         "responses": {
           "200": {
-            "description": "Rank fetched successfully"
+            "description": "Invite send successfully"
+          }
+        }
+      }
+    },
+    "/contactUs": {
+      "post": {
+        "tags": [
+          "Common"
+        ],
+        "description": "contact us API",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+         {
+          "name":"firstName",
+          "in":"formData",
+          "description":"firstName",
+          "required":true,
+          "type":"string",
+          "default":"Surendr"
+        },
+        {
+          "name":"lastName",
+          "in":"formData",
+          "description":"lastName",
+          "required":true,
+          "type":"string",
+          "default":"test"
+        },
+        {
+          "name":"email",
+          "in":"formData",
+          "description":"email",
+          "required":true,
+          "type":"string",
+          "default":"surendra@gmail.com"
+        },
+       {
+        "name":"message",
+        "in":"formData",
+        "description":"message",
+        "required":true,
+        "type":"string",
+        "default":""
+       }
+        ],
+        "responses": {
+          "200": {
+            "description": "we have reveived your query we will get back to you soon."
           }
         }
       }
     }
-    
     
     },
     "definitions":{

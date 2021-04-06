@@ -120,7 +120,7 @@ module.exports = (req) => {
       "COMMONDATA":{
         "SUCCESS":"Data fetched successfully",
         "UNSUCCESSFULL": "Failed to fetched data",
-        "CONTACTUS_SUCCESS":"Thank you for your request",
+        "CONTACTUS_SUCCESS":"Thank you for contacting us.",
         "INVITE_SUCCESS":"Your invite send successfully"
       },
       "RANK":{

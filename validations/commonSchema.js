@@ -5,7 +5,7 @@ const contactUs = Joi.object({
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         email:Joi.string().email().required(),
-        message:Joi.any()
+        message:Joi.string().required()
       }
 });
 const inviteFriend = Joi.object({
