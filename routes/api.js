@@ -36,9 +36,9 @@ routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeam
 routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 
-routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
-routes.post("/leaderboard/getRank",userBreaketTeamController.getRank);
-// routes.get("/leaderboard/updateLeaderboard",userBreaketTeamController.updateLeaderboard);
+routes.post("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
+routes.post("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
+routes.post("/leaderboard/updateLeaderboard",auth.isAuthenticated,userBreaketTeamController.updateLeaderboard);
 
 routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
