@@ -82,6 +82,8 @@ module.exports = (req) => {
       "USER": {
         "NOT_FOUND": "Not a valid user",
         "PASSWORD_UPDATED": "Password successfully updated.",
+        "USER_NAME_ALREADY_EXIST": "User Name Already Exist",
+        "USER_NAME_NOT_EXIST": "User Name Not Exist",
        },
       "DEVICE_TOKEN": {
         "UPDATED": "Device token updated successfully.",
@@ -124,7 +126,8 @@ module.exports = (req) => {
         "INVITE_SUCCESS":"Your invite send successfully"
       },
       "RANK":{
-        "SUCCESS":"Rank Data fetched successfully"
+        "SUCCESS":"Rank Data fetched successfully",
+        "UPDATE":"Leaderboard updated successfully"
       }
 
     }

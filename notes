@@ -9,3 +9,5 @@ https://picks.cbssports.com/college-basketball/ncaa-tournament/bracket/challenge
 https://mobikasateam.invisionapp.com/console/share/J9296SPJA5/543064833
 https://developer.sportsengine.com/
 Collapse
+
+npx sequelize-cli model:generate --name leaderboard --attributes userId:integer,userName:string,bracketType:string,score:integer
