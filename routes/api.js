@@ -46,7 +46,7 @@ routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.invit
 
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
-routes.get('/manage-user/validateUserName/:userName', userController.userNameValidation);
+routes.get('/manage-user/validateUserName', userController.userNameValidation);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
 routes.get('/updateWinner', bracketManagerController.updateWinner);
