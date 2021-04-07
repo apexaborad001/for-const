@@ -7,7 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     user_bracket_id:DataTypes.INTEGER,
     team_id:DataTypes.INTEGER,
     game_id: DataTypes.INTEGER,
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
+    type:DataTypes.STRING
   }, {});
   
 

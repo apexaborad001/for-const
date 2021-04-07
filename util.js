@@ -33,8 +33,8 @@ const sortJSONArrayByKey = (prop) => {
 async function roundWiseScoreDetails(req, option, round, bracketName, bracketId, userId) {
 
     try {
-        let userBracketLosserResult = await userBracketDetails(req, option, round,userId)
-        let bracketDetailsResult = await liveBracketDetails(req, bracketName)
+        // let userBracketLosserResult = await userBracketDetails(req, option, round,userId)
+        // let bracketDetailsResult = await liveBracketDetails(req, bracketName)
 
         // const bracketRoundWiseScore = [];
 
@@ -72,9 +72,10 @@ async function roundWiseScoreDetails(req, option, round, bracketName, bracketId,
     }
 
 }
-const getRoundWiseDetailsInFormat = async (roundWiseQueryResult) => {
+const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId) => {
     let scoreRoundFinalArray = [];
-    let lastRoundBracketId;
+    let scoreRoundFinalObject = [];
+    let lastRoundBracketName;
     let roundCounter = 0;
     let differentBracketFlag = false;
     for (let i = 0; i < roundWiseQueryResult.length; i++) {
@@ -82,17 +83,17 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult) => {
         let roundEle = ele;
         differentBracketFlag = false;
         roundCounter++;
-        if (!lastRoundBracketId) lastRoundBracketId = ele.user_bracket_id;
-        if (lastRoundBracketId != ele.user_bracket_id) {
+        if (!lastRoundBracketName) lastRoundBracketName = ele.name
+        if (lastRoundBracketName != ele.name) {
             differentBracketFlag = true;
             if (roundCounter < roundArray.length) {
                 for (let i = roundCounter; i < roundArray.length; i++) {
-                    if (i !== ele.round) roundEle = { round: i, user_bracket_id: lastRoundBracketId, score: 0 }
+                    if (i !== ele.round) roundEle = { round: i, user_bracket_id: bracketId, score: 0 ,name:lastRoundBracketName}
                     else roundEle = ele;
                     scoreRoundFinalArray.push(roundEle)
                 }
             }
-            roundCounter = 0;
+            roundCounter = 1;
         }
         roundEle = ele;
         if (!(ele.round && ele.score) || (i === (roundWiseQueryResult.length - 1))) {
@@ -102,10 +103,10 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult) => {
                 if (isRoundAlreadyPresent && isRoundAlreadyPresent.length) isRoundBracketThere = true
             }
             if (!isRoundBracketThere) {
-                lastRoundBracketId = null;
+                lastRoundBracketName=null;
                 if (roundCounter < roundArray.length) {
                     for (let i = roundCounter; i < roundArray.length; i++) {
-                        if (i !== ele.round) roundEle = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 }
+                        if (i !== ele.round) roundEle = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 ,name:ele.name}
                         else roundEle = ele;
                         scoreRoundFinalArray.push(roundEle)
                     }
@@ -123,13 +124,13 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult) => {
                     let roundEle1;
                     for (let i = roundCounter; i < ele.round; i++) {
                         roundCounter++;
-                        roundEle1 = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 }
+                        roundEle1 = { round: i, user_bracket_id: ele.user_bracket_id, score: 0,name:ele.name }
                         scoreRoundFinalArray.push(roundEle1)
                     }
                 }
             }
             scoreRoundFinalArray.push(roundEle)
-            lastRoundBracketId = ele.user_bracket_id;
+            lastRoundBracketName = ele.name;
         }
     }
     return scoreRoundFinalArray;
