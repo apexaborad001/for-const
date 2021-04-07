@@ -55,9 +55,9 @@ module.exports = {
         updatedAt: new Date()   
       },
      {
-        "league_id": 202107,
+        "league_id": 202106,
         "name": "Survivor Cup",
-        "current_subseason_id": 202107,
+        "current_subseason_id": 202106,
         "site_id": 11953,
         "gender": "female",
         "abbrev": "Women",
@@ -65,9 +65,9 @@ module.exports = {
         updatedAt: new Date(),       
      },
      {
-      "league_id": 202108,
+      "league_id": 202107,
       "name": "Challenge Cup",
-      "current_subseason_id": 202108,
+      "current_subseason_id": 202107,
       "site_id": 11953,
       "gender": "female",
       "abbrev": "",
@@ -75,9 +75,9 @@ module.exports = {
       updatedAt: new Date()   
     },
     {
-      "league_id": 202109,
+      "league_id": 202108,
       "name": "Champions Cup",
-      "current_subseason_id": 202109,
+      "current_subseason_id": 202108,
       "site_id": 11953,
       "gender": "female",
       "abbrev": "Mens",

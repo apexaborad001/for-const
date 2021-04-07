@@ -9,6 +9,7 @@ const getGameLists = async(req, res) =>{
         try{
            // const user_id = req.decoded.user_id;
             const gender = req.query.gender || "male";
+            const league_id = req.query.league_id  || "";
             let sql = "select tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,tgs.game_id, tgs.team_1_id,tgs.team_2_id,";
             sql += "tgs.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as";
             sql += " t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation,"
@@ -16,6 +17,9 @@ const getGameLists = async(req, res) =>{
             sql += " tgs.bracket_id = tbs.bracket_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on ";
             sql += " tm2.team_id=tgs.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round";
             sql += `  where tls.gender = "${gender}"`;
+            if(league_id){
+                sql += `  and tls.league_id = "${league_id}"`;
+            }
             let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
             let final_data={};
             for(let row of bracketData){ 
@@ -98,7 +102,7 @@ const getGameLists = async(req, res) =>{
                 status: req.constants.SUCCESS, 
                 code: req.constants.HTTP_SUCCESS,
                 data: Object.values(final_data), 
-                message: "get game list"
+                message: "game list fetched succesfully"
             });
         }catch(err){
             console.log(err);
