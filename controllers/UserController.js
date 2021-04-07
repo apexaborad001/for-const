@@ -280,204 +280,216 @@ const getUser = async(req, res) => {
 
   
   
-   const logout = async function(req, res) {
-    try {
-      let device = req.models.devices.findOne({
-        where: {
-          userId: req.decoded.user_id,
-          accessToken: req.headers["access_token"]
-        }
-      });
-      if (device) {
-        await req.models.devices.destroy({
-          where: {
-            userId: req.decoded.user_id,
-            accessToken: req.headers["access_token"]
-          }
-        });
-        return res.status(req.constants.HTTP_SUCCESS).json({
-          status: req.constants.SUCCESS,
-          code: req.constants.HTTP_SUCCESS,
-          message: req.messages.LOGOUT.SUCCESSFULL
-        });
-
-      }else{
-        return res.status(req.constants.HTTP_SUCCESS).json({
-          status: req.constants.ERROR,
-          code: req.constants.HTTP_SUCCESS,
-          message: req.messages.LOGOUT.UNSUCCESSFULL
-        });
-
-      }
-
-    } catch (err) {
-      logger.log('Logout User', req, err, 'user', req.decoded.user_id);
-      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+const logout = async function(req, res) {
+try {
+  let device = req.models.devices.findOne({
+    where: {
+      userId: req.decoded.user_id,
+      accessToken: req.headers["access_token"]
     }
+  });
+  if (device) {
+    await req.models.devices.destroy({
+      where: {
+        userId: req.decoded.user_id,
+        accessToken: req.headers["access_token"]
+      }
+    });
+    return res.status(req.constants.HTTP_SUCCESS).json({
+      status: req.constants.SUCCESS,
+      code: req.constants.HTTP_SUCCESS,
+      message: req.messages.LOGOUT.SUCCESSFULL
+    });
+
+  }else{
+    return res.status(req.constants.HTTP_SUCCESS).json({
+      status: req.constants.ERROR,
+      code: req.constants.HTTP_SUCCESS,
+      message: req.messages.LOGOUT.UNSUCCESSFULL
+    });
 
   }
+
+} catch (err) {
+  logger.log('Logout User', req, err, 'user', req.decoded.user_id);
+  return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+}
+
+}
   
    
-  const forgotPassword = async(req, res) => {
-    try {
-      let userName = req.body.userName;
-      let email = userName;
-      let userInfoQuery = `SELECT id,email, firstName from users where userName =  '${userName}' or email =  '${email}'`
-      let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
-      if (userInfo.length > 0) {
-          userInfo = userInfo[0];
-          let token = "";
-          if(userName){
-            token = userName + userInfo.id;
-          }else{
-            token = email + userInfo.id;
-          }
-          
-          let resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
-          let resetPasswordExpires = (new Date()).getTime();
-          await req.models.user.update({ resetPasswordToken: resetPasswordToken, resetPasswordExpires: resetPasswordExpires }, { where: { id: userInfo.id } })
-          let resetLink = req.BASE_URL_FRONTEND + "reset-password" + "/" + resetPasswordToken;
-          let name = userInfo.firstName;
-          let template = "ForgotPassword.html";
-          let to_id = userInfo.email,
-            subject = req.messages.MAIL_SUBJECT.PASSWORD_RESET,
-            template_name = template,
-            replacements = { user: name, resetLink: resetLink, date: moment(new Date()).format("MMMM Do YYYY") };
-           helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
-           return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.FORGOT_PASSWORD.FOLLOW_EMAIL })
-        
-      } else {
-        logger.log('Forgot Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.USER.NOT_FOUND }, 'user', 0);
+const forgotPassword = async(req, res) => {
+try {
+  let userName = req.body.userName;
+  let email = userName;
+  let userInfoQuery = `SELECT id,email, firstName from users where userName =  '${userName}' or email =  '${email}'`
+  let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
+  if (userInfo.length > 0) {
+      userInfo = userInfo[0];
+      let token = "";
+      if(userName){
+        token = userName + userInfo.id;
+      }else{
+        token = email + userInfo.id;
+      }
+      
+      let resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
+      let resetPasswordExpires = (new Date()).getTime();
+      await req.models.user.update({ resetPasswordToken: resetPasswordToken, resetPasswordExpires: resetPasswordExpires }, { where: { id: userInfo.id } })
+      let resetLink = req.BASE_URL_FRONTEND + "reset-password" + "/" + resetPasswordToken;
+      let name = userInfo.firstName;
+      let template = "ForgotPassword.html";
+      let to_id = userInfo.email,
+        subject = req.messages.MAIL_SUBJECT.PASSWORD_RESET,
+        template_name = template,
+        replacements = { user: name, resetLink: resetLink, date: moment(new Date()).format("MMMM Do YYYY") };
+        helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+        return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.FORGOT_PASSWORD.FOLLOW_EMAIL })
+    
+  } else {
+    logger.log('Forgot Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.USER.NOT_FOUND }, 'user', 0);
 
-        return res.status(req.constants.HTTP_NOT_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.USER.NOT_FOUND })
-      }
-    } catch (err) {
-      logger.log('Forgot Password', req, err, 'user', 0);
-      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
-    }
+    return res.status(req.constants.HTTP_NOT_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.USER.NOT_FOUND })
   }
-  const verifyResetToken = async(req, res) => {
-    try {
-      let resetToken = req.params.token,
-        userInfo = await req.models.user.findOne({ where: { resetPasswordToken: resetToken } });
-      if (userInfo != null) {
-        let expTime = 86400000, // 1 Day
-          expiresIn = userInfo.resetPasswordExpires,
-          currTime = (new Date()).getTime(),
-          timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) % 60);
-        if (timeDiff > expTime) {
-          res.status(401).send({
-            status: false,
-            code: 401,
-            message: req.messages.RESET_TOKEN.EXPIRED
-          });
-        } else {
-          res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.RESET_TOKEN.VERIFIED });
-        }
-      } else {
-        logger.log('Verify Reset Token', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.UN_AUTHORIZED }, 'user', 0);
-        res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.UN_AUTHORIZED })
-      }
-    } catch (err) {
-      logger.log('Verify Reset Token', req, err, 'user', 0);
-      res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
-    }
-  }
-  const resetPassword = async(req, res) => {
-    try {
-      let resetToken = req.params.token,
-        password = req.body.password,
-        userInfo = await req.models.user.findOne({ where: { resetPasswordToken: resetToken } });
-      if (userInfo != null) {
-        let expTime = 86400000, // 1 Day
-          expiresIn = userInfo.resetPasswordExpires,
-          currTime = (new Date()).getTime(),
-          timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) % 60);
-        if (timeDiff > expTime) {
-          return res.status(req.constants.HTTP_NOT_EXISTS).send({
-            status: false,
-            code: req.constants.HTTP_NOT_EXISTS,
-            message: req.messages.RESET_TOKEN.EXPIRED
-          });
-        } else {
-          await req.models.user.update({ password: bcrypt.hashSync(password), resetPasswordToken: '', resetToken: '' }, { where: { id: userInfo.id } });
-          return res.status(req.constants.HTTP_SUCCESS).json({
-            status: req.constants.SUCCESS,
-            code: req.constants.HTTP_SUCCESS,
-            message: req.messages.USER.PASSWORD_UPDATED
-          });
-        }
-      } else {
-        logger.log('Reset Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.EXPIRED }, 'user', 0);
-        return res.status(req.constants.HTTP_BAD_REQUEST).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.EXPIRED })
-      }
-    } catch (err) {
-      logger.log('Reset Password', req, err, 'user', 0);
-      res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
-    }
-  }
-  const changePassword =  async(req, res, next) => {
-    try {
-      let id = req.decoded.user_id;
-      let old_password = req.body.oldPassword;
-      let new_password = req.body.newPassword;
-      let userInfo = await req.models.user.findOne({
-        where: {
-          id: id
-        }
+} catch (err) {
+  logger.log('Forgot Password', req, err, 'user', 0);
+  return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+}
+}
+const verifyResetToken = async(req, res) => {
+try {
+  let resetToken = req.params.token,
+    userInfo = await req.models.user.findOne({ where: { resetPasswordToken: resetToken } });
+  if (userInfo != null) {
+    let expTime = 86400000, // 1 Day
+      expiresIn = userInfo.resetPasswordExpires,
+      currTime = (new Date()).getTime(),
+      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) % 60);
+    if (timeDiff > expTime) {
+      res.status(401).send({
+        status: false,
+        code: 401,
+        message: req.messages.RESET_TOKEN.EXPIRED
       });
-      userInfo = JSON.parse(JSON.stringify(userInfo));
-      if (userInfo) {
-        let comparedPassword = await bcrypt.compareSync(old_password, userInfo.password);
-        if (comparedPassword) {
-          compareNewPassword = await bcrypt.compareSync(new_password, userInfo.password);
-          if (compareNewPassword) {
-            return res.status(req.constants.HTTP_BAD_REQUEST).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.CHANGE_PASSWORD.PROMT_NEW_PASSWORD })
-          } else {
-            let isUpdated = await req.models.user.update({
-              password: await bcrypt.hashSync(new_password)
-            }, {
-              where: {
-                id: id
-              }
-            });
-            return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.CHANGE_PASSWORD.SUCCESSFUL })
-          }
-        } else {
-          logger.log('Change Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.CHANGE_PASSWORD.OLD_INCORRECT }, 'user', req.decoded.user_id);
-         return res.status(req.constants.HTTP_BAD_REQUEST).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.CHANGE_PASSWORD.OLD_INCORRECT })
-        }
+    } else {
+      res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.RESET_TOKEN.VERIFIED });
+    }
+  } else {
+    logger.log('Verify Reset Token', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.UN_AUTHORIZED }, 'user', 0);
+    res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.UN_AUTHORIZED })
+  }
+} catch (err) {
+  logger.log('Verify Reset Token', req, err, 'user', 0);
+  res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+}
+}
+const resetPassword = async(req, res) => {
+try {
+  let resetToken = req.params.token,
+    password = req.body.password,
+    userInfo = await req.models.user.findOne({ where: { resetPasswordToken: resetToken } });
+  if (userInfo != null) {
+    let expTime = 86400000, // 1 Day
+      expiresIn = userInfo.resetPasswordExpires,
+      currTime = (new Date()).getTime(),
+      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) % 60);
+    if (timeDiff > expTime) {
+      return res.status(req.constants.HTTP_NOT_EXISTS).send({
+        status: false,
+        code: req.constants.HTTP_NOT_EXISTS,
+        message: req.messages.RESET_TOKEN.EXPIRED
+      });
+    } else {
+      await req.models.user.update({ password: bcrypt.hashSync(password), resetPasswordToken: '', resetToken: '' }, { where: { id: userInfo.id } });
+      return res.status(req.constants.HTTP_SUCCESS).json({
+        status: req.constants.SUCCESS,
+        code: req.constants.HTTP_SUCCESS,
+        message: req.messages.USER.PASSWORD_UPDATED
+      });
+    }
+  } else {
+    logger.log('Reset Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.EXPIRED }, 'user', 0);
+    return res.status(req.constants.HTTP_BAD_REQUEST).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.RESET_TOKEN.EXPIRED })
+  }
+} catch (err) {
+  logger.log('Reset Password', req, err, 'user', 0);
+  res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+}
+}
+const changePassword =  async(req, res, next) => {
+try {
+  let id = req.decoded.user_id;
+  let old_password = req.body.oldPassword;
+  let new_password = req.body.newPassword;
+  let userInfo = await req.models.user.findOne({
+    where: {
+      id: id
+    }
+  });
+  userInfo = JSON.parse(JSON.stringify(userInfo));
+  if (userInfo) {
+    let comparedPassword = await bcrypt.compareSync(old_password, userInfo.password);
+    if (comparedPassword) {
+      compareNewPassword = await bcrypt.compareSync(new_password, userInfo.password);
+      if (compareNewPassword) {
+        return res.status(req.constants.HTTP_BAD_REQUEST).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.CHANGE_PASSWORD.PROMT_NEW_PASSWORD })
       } else {
-        logger.log('Change Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_NOT_EXISTS, message: req.messages.USER.NOT_FOUND }, 'user', req.decoded.user_id);
-        return res.status(req.constants.HTTP_NOT_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_EXISTS, message: req.messages.USER.NOT_FOUND })
+        let isUpdated = await req.models.user.update({
+          password: await bcrypt.hashSync(new_password)
+        }, {
+          where: {
+            id: id
+          }
+        });
+        return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.CHANGE_PASSWORD.SUCCESSFUL })
       }
+    } else {
+      logger.log('Change Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.CHANGE_PASSWORD.OLD_INCORRECT }, 'user', req.decoded.user_id);
+      return res.status(req.constants.HTTP_BAD_REQUEST).json({ status: req.constants.ERROR, code: req.constants.HTTP_BAD_REQUEST, message: req.messages.CHANGE_PASSWORD.OLD_INCORRECT })
+    }
+  } else {
+    logger.log('Change Password', req, { status: req.constants.ERROR, code: req.constants.HTTP_NOT_EXISTS, message: req.messages.USER.NOT_FOUND }, 'user', req.decoded.user_id);
+    return res.status(req.constants.HTTP_NOT_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_EXISTS, message: req.messages.USER.NOT_FOUND })
+  }
 
+} catch (err) {
+  logger.log('Change Password', req, err, 'user', req.decoded.user_id);
+  return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+}
+}
+ 
+const verifyEmailToken = async(req,res) =>{
+  try{
+        let verifyEmailToken = req.params.verifyEmailToken;
+        let tokenExists = await req.models.user.findOne({ where: {verifyEmailToken:verifyEmailToken}})
+        if(tokenExists){
+            let isUpdated = await req.models.user.update({
+            emailVerified : 1,
+            verifyEmailToken:" "
+          }, {
+            where: {
+              id:tokenExists.id
+            }
+          });
+          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
+        }else{
+        return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Invalid token details" })
+        }
     } catch (err) {
-      logger.log('Change Password', req, err, 'user', req.decoded.user_id);
-      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+    //logger.log('Change Password', req, err, 'user', verifyEmailToken);
+    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
     }
   }
- 
-  const verifyEmailToken = async(req,res) =>{
+
+  const userNameValidation = async(req,res) =>{
     try{
-          let verifyEmailToken = req.params.verifyEmailToken;
-          let tokenExists = await req.models.user.findOne({ where: {verifyEmailToken:verifyEmailToken}})
-         if(tokenExists){
-             let isUpdated = await req.models.user.update({
-              emailVerified : 1,
-              verifyEmailToken:" "
-            }, {
-              where: {
-                id:tokenExists.id
-              }
-            });
-            return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
-         }else{
-		      return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Invalid token details" })
-         }
+          let userName = req.params.userName;
+          let userNameExists = await req.models.user.findOne({ where: {userName}})
+          if(!userNameExists) res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER.USER_NAME_NOT_EXIST})
+          else res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.USER.USER_NAME_ALREADY_EXIST })
       } catch (err) {
       //logger.log('Change Password', req, err, 'user', verifyEmailToken);
-      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+        return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
       }
     }
   
@@ -491,5 +503,6 @@ module.exports = {
   verifyResetToken,
   resetPassword,
   changePassword,
-  verifyEmailToken
+  verifyEmailToken,
+  userNameValidation
 };

@@ -1,7 +1,7 @@
 const roundArray = [1, 2, 3, 4, 5, 6]
 async function userBracketDetails(req, option, round,userId) {
     try {
-        const sql = `SELECT user_breaket_teams.game_id,team_id,user_bracket_id,round FROM user_breaket_teams INNER JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id inner join user_breakets on user_breakets.id= user_breaket_teams.user_bracket_id where user_breaket_teams.team_id=tournament_games.${option} and tournament_games.round= ${round} and user_id = ${userId}`;
+        const sql = `SELECT ncrrugby.user_breaket_teams.game_id,team_id,user_bracket_id,round FROM ncrrugby.user_breaket_teams inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id INNER JOIN ncrrugby.tournament_games ON ncrrugby.user_breaket_teams.game_id=ncrrugby.tournament_games.game_id where ncrrugby.user_breaket_teams.team_id=ncrrugby.tournament_games.${option} and tournament_games.round= ${round} and user_id = ${userId}`;
         const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
         return getQueryResult
     }
@@ -33,8 +33,8 @@ const sortJSONArrayByKey = (prop) => {
 async function roundWiseScoreDetails(req, option, round, bracketName, bracketId, userId) {
 
     try {
-        // let userBracketLosserResult = await userBracketDetails(req, option, round,userId)
-        // let bracketDetailsResult = await liveBracketDetails(req, bracketName)
+        let userBracketLosserResult = await userBracketDetails(req, option, round,userId)
+        let bracketDetailsResult = await liveBracketDetails(req, bracketName)
 
         // const bracketRoundWiseScore = [];
 

@@ -37,7 +37,8 @@ routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreak
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 
 routes.get("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
-routes.get("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
+routes.post("/leaderboard/getRank",userBreaketTeamController.getRank);
+routes.get("/leaderboard/updateLeaderboard",userBreaketTeamController.updateLeaderboard);
 
 routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
@@ -45,6 +46,7 @@ routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.invit
 
 
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
+routes.get('/manage-user/validateUserName/:userName', userController.userNameValidation);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
 routes.get('/updateWinner', bracketManagerController.updateWinner);

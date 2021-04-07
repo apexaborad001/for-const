@@ -79,7 +79,6 @@ const getRoundWiseScore = async (req, res) => {
   }
 };
 
-
 const getRank = async (req, res) => {
   try {
     const sql = `SELECT user_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id GROUP BY user_id order by score desc;`
@@ -91,14 +90,19 @@ const getRank = async (req, res) => {
     for (const userBracket of allUserBrackets) {
       let userBracketScore = 0;
       const userIdd = userBracket.user_id;
-
-      const sqlQuery = `SELECT sum(winner_score) as score FROM tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name in ("Survivor Cup","Challenge Cup","Champions Cup") and winner_id IN (SELECT team_id FROM user_breaket_teams INNER JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.looser_id inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id where tournament_games.round in (1,2) and user_id= ${userIdd})`
-      let bracketWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
-      userBracketScore = userBracketScore +( bracketWiseScore && bracketWiseScore.length ? parseInt(bracketWiseScore[0].score) : 0);
-      
-      const mainBracketScore = userWiseMainBracketScore.filter(ele=>ele.user_id ==userIdd && ele.score)
-      userBracketScore = userBracketScore+ (mainBracketScore && mainBracketScore.length ? parseInt(mainBracketScore[0].score) :0)
-      userWiseAllBracketScore.push({ user_id: userIdd, score: userBracketScore })
+    //   for (const roundAndBracket of roundAndDifferentBracketJson) {
+    //     const round = roundAndBracket.round;
+    //     const bracketName = roundAndBracket.bracketName;
+    //     const sqlQuery = `SELECT sum(winner_score) as score FROM ncrrugby.tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name="${bracketName}" and winner_id IN (SELECT team_id FROM ncrrugby.user_breaket_teams INNER JOIN ncrrugby.tournament_games ON ncrrugby.user_breaket_teams.game_id=ncrrugby.tournament_games.game_id and ncrrugby.user_breaket_teams.team_id=ncrrugby.tournament_games.looser_id inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id where tournament_games.round=${round} and user_id=${userIdd}) `
+    //     let bracketWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
+    //     userBracketScore = userBracketScore +( bracketWiseScore && bracketWiseScore.length ? parseInt(bracketWiseScore[0].score) : 0);
+    //   } 
+    const sqlQuery = `SELECT sum(winner_score) as score FROM ncrrugby.tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name in ("Survivor Cup","Challenge Cup","Champions Cup") and winner_id IN (SELECT team_id FROM ncrrugby.user_breaket_teams INNER JOIN ncrrugby.tournament_games ON ncrrugby.user_breaket_teams.game_id=ncrrugby.tournament_games.game_id and ncrrugby.user_breaket_teams.team_id=ncrrugby.tournament_games.looser_id inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id where tournament_games.round in (1,2) and user_id= ${userIdd})`
+    let bracketWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
+    userBracketScore = userBracketScore +( bracketWiseScore && bracketWiseScore.length ? parseInt(bracketWiseScore[0].score) : 0);
+    const mainBracketScore = userWiseMainBracketScore.filter(ele=>ele.user_id ==userIdd && ele.score)
+    userBracketScore = userBracketScore+ (mainBracketScore && mainBracketScore.length ? parseInt(mainBracketScore[0].score) :0)
+    userWiseAllBracketScore.push({ user_id: userIdd, score: userBracketScore })
     }
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
