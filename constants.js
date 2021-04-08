@@ -48,7 +48,7 @@ module.exports = (req) => {
         "FAILURE": "Invalid username or password",
         "NOT_VERIFIED": "Please verify your account",
         "BLOCKED": "Your account is not active yet. Please contact Admin for activation.",
-        "NOT_FOUND": "No such user found."
+        "NOT_FOUND": "Invalid username or password"
       },
       "SIGNUP": {
         "ALREADY_EXISTS": "Try something different, this username already exists",
