@@ -17,6 +17,12 @@ module.exports = {
       game_id: {
         type: Sequelize.INTEGER
       },
+      team1Score:{
+        type:Sequelize.INTEGER
+      },
+      team2Score:{
+        type:Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
