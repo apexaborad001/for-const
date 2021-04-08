@@ -101,10 +101,6 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-
-
-
-
       {
         "game_id": 73,
         "round": 2,
@@ -246,7 +242,7 @@ module.exports = {
         "game_id": 85,
          "round": 2,
         "position":1 ,
-        "bracket_id": 18,
+        "bracket_id": 20,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
         createdAt: new Date(),
@@ -257,7 +253,7 @@ module.exports = {
         "game_id": 86,
         "round": 2,
         "position": 2,
-        "bracket_id": 19,
+        "bracket_id": 20,
         "game_start_time": "2021-05-02T10:00:00-05:00",
         "game_end_time": "2021-05-02T10:00:00-05:00",
         createdAt: new Date(),
