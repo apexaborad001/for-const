@@ -17,7 +17,9 @@ module.exports = (sequelize, DataTypes) => {
 	location: DataTypes.STRING,
 	timezone: DataTypes.STRING,
 	winner_score: DataTypes.INTEGER,
-	looser_score: DataTypes.INTEGER   
+	looser_score: DataTypes.INTEGER,
+	team1_score: DataTypes.INTEGER,
+	team2_score: DataTypes.INTEGER
     
   }, {});
 /*  User.associate = (models) => {
