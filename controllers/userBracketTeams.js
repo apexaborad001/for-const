@@ -50,7 +50,7 @@ const createUserBracket = async (req, res) => {
 
 const getRoundWiseScore = async (req, res) => {
   try {
-    let userId = req.decoded.id;
+    let userId = req.decoded.user_id;
     const bracketId = req.body.user_bracket_id;
     const sqlQuery = `select round ,tls.name,sum(winner_score ) as score ,user_bracket_id  from user_breaket_teams ubt inner join (select group_concat(game_id) as gameids from tournament_games where bracket_id in (1,2,3,4,5,15,16,17,18,19) and round=1) as gidt inner join (select group_concat(game_id) as gameids from tournament_games where bracket_id in (1,2,3,4,5,15,16,17,18,19) and round=2) as gidt2 inner join tournament_games tgs on (tgs.game_id=ubt.game_id and ubt.team_id= tgs.winner_id) or (ubt.team_id= tgs.winner_id and tgs.bracket_id not in (1,2,3,4,5,15,16,17,18,19,12,13,14,26,27,28) and FIND_IN_SET(ubt.game_id, gidt.gameids)) or (ubt.team_id= tgs.winner_id and tgs.bracket_id in (12,13,14,26,27,28) and FIND_IN_SET(ubt.game_id, gidt2.gameids)) inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id  inner join user_breakets ubs on ubs.id = ubt.user_bracket_id and ubs.type = tls.gender inner join users on users.id=ubs.user_id where users.id =${userId} and  user_bracket_id=${bracketId} group by user_bracket_id,users.id,users.userName ,round,tls.name` 
     const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })

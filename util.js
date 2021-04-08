@@ -89,7 +89,7 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId) => {
             if (roundCounter < roundArray.length) {
                 for (let i = roundCounter; i < roundArray.length; i++) {
                     if (i !== ele.round) roundEle = { round: i, user_bracket_id: bracketId, score: 0 ,name:lastRoundBracketName}
-                    else roundEle = ele;
+                    // else roundEle = ele;
                     scoreRoundFinalArray.push(roundEle)
                 }
             }
@@ -118,7 +118,7 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId) => {
             }
         }
         else {
-            if (differentBracketFlag) roundCounter++;
+            if (differentBracketFlag) roundCounter=1;
             if (roundCounter !== ele.round) {
                 if (roundCounter < ele.round) {
                     let roundEle1;
