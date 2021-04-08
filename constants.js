@@ -128,6 +128,9 @@ module.exports = (req) => {
       "RANK":{
         "SUCCESS":"Rank Data fetched successfully",
         "UPDATE":"Leaderboard updated successfully"
+      },
+      "TIEBREAKER":{
+        "SUCCESS":"Winner fetched successfully",
       }
 
     }

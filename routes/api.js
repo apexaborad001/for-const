@@ -39,6 +39,7 @@ routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreak
 routes.post("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
 routes.post("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 routes.post("/leaderboard/updateLeaderboard",auth.isAuthenticated,userBreaketTeamController.updateLeaderboard);
+routes.post("/tieBreakerResolver",userBreaketTeamController.tieBreakerResolver);
 
 routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);

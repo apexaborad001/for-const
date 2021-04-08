@@ -4,6 +4,7 @@ const logger = require('../helper/logger-helper');
 // const userBracketTeams = require('../models/user_breakets');
 // const roundAndDifferentBracketJson = [{ id: 2, "bracketName": "Survivor Cup", round: 1 }, { id: 3, "bracketName": "Champions Cup", round: 2 }, { id: 4, "bracketName": "Challenge Cup", round: 1 }]
 const { roundWiseScoreDetails, getRoundWiseDetailsInFormat } = require('../util')
+const util =require('../util')
 const topLeaderboardUser = 10;
 const MENSBRACKET = "male";
 const WOMENSBRACKET = "female";
@@ -127,6 +128,30 @@ const getRoundWiseScore = async (req, res) => {
 //     })
 //   }
 // };
+
+
+
+const tieBreakerResolver=async(req,res)=>{
+try{
+  let userBracketId1=req.body.user_BracketId1
+  let userBracketId2=req.body.user_BracketId2
+  const tieBreakerResolverResult = await util.tieBreakerResolverFunction(req,userBracketId1,userBracketId2)
+  res.status(req.constants.HTTP_SUCCESS).json({
+    code: req.constants.HTTP_SUCCESS,
+    status: req.constants.SUCCESS,
+    message: req.messages.TIEBREAKER.SUCCESS,
+    data: tieBreakerResolverResult,
+  })
+}catch(err)
+{
+  logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
+  res.status(req.constants.HTTP_SERVER_ERROR).json({
+    status: req.constants.ERROR,
+    code: req.constants.HTTP_SERVER_ERROR,
+    message: req.messages.INTERNAL500 + err
+})
+}
+}
 
 
 const getRank = async (req, res) => {
@@ -271,7 +296,9 @@ const upsertBracketDetails = async (req, res) => {
       return {
         user_bracket_id: userBracketId,
         team_id: ele.teamId,
-        game_id: ele.gameId
+        game_id: ele.gameId,
+        team1Score:ele.team1Score,
+        team2Score:ele.team2Score
       }
     })
     const upsertBracket = await req.models.user_breaket_team.bulkCreate(mappedUserBracketDetais);
@@ -299,5 +326,6 @@ module.exports = {
   createUserBracket,
   getRoundWiseScore,
   getRank,
-  updateLeaderboard
+  updateLeaderboard,
+  tieBreakerResolver
 }
