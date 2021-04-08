@@ -83,7 +83,11 @@ const signUp = async(req, res) => {
           }
         });
         if (findUser) {
-          return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS });
+          if(findUser.email == email){            
+            return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS_EMAIL });
+          }else{
+            return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS});
+          }
         } else {
           let userData = {
             password: password,
@@ -169,7 +173,7 @@ const signUp = async(req, res) => {
             return res.status(req.constants.HTTP_NOT_EXISTS).json({
               status: req.constants.ERROR,
               code: req.constants.HTTP_NOT_EXISTS,
-              message: "Please click the activation link we sent to your email"
+              message: req.messages.LOGIN.NOT_VERIFIED
             });
           }
         let otp_verified = response.otpVerified;
@@ -471,13 +475,12 @@ const verifyEmailToken = async(req,res) =>{
               id:tokenExists.id
             }
           });
-          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "email verified successfully" })
+          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "Account verified successfully" })
         }else{
-        return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Invalid token details" })
+        return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Your email verification link has expired." })
         }
     } catch (err) {
-    //logger.log('Change Password', req, err, 'user', verifyEmailToken);
-    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
+      return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
     }
   }
 

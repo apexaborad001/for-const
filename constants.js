@@ -44,46 +44,47 @@ module.exports = (req) => {
        },
     messages = {
       "LOGIN": {
-        "SUCCESS": "Logged in successfully.",
-        "FAILURE": "Invalid username or password.",
-        "NOT_VERIFIED": "Please verify your account.",
+        "SUCCESS": "Logged in successfully",
+        "FAILURE": "Invalid username or password",
+        "NOT_VERIFIED": "Please verify your account",
         "BLOCKED": "Your account is not active yet. Please contact Admin for activation.",
         "NOT_FOUND": "No such user found."
       },
       "SIGNUP": {
-        "ALREADY_EXISTS": "Username already used.",
-        "SUCCESS": "Account created successfully.",
-        "NOT_VERIFIED": "Please verify your account.",
-        "BLOCKED": "Your account is not active yet. Please contact Admin for activation.",
+        "ALREADY_EXISTS": "Try something different, this username already exists",
+        "ALREADY_EXISTS_EMAIL": "Try something different, this email already exists",
+        "SUCCESS": "Verify your account from the verification link shared on your registered E-mail.",
+        "NOT_VERIFIED": "Please verify your account",
+        "BLOCKED": "Your account is not active yet, please contact Admin for activation",
         "NOT_FOUND": "No such user found."
       },
       "LOGOUT": {
-        "SUCCESSFULL": "Logged out successfully.",
-        "UNSUCCESSFULL": "Failed to logout."
+        "SUCCESSFULL": "Logged out successfully",
+        "UNSUCCESSFULL": "Unable to logout"
       },
-      "INTERNAL500": "Something went wrong.",
+      "INTERNAL500": "Something went wrong",
       "COMMON_DATA": {
        },
       "FORGOT_PASSWORD": {
-        "SUCCESS": "Password update successfully",
-        "FAILURE": "Invalid userName/Password",
-        "FOLLOW_EMAIL":"Please check the email sent to your email ID."
+        "SUCCESS": "Password updated successfully",
+        "FAILURE": "Invalid Username/Password",
+        "FOLLOW_EMAIL":"Please check the E-mail sent to your registered E-mail ID"
       },
       "RESET_TOKEN": {
-        "VERIFIED": "Reset token verified.",
-        "UN_AUTHORIZED": "Unauthorized access.",
-        "EXPIRED": "Reset token expired.",
+        "VERIFIED": "Reset token verified",
+        "UN_AUTHORIZED": "Unauthorised access",
+        "EXPIRED": "Reset token expired",
       },
       "CHANGE_PASSWORD": {
-        "PROMT_NEW_PASSWORD": "Please enter a new password, you have already used this password.",
-        "SUCCESSFUL": "Password change successfully.",
-        "OLD_INCORRECT": "Incorrect old password."
+        "PROMT_NEW_PASSWORD": "Please enter a new password, you have already used this password",
+        "SUCCESSFUL": "Password changed successfully.",
+        "OLD_INCORRECT": "Your old password does not match"
       },
       "USER": {
         "NOT_FOUND": "Not a valid user",
-        "PASSWORD_UPDATED": "Password successfully updated.",
-        "USER_NAME_ALREADY_EXIST": "Try something different, this username is already taken.",
-        "USER_NAME_NOT_EXIST": "Username is available",
+        "PASSWORD_UPDATED": "Password updated successfully",
+        "USER_NAME_ALREADY_EXIST": "Try something different, this username already exists",
+        "USER_NAME_NOT_EXIST": "Try something different, this username is already taken ",
        },
       "DEVICE_TOKEN": {
         "UPDATED": "Device token updated successfully.",
@@ -92,19 +93,19 @@ module.exports = (req) => {
       "MAIL_SUBJECT":{
 		    "PASSWORD_RESET":"NcrRugby | Forgot Password",
 		    "WELCOME_MAIL":"NcrRugby | Welcome Aboard",
-        "INVITEFRIEND":"NcrRugby | May Madness 7s Rugby",
-        "CONTACTUS":"NcrRugby | CONTACTUS",
-        "ACTIVATE_MAIL":"NcrRugby | Activate Your Account"
+        "INVITEFRIEND":"NcrRugby Invitation| May Madness 7s Rugby",
+        "CONTACTUS":"NcrRugby | Contact Us",
+        "ACTIVATE_MAIL":"Activate Your Account | NcrRugby"
       },
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",
         "UNSUCCESSFULL": "User not found",
-        "UPDATE_SUCCESS":"User profile updated successfully",
-        "ALREADY_EXISTS": "Username already used"
+        "UPDATE_SUCCESS":"Your profile is updated successfully",
+        "ALREADY_EXISTS": "This username is already used by someone"
       },
       "USER_BRACKET":{
-        "SUCCESS":"Bracket created successfully",
-        "UNSUCCESSFULL": "You already register a bracket",
+        "SUCCESS":"You have successfully submitted your bracket",
+        "UNSUCCESSFULL": "You have already submitted the bracket",
         "FOUND":"Bracket found successfully",
         "NOTFOUND":"Bracket not found"
       },
@@ -112,8 +113,8 @@ module.exports = (req) => {
         "SUCCESS":"Bracket created successfully",
         "UNSUCCESSFULL": "User already register",
         "FOUND":"Bracket Details Found successfully",
-        "NOTFOUND":"Bracket Details Not Found",
-        "UPSERT":"Breaket upserted successfully",
+        "NOTFOUND":"Bracket details not found",
+        "UPSERT":"Bracket upserted successfully",
       },
       "SCORE":{
         "SUCCESS":"Round Wise Score fetched successfully",
@@ -122,8 +123,8 @@ module.exports = (req) => {
       "COMMONDATA":{
         "SUCCESS":"Data fetched successfully",
         "UNSUCCESSFULL": "Failed to fetched data",
-        "CONTACTUS_SUCCESS":"Thank you for contacting us.",
-        "INVITE_SUCCESS":"Your invite send successfully"
+        "CONTACTUS_SUCCESS":"Thank you for contacting us. We will get back to you as soon as possible",
+        "INVITE_SUCCESS":"Your invitation is sent successfully"
       },
       "RANK":{
         "SUCCESS":"Rank Data fetched successfully",
