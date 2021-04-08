@@ -82,8 +82,8 @@ module.exports = (req) => {
       "USER": {
         "NOT_FOUND": "Not a valid user",
         "PASSWORD_UPDATED": "Password successfully updated.",
-        "USER_NAME_ALREADY_EXIST": "Username is available",
-        "USER_NAME_NOT_EXIST": "Try something different, username already exists.",
+        "USER_NAME_ALREADY_EXIST": "Try something different, this username is already taken.",
+        "USER_NAME_NOT_EXIST": "Username is available",
        },
       "DEVICE_TOKEN": {
         "UPDATED": "Device token updated successfully.",

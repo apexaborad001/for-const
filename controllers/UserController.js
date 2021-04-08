@@ -484,6 +484,8 @@ const verifyEmailToken = async(req,res) =>{
 const userNameValidation = async(req,res) =>{
   try{
         let userName = req.query.userName;
+        if(!userName) return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: '' })
+
         let userNameExists = await req.models.user.findOne({ where: {userName}})
         if(!userNameExists) res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER.USER_NAME_NOT_EXIST})
         else res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.USER.USER_NAME_ALREADY_EXIST })

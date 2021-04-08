@@ -52,6 +52,9 @@ routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.ge
 routes.get('/updateWinner', bracketManagerController.updateWinner);
 routes.post('/updateMultiWinner', bracketManagerController.updateMultiWinner);
 
+routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameListsByUserBracketID);
+routes.post('/updateTeamScore', bracketManagerController.updateMultiWinnerByScore);
+
 
 /*routes.get("/getEnv", (req, res)=>{
 
