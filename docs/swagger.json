@@ -704,7 +704,15 @@
            "description":"bracketName",
            "type":"string",
            "default":""
-         }
+         },
+         {
+          "name":"bracketType",
+          "in":"formData",
+          "description":"bracketType",
+          "type":"string",
+          "default":""
+        }
+
         ],
         "responses": {
           "200": {
@@ -861,7 +869,7 @@
       }
     },
     "/leaderboard/getRoundWiseScore": {
-      "get": {
+      "post": {
         "tags": [
           "leaderboard"
         ],
@@ -877,7 +885,47 @@
             "required":false,
             "type":"string",
             "default":""
-         }
+         },
+         {
+          "name":"user_bracket_id",
+          "in":"formData",
+          "description":"user_bracket_id",
+          "type":"number",
+          "default":""
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "Round wise score found"
+          }
+        }
+      }
+    },
+    "/leaderboard/updateLeaderboard": {
+      "post": {
+        "tags": [
+          "leaderboard"
+        ],
+        "description": "Update Leaderboard",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
+          "name":"bracket_type",
+          "in":"formData",
+          "description":"bracket_type",
+          "type":"string",
+          "default":""
+        }
         ],
         "responses": {
           "200": {
@@ -939,7 +987,7 @@
       }
     },
     "/leaderboard/getRank": {
-      "get": {
+      "post": {
         "tags": [
           "leaderboard"
         ],
@@ -955,7 +1003,14 @@
             "required":false,
             "type":"string",
             "default":""
-         }
+         },
+         {
+          "name":"user_bracket_id",
+          "in":"formData",
+          "description":"user_bracket_id",
+          "type":"number",
+          "default":""
+        }
         ],
         "responses": {
           "200": {
