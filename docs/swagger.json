@@ -1018,8 +1018,63 @@
           }
         }
       }
-    }
-    ,
+    },
+    "/tieBreakerResolver": {
+      "post": {
+        "tags": [
+          "Tie Breaker Resolver"
+        ],
+        "description": "Tie Breaker Resolver",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
+          "name":"user_BracketId1",
+          "in":"formData",
+          "description":"user_BracketId1",
+          "type":"number",
+          "default":""
+        },
+        {
+          "name":"user_BracketId2",
+          "in":"formData",
+          "description":"user_BracketId2",
+          "type":"number",
+          "default":""
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "Winner fetched successfully"
+          }
+        }
+      }
+    },
+    "/getUserGameLists": {
+      "get": {
+        "tags": [
+          "Common"
+        ],
+        "description": "getUserGameLists",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Winner fetched successfully"
+          }
+        }
+      }
+    },
     "/sendInvite": {
       "post": {
         "tags": [

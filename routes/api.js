@@ -20,39 +20,31 @@ routes.post('/manage-user/editProfile', validate(userValidation.editProfile), au
 routes.post('/manage-user/forgotPassword', validate(userValidation.forgotPassword), userController.forgotPassword);
 routes.post('/manage-user/logout', auth.isAuthenticated, userController.logout);
 routes.get('/manage-user/getUser',auth.isAuthenticated,userController.getUser);
-
-
 routes.get("/manage-user/verifyResetToken/:token", validate(userValidation.verifyResetToken), userController.verifyResetToken);
 routes.post("/manage-user/resetPassword/:token", validate(userValidation.resetPassword), userController.resetPassword);
 routes.post("/manage-user/changePassword", auth.isAuthenticated, validate(userValidation.changePassword), auth.isAuthenticated, userController.changePassword);
+routes.post("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
 routes.post("/notifications/subscribe", webpushNotificationController.subscribe);
 routes.post("/notifications/sendNotification",auth.isAuthenticated, webpushNotificationController.sendNotification); 
-routes.post("/notifications/unsubscribe",auth.isAuthenticated,webpushNotificationController.unSubscribe);
-
 routes.post("/manage-user-bracket/create",auth.isAuthenticated,userBreaketTeamController.createUserBracket);
 routes.get("/manage-user-bracket/getBracketById",auth.isAuthenticated,userBreaketTeamController.getUserBracket);
-
 routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeamController.getBracketDetails);
 routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
-
 routes.post("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
 routes.post("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 routes.post("/leaderboard/updateLeaderboard",auth.isAuthenticated,userBreaketTeamController.updateLeaderboard);
-routes.post("/tieBreakerResolver",userBreaketTeamController.tieBreakerResolver);
-
+routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
 routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
 routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.inviteFriend), commondataController.inviteFriends);
-
-
-routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
-routes.get('/manage-user/validateUserName', userController.userNameValidation);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
+
 routes.get('/updateWinner', bracketManagerController.updateWinner);
 routes.post('/updateMultiWinner', bracketManagerController.updateMultiWinner);
-
+routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
+routes.get('/manage-user/validateUserName', userController.userNameValidation);
 routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameListsByUserBracketID);
 routes.post('/updateTeamScore', bracketManagerController.updateMultiWinnerByScore);
 
