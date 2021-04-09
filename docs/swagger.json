@@ -1133,7 +1133,10 @@
           "in":"formData",
           "description":"mail_to",
           "required":true,
-          "type":"string",
+          "type":"array",
+          "schema": {
+            "$ref": "#/definitions/arrayofemail"
+          },
           "default":"surendra@gmail.com"
         },
        {
@@ -1355,6 +1358,9 @@
             "type":"string"
           }
         }
+    },
+    "arrayofemail":{
+      "type": "array"
     }
    }
 }
