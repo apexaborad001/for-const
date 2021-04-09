@@ -10,7 +10,7 @@ const contactUs = Joi.object({
 });
 const inviteFriend = Joi.object({
       body:{
-        mail_to:Joi.string().email().required(),
+        mail_to:Joi.required(),
         comment:Joi.string().required(),
       }
 });
