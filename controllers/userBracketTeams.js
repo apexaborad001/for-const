@@ -189,9 +189,9 @@ const getUserRank = async (req,res) => {
     let userid = req.decoded.user_id;
     const bracketType = req.body.bracket_type;
     const userRank = await getUserRankFunction(req,bracketType)
-    userRank.find(function(item, i){
+    userRank.find((item, i)=>{
       if(item.userId === userid){
-        index = i;
+        index = i+1;
         return i;
       }
     })
@@ -203,7 +203,7 @@ const getUserRank = async (req,res) => {
     })
   }
   catch (err) {
-    logger.log('updateLeaderboard', req, err, 'user_breaket_team', req.decoded.user_id);
+    logger.log('getUserRank', req, err, 'getUserRank', userid);
     res.status(req.constants.HTTP_SERVER_ERROR).json({
       status: req.constants.ERROR,
       code: req.constants.HTTP_SERVER_ERROR,
