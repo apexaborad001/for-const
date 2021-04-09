@@ -787,6 +787,41 @@
         }
       }
     },
+    "/manage-user-bracket/getUserRank": {
+      "post": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "User Bracket",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+         {
+           "name":"bracket_type",
+           "in":"formData",
+           "description":"bracket_type",
+           "type":"string",
+           "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Your rank fetched successfully"
+          }
+          
+        }
+      }
+    },
+    
     "/manage-user-bracket/insertDetails": {
       "post": {
         "tags": [

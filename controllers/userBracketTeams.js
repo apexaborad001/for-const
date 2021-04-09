@@ -1,3 +1,4 @@
+const { indexOf, forEach } = require('lodash');
 const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const logger = require('../helper/logger-helper');
@@ -176,6 +177,42 @@ const getRank = async (req, res) => {
   }
 };
 
+const getUserRankFunction= async (req,bracketType)=>{
+  let sqlQuery = `select sum(winner_score ) as score,users.id as userId,users.userName ,"${bracketType}" as bracketType ,user_bracket_id  from user_breaket_teams ubt inner join (select group_concat(game_id) as gameids from tournament_games where bracket_id in (1,2,3,4,5,15,16,17,18,19) and round=1) as gidt inner join (select group_concat(game_id) as gameids from tournament_games where bracket_id in (1,2,3,4,5,15,16,17,18,19) and round=2) as gidt2 inner join tournament_games tgs on (tgs.game_id=ubt.game_id and ubt.team_id= tgs.winner_id) or (ubt.team_id= tgs.winner_id and tgs.bracket_id not in (1,2,3,4,5,15,16,17,18,19,12,13,14,26,27,28) and FIND_IN_SET(ubt.game_id, gidt.gameids)) or (ubt.team_id= tgs.winner_id and tgs.bracket_id in (12,13,14,26,27,28) and FIND_IN_SET(ubt.game_id, gidt2.gameids)) inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id  inner join user_breakets ubs on ubs.id = ubt.user_bracket_id  inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" group by user_bracket_id,users.id,users.userName  order by score desc `;
+  const userRank= await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+  return userRank;
+};
+
+const getUserRank = async (req,res) => {
+  try {
+    var index = -1;
+    let userid = req.decoded.user_id;
+    const bracketType = req.body.bracket_type;
+    const userRank = await getUserRankFunction(req,bracketType)
+    userRank.find(function(item, i){
+      if(item.userId === userid){
+        index = i;
+        return i;
+      }
+    })
+    res.status(req.constants.HTTP_SUCCESS).json({
+      code: req.constants.HTTP_SUCCESS,
+      status: req.constants.SUCCESS,
+      message: req.messages.RANK.USERRANK,
+      data: ({Rank:index}),
+    })
+  }
+  catch (err) {
+    logger.log('updateLeaderboard', req, err, 'user_breaket_team', req.decoded.user_id);
+    res.status(req.constants.HTTP_SERVER_ERROR).json({
+      status: req.constants.ERROR,
+      code: req.constants.HTTP_SERVER_ERROR,
+      message: req.messages.INTERNAL500 + err
+    })
+  }
+}
+
+
 const updateLeaderboard = async (req,res) => {
   try {
     const bracketType = req.body.bracket_type?req.body.bracket_type:MENSBRACKET;
@@ -327,5 +364,6 @@ module.exports = {
   getRoundWiseScore,
   getRank,
   updateLeaderboard,
-  tieBreakerResolver
+  tieBreakerResolver,
+  getUserRank
 }

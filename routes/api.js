@@ -29,6 +29,9 @@ routes.post("/notifications/sendNotification",auth.isAuthenticated, webpushNotif
 routes.post("/manage-user-bracket/create",auth.isAuthenticated,userBreaketTeamController.createUserBracket);
 routes.get("/manage-user-bracket/getBracketById",auth.isAuthenticated,userBreaketTeamController.getUserBracket);
 routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeamController.getBracketDetails);
+
+routes.post("/manage-user-bracket/getUserRank",auth.isAuthenticated, userBreaketTeamController.getUserRank);
+
 routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.post("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);

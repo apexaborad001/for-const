@@ -71,7 +71,8 @@ const editProfile = async(req,res) =>{
 
 const signUp = async(req, res) => {   
     try {    
-        let email = req.body.email;         
+        let email = req.body.email;  
+        let username=req.body.userName;       
         let password = bcrypt.hashSync(req.body.password);
         req.body.accepTermConditions = req.body.accepTermConditions || 1;
         let findUser = await req.models.user.findOne({
@@ -83,7 +84,18 @@ const signUp = async(req, res) => {
           }
         });
         if (findUser) {
-          return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS });
+          if(email==findUser.get('email')&&username==findUser.get('userName'))
+          {
+            return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS });
+          }
+          else if(email==findUser.get('email'))
+          {
+            return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.EMAIL_ALREADY_EXISTS });
+          }
+          else if(username==findUser.get('userName'))
+          {
+            return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.USERNAME_ALREADY_EXISTS }); 
+          }
         } else {
           let userData = {
             password: password,

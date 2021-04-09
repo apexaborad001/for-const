@@ -51,8 +51,10 @@ module.exports = (req) => {
         "NOT_FOUND": "No such user found."
       },
       "SIGNUP": {
-        "ALREADY_EXISTS": "Username already used.",
-        "SUCCESS": "Account created successfully.",
+        "USERNAME_ALREADY_EXISTS": "Username already used",
+        "EMAIL_ALREADY_EXISTS": "Email already used",
+        "ALREADY_EXISTS":"User with this usename and email already exists",
+        "SUCCESS": "Verification link has been sent to your email id. Please verify your account.",
         "NOT_VERIFIED": "Please verify your account.",
         "BLOCKED": "Your account is not active yet. Please contact Admin for activation.",
         "NOT_FOUND": "No such user found."
@@ -127,7 +129,8 @@ module.exports = (req) => {
       },
       "RANK":{
         "SUCCESS":"Rank Data fetched successfully",
-        "UPDATE":"Leaderboard updated successfully"
+        "UPDATE":"Leaderboard updated successfully",
+        "USERRANK":"Your rank fetched successfully"
       },
       "TIEBREAKER":{
         "SUCCESS":"Winner fetched successfully",
