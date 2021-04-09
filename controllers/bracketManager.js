@@ -13,7 +13,7 @@ const getGameLists = async(req, res) =>{
             let sql = "select tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,tgs.game_id, tgs.team_1_id,tgs.team_2_id,";
             sql += "tgs.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as";
             sql += " t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation,"
-            sql += " wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround from tournament_leagues tls inner join tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on "; 
+            sql += " wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on "; 
             sql += " tgs.bracket_id = tbs.bracket_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on ";
             sql += " tm2.team_id=tgs.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round";
             sql += `  where tls.gender = "${gender}"`;
@@ -24,7 +24,7 @@ const getGameLists = async(req, res) =>{
             let final_data={};
             for(let row of bracketData){ 
                // let league_id = row["league_id"];
-                let {bracket_id, league_id, game_id,team_1_id,team_2_id,winner_id,round, position, t1_name, t1_thumbnails,t2_name,t2_thumbnails, division_teamid2, division_teamid1} = row;
+                let {bracket_id, league_id, game_id,team_1_id,team_2_id,winner_id,round, position, t1_name, t1_thumbnails,t2_name,t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
                 if(!final_data[league_id]) {
                     final_data[league_id] = {};
                     final_data[league_id].league_name = row["league_name"];
@@ -87,7 +87,7 @@ const getGameLists = async(req, res) =>{
                     thumbnails:t2_thumbnails,
                     division_teamid:division_teamid2
                 }
-                final_data[league_id]["brackets"][bracket_id]["games"].push({game_id, bracket_id, round, position, winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key })
+                final_data[league_id]["brackets"][bracket_id]["games"].push({game_id, bracket_id, round, position, winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score })
             }
             final_data = Object.values(final_data);
             for(let i in final_data){
@@ -421,6 +421,7 @@ const cupWiseDetails =  async(req, res) => {
        // const user_id = req.decoded.user_id;
         const gender = req.query.gender || "male";
         const league_id = req.query.league_id  || "";
+        const user_bracket_id = req.query.user_bracket_id  || "";
         let mainBracketId = [1,2,3,4,5,15,16,17,18,19];
         let championBractID = [12,13,14,26,27,28];
         let sql = "select tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,tgs.game_id, tgs.team_1_id,tgs.team_2_id,";
@@ -435,7 +436,7 @@ const cupWiseDetails =  async(req, res) => {
         }
         
         let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
-        let sql2 = "select tournament_games.game_id, team_id, round, bracket_id from user_breaket_teams inner join tournament_games on tournament_games.game_id= user_breaket_teams.game_id where user_bracket_id=3";
+        let sql2 = "select tournament_games.game_id, team_id, round, bracket_id from user_breaket_teams inner join tournament_games on tournament_games.game_id= user_breaket_teams.game_id where user_bracket_id="+user_bracket_id;
         let userData = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT });
         let round1TeamID = [];
         let round2TeamID = [];

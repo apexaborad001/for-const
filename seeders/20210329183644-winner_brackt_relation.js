@@ -157,23 +157,14 @@ module.exports = {
 {
   "bracket_id": 6,
   "round": 2,
-  "nextbracketid": 6,
+  "nextbracketid": 8,
   "nextround":3, 
   "point":60, 
    createdAt: new Date(),
    updatedAt: new Date(),
  
 },
-{
-  "bracket_id": 6,
-  "round": 3,
-  "nextbracketid": 8,
-  "nextround":4, 
-  "point":120, 
-   createdAt: new Date(),
-   updatedAt: new Date(),
- 
-},
+
 {
   "bracket_id": 7,
   "round": 1,
@@ -187,16 +178,16 @@ module.exports = {
 {
   "bracket_id": 7,
   "round": 2,
-  "nextbracketid": 7,
+  "nextbracketid": 8,
   "nextround":3, 
   "point":60,
-  "position_relation":"1:2,2:2", 
+  "position_relation":"1:2", 
    createdAt: new Date(),
    updatedAt: new Date(),
  
 },
 {
-  "bracket_id": 7,
+  "bracket_id": 8,
   "round": 3,
   "nextbracketid": 8,
   "nextround":4, 
@@ -204,8 +195,7 @@ module.exports = {
    createdAt: new Date(),
    updatedAt: new Date(),
  
-},
-{
+},{
   "bracket_id": 8,
   "round": 4, 
   "point":240, 
@@ -217,49 +207,39 @@ module.exports = {
 {
   "bracket_id": 9,
   "round": 1,
-  "nextbracketid": 9,
-  "nextround":2, 
-  "point":30, 
-   createdAt: new Date(),
-   updatedAt: new Date(),
- 
-},
-{
-  "bracket_id": 9,
-  "round": 2,
   "nextbracketid": 11,
-  "nextround":3, 
+  "nextround":2, 
   "point":60, 
    createdAt: new Date(),
    updatedAt: new Date(),
  
 },
+
 {
   "bracket_id": 10,
   "round": 1,
-  "nextbracketid": 10,
-  "nextround":2, 
-  "point":30, 
-  "position_relation":"1:2,2:2",
-   createdAt: new Date(),
-   updatedAt: new Date(),
- 
-},
-{
-  "bracket_id": 10,
-  "round": 2,
   "nextbracketid": 11,
-  "nextround":3, 
+  "nextround":2, 
   "point":60, 
+  "position_relation":"1:2,2:2",
    createdAt: new Date(),
    updatedAt: new Date(),
  
 },
 {
   "bracket_id": 11,
-  "round": 3,
+  "round": 2,
+  "nextbracketid": 11,
+  "nextround":3, 
   "point":120, 
-  "position_relation":"1:1:120,2:1:60",
+   createdAt: new Date(),
+   updatedAt: new Date(),
+ 
+},{
+  "bracket_id": 11,
+  "round": 3,
+  "point":240, 
+  "position_relation":"1:1:240,2:1:120",
    createdAt: new Date(),
    updatedAt: new Date(),
  
@@ -267,18 +247,8 @@ module.exports = {
 {
   "bracket_id": 12,
   "round": 1,
-  "nextbracketid": 12,
-  "nextround":2, 
-  "point":30, 
-   createdAt: new Date(),
-   updatedAt: new Date(),
- 
-},
-{
-  "bracket_id": 12,
-  "round": 2,
   "nextbracketid": 14,
-  "nextround":3, 
+  "nextround":2, 
   "point":60, 
    createdAt: new Date(),
    updatedAt: new Date(),
@@ -287,20 +257,20 @@ module.exports = {
 {
   "bracket_id": 13,
   "round": 1,
-  "nextbracketid": 13,
+  "nextbracketid": 14,
   "nextround":2, 
-  "point":30, 
+  "point":60, 
   "position_relation":"1:2,2:2",
    createdAt: new Date(),
    updatedAt: new Date(),
  
 },
 {
-  "bracket_id": 13,
+  "bracket_id": 14,
   "round": 2,
   "nextbracketid": 14,
   "nextround":3, 
-  "point":60, 
+  "point":120, 
    createdAt: new Date(),
    updatedAt: new Date(),
  
@@ -308,8 +278,8 @@ module.exports = {
 {
   "bracket_id": 14,
   "round": 3,
-  "point":120,
-  "position_relation":"1:1:120,2:1:60", 
+  "point":240,
+  "position_relation":"1:1:240,2:1:120", 
    createdAt: new Date(),
    updatedAt: new Date(),
  
