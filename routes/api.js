@@ -42,7 +42,7 @@ routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
 routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.inviteFriend), commondataController.inviteFriends);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
-routes.get('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
+routes.post('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
 
 routes.get('/updateWinner', bracketManagerController.updateWinner);
 routes.post('/updateMultiWinner', bracketManagerController.updateMultiWinner);

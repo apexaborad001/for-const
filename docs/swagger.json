@@ -1095,7 +1095,7 @@
       }
     },
     "/getUserGameLists": {
-      "get": {
+      "post": {
         "tags": [
           "Common"
         ],
@@ -1103,6 +1103,22 @@
         "produces": [
           "application/json"
         ],
+        "parameters":[{
+          "name":"access_token",
+          "in":"header",
+          "description":"access_token",
+          "required":false,
+          "type":"string",
+          "default":""
+       },
+        {
+          "name":"gender",
+          "in":"formData",
+          "description":"Teams Gender",
+          "required":false,
+          "type":"string",
+          "default":""
+       }],
         "responses": {
           "200": {
             "description": "Winner fetched successfully"
@@ -1133,10 +1149,7 @@
           "in":"formData",
           "description":"mail_to",
           "required":true,
-          "type":"array",
-          "schema": {
-            "$ref": "#/definitions/arrayofemail"
-          },
+          "type":"string",
           "default":"surendra@gmail.com"
         },
        {
@@ -1358,9 +1371,6 @@
             "type":"string"
           }
         }
-    },
-    "arrayofemail":{
-      "type": "array"
     }
    }
 }
