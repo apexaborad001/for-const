@@ -273,7 +273,9 @@ const getBracketDetails = async (req, res) => {
 
 const upsertBracketDetails = async (req, res) => {
   try {
-    let userBracketId = req.body.userBracketDetails[0].user_bracket_id
+    // let userBracketId
+    const userBracketDetails = JSON.parse(req.body.userBracketDetails);
+    let userBracketId =userBracketDetails[0].user_bracket_id;
     req.models.user_breaket_team.destroy({
       where: {
         user_bracket_id: userBracketId
@@ -285,21 +287,16 @@ const upsertBracketDetails = async (req, res) => {
       }
     });
     if(userBracket){
-    const userBracketDetials = req.body.userBracketDetails;
-    // const mappedUserBracketDetais = userBracketDetials.map(ele => {
-    //   return {
-    //     user_bracket_id: userBracketId,
-    //     ...ele
-    //   }
-    // })
-    const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetials);
+    //const userBracketDetials = req.body.userBracketDetails;
+    
+    const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
     res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
   }else{
     logger.log(req.messages.USER_BRACKET.UNSUCCESSFULL, req, 'user_breaket_team');
-    res.status(req.constants.HTTP_ALREADY_EXISTS).json({
+    res.status(req.constants.HTTP_BAD_REQUEST).json({
       status: req.constants.ERROR,
-      code: req.constants.HTTP_ALREADY_EXISTS,
-      message: req.messages.USER_BRACKET_TEAMS.NOTMATCHED,
+      code: req.constants.HTTP_BAD_REQUEST,
+      message: req.messages.USER_BRACKET_TEAMS.INVALIDBRACKET,
       data: null
      })
   }
