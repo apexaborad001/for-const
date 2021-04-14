@@ -11,17 +11,20 @@ module.exports = {
       user_bracket_id: {
         type: Sequelize.INTEGER
       },
-      team_id: {
+      team_1_id: {
         type: Sequelize.INTEGER
       },
-      game_id: {
+      team_2_id: {
         type: Sequelize.INTEGER
       },
-      team1Score:{
-        type:Sequelize.INTEGER
+      winner_id:{
+        type: Sequelize.INTEGER
       },
-      team2Score:{
-        type:Sequelize.INTEGER
+      team_1_score:{
+        type: Sequelize.INTEGER
+      },
+      team_2_score:{
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
