@@ -107,7 +107,7 @@ let hasAccessForProvider = (req, res, next) => {
 }
 
 module.exports = {
-  isAuthenticated: isAuthenticated,
-  hasAccess: hasAccess,
-  hasAccessForProvider: hasAccessForProvider
+  isAuthenticated,
+  hasAccess,
+  hasAccessForProvider
 }
