@@ -273,7 +273,9 @@ const getBracketDetails = async (req, res) => {
 
 const upsertBracketDetails = async (req, res) => {
   try {
-    let userBracketId = req.body.userBracketDetails[0].user_bracket_id
+    // let userBracketId
+    const userBracketDetails = JSON.parse(req.body.userBracketDetails);
+    let userBracketId =userBracketDetails[0].user_bracket_id;
     req.models.user_breaket_team.destroy({
       where: {
         user_bracket_id: userBracketId
@@ -285,21 +287,16 @@ const upsertBracketDetails = async (req, res) => {
       }
     });
     if(userBracket){
-    const userBracketDetials = req.body.userBracketDetails;
-    // const mappedUserBracketDetais = userBracketDetials.map(ele => {
-    //   return {
-    //     user_bracket_id: userBracketId,
-    //     ...ele
-    //   }
-    // })
-    const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetials);
+    //const userBracketDetials = req.body.userBracketDetails;
+    
+    const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
     res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
   }else{
     logger.log(req.messages.USER_BRACKET.UNSUCCESSFULL, req, 'user_breaket_team');
-    res.status(req.constants.HTTP_ALREADY_EXISTS).json({
+    res.status(req.constants.HTTP_BAD_REQUEST).json({
       status: req.constants.ERROR,
-      code: req.constants.HTTP_ALREADY_EXISTS,
-      message: req.messages.USER_BRACKET_TEAMS.NOTMATCHED,
+      code: req.constants.HTTP_BAD_REQUEST,
+      message: req.messages.USER_BRACKET_TEAMS.INVALIDBRACKET,
       data: null
      })
   }
@@ -314,7 +311,7 @@ const getUserBracketDetails = async(req, res) =>{
   try{
       
       const userId = req.decoded.user_id;
-      const gender = req.query.gender || "male";
+      const gender = req.query.bracketType || "male";
   
       let sql = `select ubt.user_bracket_id ,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
       tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on  tgs.bracket_id = tbs.bracket_id left join user_breaket_teams ubt on ubt.game_id = tgs.game_id left join tournament_teams tm1 on tm1.team_id=ubt.team_1_id left join tournament_teams tm2 on tm2.team_id=ubt.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round  inner join user_breakets ubs on ubs.id=ubt.user_bracket_id where tls.gender = "${gender}" and ubs.user_id = ${userId};`

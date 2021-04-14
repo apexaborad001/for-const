@@ -770,6 +770,14 @@
             "required":false,
             "type":"string",
             "default":""
+         },
+         {
+          "name": "bracketType",
+          "in": "path",
+          "description": "bracketType",
+          "required": true,
+          "type": "string",
+          "default": ""
          }
         ],
         "responses": {
@@ -1170,7 +1178,7 @@
           "in":"formData",
           "description":"mail_to",
           "required":true,
-          "type":"string",
+          "type":"array",
           "default":"surendra@gmail.com"
         },
        {
@@ -1403,7 +1411,7 @@
           "team_2_score":{
             "type":"string"
           },
-          "gameId":{
+          "game_id":{
             "type":"string"
           }
         }
