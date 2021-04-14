@@ -770,6 +770,14 @@
             "required":false,
             "type":"string",
             "default":""
+         },
+         {
+          "name": "bracketType",
+          "in": "path",
+          "description": "bracketType",
+          "required": true,
+          "type": "string",
+          "default": ""
          }
         ],
         "responses": {
