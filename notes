@@ -11,3 +11,14 @@ https://developer.sportsengine.com/
 Collapse
 
 npx sequelize-cli model:generate --name leaderboard --attributes userId:integer,userName:string,bracketType:string,score:integer
+
+
+
+  // "development": {
+  //   "username": "dev",
+  //   "password": "qjwjnrufqsl0p3",
+  //   "database": "ncruat",
+  //   "host": "staging.maymadness7s.com",
+  //   "dialect": "mysql",
+  //   "operatorsAliases": false
+  // },

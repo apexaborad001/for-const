@@ -169,7 +169,7 @@ module.exports = {
      },
      {
         "team_id": 19,
-        "name": "Creighton19",
+        "name": "team19",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -259,7 +259,7 @@ module.exports = {
      },
      {
         "team_id": 29,
-        "name": "virginia29",
+        "name": "team29",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
