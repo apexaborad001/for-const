@@ -7,7 +7,7 @@ module.exports = {
   [
     {
         "team_id": 1,
-        "name": "virginia1",
+        "name": "team1",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -16,7 +16,7 @@ module.exports = {
      },
      {
         "team_id": 2,
-        "name": "UMBC2",
+        "name": "team2",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -25,7 +25,7 @@ module.exports = {
      },
      {
         "team_id": 3,
-        "name": "Creighton3",
+        "name": "team3",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -34,7 +34,7 @@ module.exports = {
      },
      {
         "team_id": 4,
-        "name": "Kansas State4",
+        "name": "team4",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -43,7 +43,7 @@ module.exports = {
      },
      {
         "team_id": 5,
-        "name": "virginia5",
+        "name": "team5",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -52,7 +52,7 @@ module.exports = {
      },
       {
         "team_id": 6,
-        "name": "UMBC6",
+        "name": "team6",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -61,7 +61,7 @@ module.exports = {
      },
      {
         "team_id": 7,
-        "name": "Creighton7",
+        "name": "team7",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -70,7 +70,7 @@ module.exports = {
      },
      {
         "team_id": 8,
-        "name": "Kansas State8",
+        "name": "team8",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -79,7 +79,7 @@ module.exports = {
      },
      {
         "team_id": 9,
-        "name": "virginia9",
+        "name": "team9",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -88,7 +88,7 @@ module.exports = {
      },
      {
         "team_id": 10,
-        "name": "UMBC10",
+        "name": "team10",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -97,7 +97,7 @@ module.exports = {
      },
      {
         "team_id": 11,
-        "name": "Creighton11",
+        "name": "team11",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -106,7 +106,7 @@ module.exports = {
         },
      {
         "team_id": 12,
-        "name": "Kansas State12",
+        "name": "team12",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -115,7 +115,7 @@ module.exports = {
      },
      {
         "team_id": 13,
-        "name": "virginia13",
+        "name": "team13",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -124,7 +124,7 @@ module.exports = {
      },
       {
         "team_id": 14,
-        "name": "UMBC14",
+        "name": "team15",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -133,7 +133,7 @@ module.exports = {
      },
      {
         "team_id": 15,
-        "name": "Creighton15",
+        "name": "team15",
         "gender": "male",
         "league_id": 202105,     
         "current_subseason_ids": 291621,
@@ -142,7 +142,7 @@ module.exports = {
      },
      {
         "team_id": 16,
-        "name": "Kansas State16",
+        "name": "team16",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -151,7 +151,7 @@ module.exports = {
      },
      {
         "team_id": 17,
-        "name": "virginia17",
+        "name": "team17",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -160,7 +160,7 @@ module.exports = {
      },
      {
         "team_id": 18,
-        "name": "UMBC18",
+        "name": "team18",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -178,7 +178,7 @@ module.exports = {
      },
      {
         "team_id": 20,
-        "name": "Kansas State20",
+        "name": "team20",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -187,7 +187,7 @@ module.exports = {
      },
      {
         "team_id": 21,
-        "name": "virginia21",
+        "name": "team21",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -196,7 +196,7 @@ module.exports = {
      },
       {
         "team_id": 22,
-        "name": "UMBC22",
+        "name": "team22",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -205,7 +205,7 @@ module.exports = {
      },
      {
         "team_id": 23,
-        "name": "Creighton23",
+        "name": "team23",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -214,7 +214,7 @@ module.exports = {
      },
      {
         "team_id": 24,
-        "name": "Kansas State24",
+        "name": "team24",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -223,7 +223,7 @@ module.exports = {
      },
      {
         "team_id": 25,
-        "name": "virginia25",
+        "name": "team25",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -232,7 +232,7 @@ module.exports = {
      },
      {
         "team_id": 26,
-        "name": "UMBC16",
+        "name": "team16",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -241,7 +241,7 @@ module.exports = {
      },
      {
         "team_id": 27,
-        "name": "Creighton27",
+        "name": "team27",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -250,7 +250,7 @@ module.exports = {
         },
      {
         "team_id": 28,
-        "name": "Kansas State29",
+        "name": "team28",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -259,7 +259,7 @@ module.exports = {
      },
      {
         "team_id": 29,
-        "name": "virginia30",
+        "name": "virginia29",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -268,7 +268,7 @@ module.exports = {
      },
       {
         "team_id": 30,
-        "name": "UMBC4_w",
+        "name": "team30",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -277,7 +277,7 @@ module.exports = {
      },
      {
         "team_id": 31,
-        "name": "Creighton31",
+        "name": "team31",
         "gender": "male",
         "league_id": 202105,     
         "current_subseason_ids": 291621,
@@ -286,7 +286,7 @@ module.exports = {
      },
      {
       "team_id": 32,
-      "name": "Kansas State32",
+      "name": "team32",
       "gender": "male",
       "league_id": 202105,       
       "current_subseason_ids": 291621,
@@ -295,7 +295,7 @@ module.exports = {
    },
    {
     "team_id": 33,
-    "name": "virginia33",
+    "name": "team33",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -304,7 +304,7 @@ module.exports = {
  },
  {
     "team_id": 34,
-    "name": "UMBC34",
+    "name": "team34",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -313,7 +313,7 @@ module.exports = {
  },
  {
     "team_id": 35,
-    "name": "Creighton35",
+    "name": "team35",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -322,7 +322,7 @@ module.exports = {
  },
  {
     "team_id": 36,
-    "name": "Kansas State36",
+    "name": "team36",
     "gender": "male",
     "league_id": 202105,  
     "current_subseason_ids": 291621,
@@ -331,7 +331,7 @@ module.exports = {
  },
  {
     "team_id": 37,
-    "name": "virginia37",
+    "name": "team37",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -340,7 +340,7 @@ module.exports = {
  },
   {
     "team_id": 38,
-    "name": "UMBC38",
+    "name": "team38",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -349,7 +349,7 @@ module.exports = {
  },
  {
     "team_id": 39,
-    "name": "Creighton39",
+    "name": "team39",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -358,7 +358,7 @@ module.exports = {
  },
  {
     "team_id": 40,
-    "name": "Kansas State40",
+    "name": "team40",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
@@ -367,7 +367,7 @@ module.exports = {
  },
  {
     "team_id": 41,
-    "name": "virginia40",
+    "name": "team40",
     "gender": "male",
     "league_id": 202105,  
     "current_subseason_ids": 291621,
@@ -376,7 +376,7 @@ module.exports = {
  },
  {
     "team_id": 42,
-    "name": "UMBC42",
+    "name": "team42",
     "gender": "male",
     "league_id": 27737,
     "current_subseason_ids": 291621,
@@ -385,7 +385,7 @@ module.exports = {
  },
  {
     "team_id": 43,
-    "name": "Creighton43",
+    "name": "team43",
     "gender": "male",
     "league_id": 27737,
     "current_subseason_ids": 291621,
@@ -394,7 +394,7 @@ module.exports = {
     },
  {
     "team_id": 44,
-    "name": "Kansas State44",
+    "name": "team44",
     "gender": "male",
     "league_id": 27737,
     "current_subseason_ids": 291621,
@@ -403,7 +403,7 @@ module.exports = {
  },
  {
     "team_id": 45,
-    "name": "virginia45",
+    "name": "team45",
     "gender": "male",
     "league_id": 27737,
     "current_subseason_ids": 291621,
@@ -412,7 +412,7 @@ module.exports = {
  },
   {
     "team_id": 46,
-    "name": "UMBC46",
+    "name": "team46",
     "gender": "male",
     "league_id": 27737,
     "current_subseason_ids": 291621,
@@ -421,7 +421,7 @@ module.exports = {
  },
  {
     "team_id": 47,
-    "name": "Creighton47",
+    "name": "team47",
     "gender": "male",
     "league_id": 202105,     
     "current_subseason_ids": 291621,
@@ -430,7 +430,7 @@ module.exports = {
  },
  {
     "team_id": 48,
-    "name": "Kansas State48",
+    "name": "team48",
     "gender": "male",
     "league_id": 202105,       
     "current_subseason_ids": 291621,

@@ -753,6 +753,35 @@
         }
       }
     },
+    "/manage-user-bracket/bracketDetails": {
+      "get": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "get bracket Details",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bracket found successfully"
+          },
+          "404":{
+            "description": "Bracket not found"
+          }
+        }
+      }
+    },
     "/manage-user-bracket/getById": {
       "post": {
         "tags": [
@@ -1364,7 +1393,22 @@
     "userBracketDetails":{
       "type": "object",
       "properties":{
-          "teamId":{
+          "team_1_id":{
+            "type":"string"
+          },
+          "team_2_id":{
+            "type":"string"
+          },
+          "winner_id":{
+            "type":"string"
+          },
+          "user_bracket_id":{
+            "type":"string"
+          },
+          "team_1_score":{
+            "type":"string"
+          },
+          "team_2_score":{
             "type":"string"
           },
           "gameId":{

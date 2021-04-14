@@ -34,6 +34,8 @@ routes.post("/manage-user-bracket/getUserRank",auth.isAuthenticated, userBreaket
 
 routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
+routes.get("/manage-user-bracket/bracketDetails",auth.isAuthenticated, userBreaketTeamController.getUserBracketDetails);
+
 routes.post("/leaderboard/getRoundWiseScore",auth.isAuthenticated,userBreaketTeamController.getRoundWiseScore);
 routes.post("/leaderboard/getRank",auth.isAuthenticated,userBreaketTeamController.getRank);
 routes.post("/leaderboard/updateLeaderboard",auth.isAuthenticated,userBreaketTeamController.updateLeaderboard);

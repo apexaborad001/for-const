@@ -146,10 +146,27 @@ const tieBreakerResolverFunction=async(req,userBracketId1,userBracketId2)=> {
     }
   }
 
+  async function insertUserBracketDetails(req, bracketType,userBracketId) {
+    try{
+         let sql = `select  tgs.game_id , tgs.team_1_id ,tgs.team_2_id,${userBracketId} as user_bracket_id, 
+         tgs.winner_id  from tournament_leagues tls inner join tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on 
+          tgs.bracket_id = tbs.bracket_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on 
+          tm2.team_id=tgs.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round
+           where tls.gender = "${bracketType}"`;
+        const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+        await req.models.user_breaket_team.bulkCreate(getQueryResult);
+
+        return getQueryResult
+     }catch(err){
+         console.log(err);
+     }
+ };
+
 module.exports = {
     userBracketDetails,
     liveBracketDetails,
     roundWiseScoreDetails,
     getRoundWiseDetailsInFormat,
-    tieBreakerResolverFunction
+    tieBreakerResolverFunction,
+    insertUserBracketDetails
 };
