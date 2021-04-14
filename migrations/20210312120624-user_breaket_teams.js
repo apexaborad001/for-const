@@ -11,6 +11,9 @@ module.exports = {
       user_bracket_id: {
         type: Sequelize.INTEGER
       },
+      game_id: {
+        type: Sequelize.INTEGER
+      },
       team_1_id: {
         type: Sequelize.INTEGER
       },
