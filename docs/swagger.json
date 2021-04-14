@@ -873,13 +873,6 @@
             "default":""
          },
          {
-          "name":"userBracketId",
-          "in":"formData",
-          "description":"userBracketId",
-          "type":"number",
-          "default":""
-        },
-         {
            "name":"userBracketDetails",
            "in":"body",
            "schema": {
@@ -916,7 +909,6 @@
             "type":"string",
             "default":""
          },
-         
           {
            "name":"userBracketDetails",
            "in":"body",
