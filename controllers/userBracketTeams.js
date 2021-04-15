@@ -267,8 +267,8 @@ const getBracketDetails = async (req, res) => {
 const upsertBracketDetails = async (req, res) => {
   try {
     // let userBracketId
-    const userBracketDetails = req.body.userBracketDetails;
-    let userBracketId =userBracketDetails[0].user_bracket_id;
+    const userBracketDetails = JSON.parse(req.body.userBracketDetails);
+    let userBracketId = userBracketDetails[0].user_bracket_id;
     req.models.user_breaket_team.destroy({
       where: {
         user_bracket_id: userBracketId
