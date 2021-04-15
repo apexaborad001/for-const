@@ -1,4 +1,5 @@
-const roundArray = [1, 2, 3, 4, 5, 6]
+const maleRoundArray = [1, 2, 3, 4, 5, 6]
+const femaleRoundArray =[1, 2, 3, 4]
 async function userBracketDetails(req, option, round,userId) {
     try {
         const sql = `SELECT ncrrugby.user_breaket_teams.game_id,team_id,user_bracket_id,round FROM ncrrugby.user_breaket_teams inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id INNER JOIN ncrrugby.tournament_games ON ncrrugby.user_breaket_teams.game_id=ncrrugby.tournament_games.game_id where ncrrugby.user_breaket_teams.team_id=ncrrugby.tournament_games.${option} and tournament_games.round= ${round} and user_id = ${userId}`;
@@ -33,35 +34,6 @@ const sortJSONArrayByKey = (prop) => {
 async function roundWiseScoreDetails(req, option, round, bracketName, bracketId, userId) {
 
     try {
-        // let userBracketLosserResult = await userBracketDetails(req, option, round,userId)
-        // let bracketDetailsResult = await liveBracketDetails(req, bracketName)
-
-        // const bracketRoundWiseScore = [];
-
-        // for (ele of userBracketLosserResult) {
-        //     const userTeamsBracketWinnerList = bracketDetailsResult.filter(el => el.winner_id === ele.team_id)
-        //     if (userTeamsBracketWinnerList.length > 0) {
-        //         for (ele of userTeamsBracketWinnerList) {
-        //             bracketRoundWiseScore.push({ round: ele.round, score: ele.winner_score });
-        //         }
-        //     }
-        // }
-
-        // bracketRoundWiseScore.sort(sortJSONArrayByKey("round"));
-        // let score = 0
-        // let roundWiseScore = []
-        // let preivousRound = bracketRoundWiseScore && bracketRoundWiseScore.length ? bracketRoundWiseScore[0].round : 0;
-        // for (i = 0; i < bracketRoundWiseScore.length; i++) {
-        //     const scoreEle = bracketRoundWiseScore[i]
-        //     if (preivousRound == scoreEle.round) {
-        //         score += scoreEle.score
-        //     } else {
-        //         roundWiseScore.push({ "round": preivousRound, score, user_bracket_id: bracketId })
-        //         preivousRound = scoreEle.round
-        //         score = scoreEle.score
-        //     }
-        //     if (i == (bracketRoundWiseScore.length - 1)) roundWiseScore.push({ "round": preivousRound, score, user_bracket_id: bracketId })
-        // }
         const sqlQuery = `SELECT sum(winner_score) as score,round,${bracketId} as user_bracket_id FROM tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name="${bracketName}" and winner_id IN (SELECT team_id FROM user_breaket_teams INNER JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.looser_id inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id where tournament_games.round=${round} and user_id=${userId}) group by round`
         let roundWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
         if (!(roundWiseScore && roundWiseScore.length)) roundWiseScore.push({ "round": null, score: null, user_bracket_id: bracketId })
@@ -72,12 +44,19 @@ async function roundWiseScoreDetails(req, option, round, bracketName, bracketId,
     }
 
 }
-const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId) => {
+const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender) => {
+    let genderWiseArray
     let scoreRoundFinalArray = [];
     let scoreRoundFinalObject = [];
     let lastRoundBracketName;
     let roundCounter = 0;
     let differentBracketFlag = false;
+    if(gender=="female"){
+        genderWiseArray=femaleRoundArray
+    }
+    else{
+        genderWiseArray=maleRoundArray
+    }
     for (let i = 0; i < roundWiseQueryResult.length; i++) {
         let ele = roundWiseQueryResult[i];
         let roundEle = ele;
@@ -86,8 +65,8 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId) => {
         if (!lastRoundBracketName) lastRoundBracketName = ele.name
         if (lastRoundBracketName != ele.name) {
             differentBracketFlag = true;
-            if (roundCounter < roundArray.length) {
-                for (let i = roundCounter; i < roundArray.length; i++) {
+            if (roundCounter < genderWiseArray.length) {
+                for (let i = roundCounter; i < genderWiseArray.length; i++) {
                     if (i !== ele.round) roundEle = { round: i, user_bracket_id: bracketId, score: 0 ,name:lastRoundBracketName}
                     // else roundEle = ele;
                     scoreRoundFinalArray.push(roundEle)
@@ -104,8 +83,8 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId) => {
             }
             if (!isRoundBracketThere) {
                 lastRoundBracketName=null;
-                if (roundCounter < roundArray.length) {
-                    for (let i = roundCounter; i < roundArray.length; i++) {
+                if (roundCounter < genderWiseArray.length) {
+                    for (let i = roundCounter; i < genderWiseArray.length; i++) {
                         if (i !== ele.round) roundEle = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 ,name:ele.name}
                         else roundEle = ele;
                         scoreRoundFinalArray.push(roundEle)

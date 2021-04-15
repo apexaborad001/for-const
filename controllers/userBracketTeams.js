@@ -55,22 +55,10 @@ const getRoundWiseScore = async (req, res) => {
   try {
     let userId = req.decoded.user_id;
     const bracketId = req.body.user_bracket_id;
-    const sqlQuery = `SELECT tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id order by round` 
+    const sqlQuery = `SELECT tls.gender,tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id order by round;` 
     const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
-    // const sql = `SELECT round,user_bracket_id,sum(winner_score) as score FROM user_breaket_teams left JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.winner_id  left JOIN user_breakets on user_breaket_teams.user_bracket_id= user_breakets.id where user_breakets.user_id='` + userId + `' GROUP BY round,user_id,user_bracket_id order by user_bracket_id,round;`
-    // const roundWiseQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-    // const mainBracketScore = await getRoundWiseDetailsInFormat(roundWiseQueryResult)
-    // const roundWiseScoreObject = {};
-    // roundWiseScoreObject['Main Bracket'] = mainBracketScore;
-
-    // for (const roundAndBracket of roundAndDifferentBracketJson) {
-    //   const round = roundAndBracket.round;
-    //   const bracketName = roundAndBracket.bracketName;
-    //   const bracketId = roundAndBracket.id;
-    //   let roundWiseScore = await roundWiseScoreDetails(req, "looser_id", round, bracketName, bracketId, userId);
-    //   roundWiseScoreObject[bracketName] = roundWiseScore
-    // }
-    const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult,bracketId)
+    let bracketgender=roundWiseQueryResult[0].gender
+    const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult,bracketId,bracketgender)
     logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
@@ -114,9 +102,14 @@ try{
 
 const getRank = async (req, res) => {
   try {
+    let counter=1
     const userBracketId = req.body.user_bracket_id;
     const sql = `SELECT userId,score,userName from leaderboards inner join user_breakets on user_breakets.type = leaderboards.bracketType where user_breakets.id = ${userBracketId}`
     const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+    for (ele of leaderboardData){
+      ele.rank=counter;
+      counter++;
+    }
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
       status: req.constants.SUCCESS,
@@ -135,7 +128,7 @@ const getRank = async (req, res) => {
 };
 
 const getUserRankFunction= async (req,bracketType)=>{
-  let sqlQuery = `select sum(winner_score ) as score,tls.gender,users.id as userId,users.userName ,user_bracket_id,ubs.type  from user_breaket_teams ubt inner join (select group_concat(game_id) as gameids from tournament_games where bracket_id in (1,2,3,4,5,15,16,17,18,19) and round=1) as gidt inner join (select group_concat(game_id) as gameids from tournament_games where bracket_id in (1,2,3,4,5,15,16,17,18,19) and round=2) as gidt2 inner join tournament_games tgs on (tgs.game_id=ubt.game_id and ubt.team_id= tgs.winner_id) or (ubt.team_id= tgs.winner_id and tgs.bracket_id not in (1,2,3,4,5,15,16,17,18,19,12,13,14,26,27,28) and FIND_IN_SET(ubt.game_id, gidt.gameids)) or (ubt.team_id= tgs.winner_id and tgs.bracket_id in (12,13,14,26,27,28) and FIND_IN_SET(ubt.game_id, gidt2.gameids)) inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id  inner join user_breakets ubs on ubs.id = ubt.user_bracket_id  inner join users on users.id=ubs.user_id where ubs.type=tls.gender and ubs.type="${bracketType}" group by user_bracket_id,users.id,users.userName order by score desc`;
+  let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,"${bracketType}" as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName order by score desc`;
   const userRank= await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
   return userRank;
 };
@@ -193,9 +186,9 @@ const updateLeaderboard = async (req,res) => {
 const updateLeaderboardFunction =async (req,bracketType)=>{
   try{
       // let mainBracketIds ="(1,2,3,4,5,15,16,17,18,19)";
-      let sqlQuery = `select sum(winner_score ) as score,users.id as userId,users.userName ,"${bracketType}" as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName order by score desc limit ${topLeaderboardUser}`;
+      let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,"${bracketType}" as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName order by score desc limit ${topLeaderboardUser}`;
       const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
-      sqlQuery = `delete from leaderboards`
+      sqlQuery = `delete from leaderboards where bracketType="${bracketType}"`
       await req.database.query(sqlQuery)
       await req.models.leaderboard.bulkCreate(userWiseScore);
       return userWiseScore;
@@ -274,7 +267,7 @@ const getBracketDetails = async (req, res) => {
 const upsertBracketDetails = async (req, res) => {
   try {
     // let userBracketId
-    const userBracketDetails = JSON.parse(req.body.userBracketDetails);
+    const userBracketDetails = req.body.userBracketDetails;
     let userBracketId =userBracketDetails[0].user_bracket_id;
     req.models.user_breaket_team.destroy({
       where: {
