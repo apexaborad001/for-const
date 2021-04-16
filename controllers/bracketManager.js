@@ -571,7 +571,7 @@ const updateMultiWinnerByScore = async (req, res)=>{
             return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed." });
    
         }
-        let gameDATAArr = req.body.game_data;
+        let gameDATAArr = JSON.parse(req.body.game_data);
         //console.log(gameDATAArr[0]);
         let dataByGameID = [];    
         let gameIDs = [];    
