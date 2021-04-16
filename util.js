@@ -116,7 +116,7 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender
 };
 const tieBreakerResolverFunction=async(req,userBracketId1,userBracketId2)=> {
     try {
-        const sql = `SELECT user_breaket_teams.game_id,user_bracket_id,(team1_score+team2Score) as score,(team1_score+team2_score) as actual_score,abs((team1_score+team2_score) - (team1Score+team2Score)) as diff_score FROM user_breaket_teams INNER JOIN tournament_games on tournament_games.game_id=user_breaket_teams.game_id where(team1Score and team2Score) IS NOT NULL and (user_bracket_id=${userBracketId1} or user_bracket_id=${userBracketId2}) order by diff_score limit 1`;
+        const sql = `SELECT user_breaket_teams.game_id,user_bracket_id,(team1_score+team2_Score) as score,(team1_score+team2_score) as actual_score,abs((team_1_score+team_2_score) - (team1_score+team2_score)) as diff_score FROM user_breaket_teams INNER JOIN tournament_games on tournament_games.game_id=user_breaket_teams.game_id where(team1_score and team2_score) IS NOT NULL and (user_bracket_id=${userBracketId1} or user_bracket_id=${userBracketId2}) order by diff_score limit 1`;
         const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
         return getQueryResult
     }

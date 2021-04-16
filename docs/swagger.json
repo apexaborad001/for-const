@@ -1246,6 +1246,35 @@
           }
         }
       }
+    },
+    "/updateMultiWinner": {
+      "post": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "User Bracket",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+           "name":"game_data",
+           "in":"body",
+           "schema": {
+            "type": "array",
+            "$ref": "#/definitions/updateWinner"
+          }
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Breaket upserted successfully"
+          }
+        }
+      }
     }
     
     },
@@ -1389,6 +1418,17 @@
           }
         }
       }
+    },
+    "updateWinner":{
+      "type": "object",
+      "properties":{
+          "game_id":{
+            "type":"number"
+          },
+          "team_id":{
+            "type":"number"
+          }
+     }
     },
     "userBracketDetails":{
       "type": "object",
