@@ -74,40 +74,42 @@ let upload = async(req, imageType='')=>{
 
           return new Promise((resolve, reject)=> {
             try{
-              let file_to_upload = req.files ? req.files.profile_image : '';
-              // let file_to_upload = req.files.image
-              //console.log(req.files)
-              
-              let absolute_path = path.join(__dirname, "../public/temp");
-              if (!fs.existsSync(absolute_path)) {
-                fs.mkdirSync(absolute_path, { recursive: true })
-                fs.chmodSync(absolute_path, '775', function(err) {
-                  if (err) throw err;
+              if(req.files.profile_image){
+                let file_to_upload = req.files ? req.files.profile_image : '';
+                // let file_to_upload = req.files.image
+                //console.log(req.files)
+                
+                let absolute_path = path.join(__dirname, "../public/temp");
+                if (!fs.existsSync(absolute_path)) {
+                  fs.mkdirSync(absolute_path, { recursive: true })
+                  fs.chmodSync(absolute_path, '775', function(err) {
+                    if (err) throw err;
+                  });
+                }
+                var extension = file_to_upload.name.split('.').pop();
+                // if (upload_type_allowed.includes("." + extension)) {
+                var orignal_name = (new Date()).getTime() + "." + extension;
+                //var orignal_name = file_to_upload.name;
+                file_to_upload.mv(absolute_path + '/' + orignal_name, async(err) => {
+                  if (err) {
+                    reject(err)
+                    
+                  } else {
+                    //Action as required
+                    try{
+                      let imgdir = "profile";
+                      let a = await saveToS3(req, orignal_name, imgdir);
+                      // console.log(a)
+                      // console.log(orignal_name)
+                      let imageRes =  {"imagePath":imgdir+"/"+orignal_name, "imageType":imageType, "name":orignal_name};
+                      resolve(imageRes)
+                    }catch(err){
+                      console.log(err)
+                    }
+                    
+                  }
                 });
               }
-              var extension = file_to_upload.name.split('.').pop();
-              // if (upload_type_allowed.includes("." + extension)) {
-              var orignal_name = (new Date()).getTime() + "." + extension;
-              //var orignal_name = file_to_upload.name;
-              file_to_upload.mv(absolute_path + '/' + orignal_name, async(err) => {
-                if (err) {
-                  reject(err)
-                  
-                } else {
-                  //Action as required
-                  try{
-                    let imgdir = "profile";
-                    let a = await saveToS3(req, orignal_name, imgdir);
-                    // console.log(a)
-                    // console.log(orignal_name)
-                    let imageRes =  {"imagePath":imgdir+"/"+orignal_name, "imageType":imageType, "name":orignal_name};
-                    resolve(imageRes)
-                  }catch(err){
-                    console.log(err)
-                  }
-                  
-                }
-              });
             }catch(err){
               reject(err)
             }
