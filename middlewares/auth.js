@@ -34,6 +34,7 @@ let isAuthenticated = (req, res, next) => {
 		  ]           
         });
         userInfo = JSON.parse(JSON.stringify(userInfo, null, 4));
+        
         if (!userInfo) {
           return res.status(413).send({
             status: false,
@@ -42,6 +43,7 @@ let isAuthenticated = (req, res, next) => {
           });
         } else {
          if(userInfo.status){
+            req.decoded.userName = userInfo.userName;
             req.decoded.status = userInfo.status;
           }
 
