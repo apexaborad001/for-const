@@ -8,7 +8,7 @@ const crypto = require("crypto");
 const editProfile = async(req,res) =>{  
         try{
             const user_id = req.decoded.user_id;
-            const isProfileRemoved = req.body.is_profile_removed;
+            const isProfileRemoved = req.body.isProfileRemoved;
             let is_email_updated = false;
             let userData = await req.models.user.findOne({attributes:{exclude:["password"]}, where:{id:user_id}});
             /*if(req.body.email !=userData.email){

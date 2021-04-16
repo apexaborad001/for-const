@@ -293,6 +293,13 @@
             "description": "file to upload",
             "required": false,
             "type": "file"
+          },
+          {
+            "name": "isProfileRemoved",
+            "in": "formData",
+            "description": "is profile removed flag",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {

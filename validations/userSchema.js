@@ -32,7 +32,8 @@ const editProfile = Joi.object({
     date_of_birth:Joi.date(),
     role:Joi.number(),
     phoneNumber: Joi.any(),       
-    gender: Joi.string().required()
+    gender: Joi.string().required(),
+    isProfileRemoved:Joi.any()
   }
 });
 const login = Joi.object({
