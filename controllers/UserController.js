@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const editProfile = async(req,res) =>{  
         try{
             const user_id = req.decoded.user_id;
+            const isProfileRemoved = req.body.isProfileRemoved;
             let is_email_updated = false;
             let userData = await req.models.user.findOne({attributes:{exclude:["password"]}, where:{id:user_id}});
             /*if(req.body.email !=userData.email){
@@ -30,7 +31,7 @@ const editProfile = async(req,res) =>{
             await userData.save();
             let data = userData;
             
-            if(!req.body.profile_image){
+            if(isProfileRemoved){
               await req.models.user_images.destroy({
                 where:{
                   userId:req.decoded.user_id
@@ -201,7 +202,8 @@ const signUp = async(req, res) => {
 				});
 				let data = {
 					firstName:response.firstName,
-					email:response.email
+					email:response.email,
+          admin:response.admin
 				}
 				return res.status(req.constants.HTTP_SUCCESS).send({
 					code: req.constants.HTTP_SUCCESS,
