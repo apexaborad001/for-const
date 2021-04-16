@@ -396,6 +396,7 @@ const getUserBracketDetails = async(req, res) =>{
       }
       final_data = Object.values(final_data);
       for(let i in final_data){
+              final_data[i].user_bracket_id=bracket.id;
               let brackts = [];
               for(let j in final_data[i]['brackets']){
                   brackts.push(final_data[i]['brackets'][j])
