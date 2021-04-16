@@ -51,7 +51,7 @@ routes.post('/updateMultiWinner', bracketManagerController.updateMultiWinner);
 routes.get('/manage-user/verifyEmailToken/:verifyEmailToken', userController.verifyEmailToken);
 routes.get('/manage-user/validateUserName', userController.userNameValidation);
 routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameListsByUserBracketID);
-routes.post('/updateTeamScore', bracketManagerController.updateMultiWinnerByScore);
+routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 
 
 /*routes.get("/getEnv", (req, res)=>{

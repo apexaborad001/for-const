@@ -1282,7 +1282,43 @@
           }
         }
       }
-    }
+    },
+    "/updateTeamScore": {
+      "post": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "updateTeamScore",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         },
+          {
+           "name":"game_data",
+           "in":"body",
+           "schema": {
+            "$ref": "#/definitions/updateTeamScore"
+          }
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Winner updated successfully"
+          }
+        }
+      }
+    }    
     
     },
     "definitions":{
@@ -1433,6 +1469,20 @@
             "type":"number"
           },
           "team_id":{
+            "type":"number"
+          }
+     }
+    },
+    "updateTeamScore":{
+      "type": "object",
+      "properties":{
+          "game_id":{
+            "type":"number"
+          },
+          "team1_score":{
+            "type":"number"
+          },
+          "team2_score":{
             "type":"number"
           }
      }
