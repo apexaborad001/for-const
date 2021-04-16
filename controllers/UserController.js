@@ -201,7 +201,8 @@ const signUp = async(req, res) => {
 				});
 				let data = {
 					firstName:response.firstName,
-					email:response.email
+					email:response.email,
+          admin:response.admin
 				}
 				return res.status(req.constants.HTTP_SUCCESS).send({
 					code: req.constants.HTTP_SUCCESS,
