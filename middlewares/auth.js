@@ -17,7 +17,7 @@ let isAuthenticated = (req, res, next) => {
       } else {
         req.decoded = decoded;
         let userInfo = await req.models.user.findOne({
-          attributes:["id", "userName", "status"],
+          attributes:["id", "userName", "status", "admin"],
           where: {
             id: req.decoded.user_id,
             isDeleted: {
@@ -45,6 +45,7 @@ let isAuthenticated = (req, res, next) => {
          if(userInfo.status){
             req.decoded.userName = userInfo.userName;
             req.decoded.status = userInfo.status;
+            req.decoded.admin = userInfo.admin;
           }
 
         }

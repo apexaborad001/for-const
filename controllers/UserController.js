@@ -11,7 +11,7 @@ const editProfile = async(req,res) =>{
             const isProfileRemoved = req.body.is_profile_removed;
             let is_email_updated = false;
             let userData = await req.models.user.findOne({attributes:{exclude:["password"]}, where:{id:user_id}});
-            if(req.body.email !=userData.email){
+            /*if(req.body.email !=userData.email){
               let findUser = await req.models.user.findOne({
                 attributes: ['id'],
                 where: {
@@ -23,8 +23,8 @@ const editProfile = async(req,res) =>{
               }
               is_email_updated = true;
               userData['emailVerified'] = 0;
-            }
-            let keyToUpdate = ["firstName", "lastName", "email", "countryCode", "isSubscribed", "stateId", "countryId", "date_of_birth", "role", "phoneNumber", "gender"];
+            }*/
+            let keyToUpdate = ["firstName", "lastName", "countryCode", "isSubscribed", "stateId", "countryId", "date_of_birth", "role", "phoneNumber", "gender"];
             for(let key of keyToUpdate){ 
             	if(req.body[key]) userData[key] = req.body[key]
             }
@@ -202,7 +202,8 @@ const signUp = async(req, res) => {
 				});
 				let data = {
 					firstName:response.firstName,
-					email:response.email
+					email:response.email,
+          admin:response.admin
 				}
 				return res.status(req.constants.HTTP_SUCCESS).send({
 					code: req.constants.HTTP_SUCCESS,

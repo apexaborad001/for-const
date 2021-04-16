@@ -567,8 +567,12 @@ const cupWiseDetails =  async(req, res) => {
 };
 const updateMultiWinnerByScore = async (req, res)=>{
     try{
+        if(!req.decoded.admin){
+            return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed." });
+   
+        }
         let gameDATAArr = req.body.game_data;
-        console.log(gameDATAArr[0]);
+        //console.log(gameDATAArr[0]);
         let dataByGameID = [];    
         let gameIDs = [];    
         for(let grow of gameDATAArr){
