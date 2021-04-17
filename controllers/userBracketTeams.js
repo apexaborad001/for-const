@@ -57,7 +57,18 @@ const getRoundWiseScore = async (req, res) => {
     const bracketId = req.body.user_bracket_id;
     const sqlQuery = `SELECT tls.gender,tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id order by round;` 
     const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
+    if(!roundWiseQueryResult.length){
+      logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
+      res.status(req.constants.HTTP_SUCCESS).json({
+        code: req.constants.HTTP_SUCCESS,
+        status: req.constants.SUCCESS,
+        message: req.messages.SCORE.SUCCESS,
+        data: roundWiseQueryResult,
+      })
+    }
+
     let bracketgender=roundWiseQueryResult[0].gender
+    console.log(bracketgender)
     const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult,bracketId,bracketgender)
     logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
     res.status(req.constants.HTTP_SUCCESS).json({
@@ -67,6 +78,7 @@ const getRoundWiseScore = async (req, res) => {
       data: roundWiseScoreObject,
     })
   }
+
   catch (err) {
     logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
     res.status(req.constants.HTTP_SERVER_ERROR).json({
@@ -306,6 +318,7 @@ const getUserBracketDetails = async(req, res) =>{
       let userId = req.decoded.user_id;
       const userName = req.decoded.userName;
       let bracketType = req.params.bracketType;
+      let userBracketId;
       let bracket = await req.models.user_breaket.findOne({
         where: {
           user_id: userId,
@@ -320,7 +333,11 @@ const getUserBracketDetails = async(req, res) =>{
           type:bracketType
         };
         const createBreaket = await req.models.user_breaket.create(userBracketData);
+        userBracketId=createBreaket.id;
+
         await util.insertUserBracketDetails(req,bracketType,createBreaket.id)
+      }else{
+        userBracketId=bracket.id;
       }
 
       let sql = `select ubt.user_bracket_id ,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
@@ -396,7 +413,7 @@ const getUserBracketDetails = async(req, res) =>{
       }
       final_data = Object.values(final_data);
       for(let i in final_data){
-              final_data[i].user_bracket_id=bracket.id;
+              final_data[i].user_bracket_id=userBracketId;
               let brackts = [];
               for(let j in final_data[i]['brackets']){
                   brackts.push(final_data[i]['brackets'][j])
