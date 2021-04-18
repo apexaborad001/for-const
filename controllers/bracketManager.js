@@ -4,6 +4,7 @@ const Op = Sequelize.Op;
 const helper = require('../helper/common-helper');
 const logger = require('../helper/logger-helper');
 const util =require('../util')
+const {updateLeaderboardFunction}=require('./userBracketTeams')
 
 const getGameLists = async(req, res) =>{  
         try{
@@ -567,11 +568,13 @@ const cupWiseDetails =  async(req, res) => {
 };
 const updateMultiWinnerByScore = async (req, res)=>{
     try{
-        if(!req.decoded.admin){
-            return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed." });
-   
-        }
-        let gameDATAArr = JSON.parse(req.body.game_data);
+        // if(!req.decoded.admin){
+        //     return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed." });
+        // }
+        const bracketType = req.body.bracket_type;   
+        await updateLeaderboardFunction(req,bracketType)
+
+        let gameDATAArr = req.body.game_data;
         //console.log(gameDATAArr[0]);
         let dataByGameID = [];    
         let gameIDs = [];    
