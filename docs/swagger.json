@@ -1476,6 +1476,9 @@
     "updateTeamScore":{
       "type": "object",
       "properties":{
+        "bracket_type":{
+          "type":"string"
+        },
           "game_id":{
             "type":"number"
           },
