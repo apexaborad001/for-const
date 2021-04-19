@@ -317,7 +317,7 @@ const getUserBracketDetails = async(req, res) =>{
   try{
 
       let isBracketEditable = true;
-      if(new Date() > process.env.BRACKET_SUBMIT_DEADLINE){
+      if(new Date() > new  Date(req.constants.Bracket_submission_deadline)){
         isBracketEditable = false;
       }
       let userId = req.decoded.user_id;

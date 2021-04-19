@@ -40,7 +40,8 @@ module.exports = (req) => {
       "upload_type_allowed": ['.png', '.pdf', '.jpeg', '.jpg', '.bmp'],
       "TEMP_LIVE_URL": `${req.BASE_URL}assets/temp/`,
       "COMMON_IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}`,
-      "IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}common/`
+      "IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}common/`,
+      "Bracket_submission_deadline":"04-May-2021"
        },
     messages = {
       "LOGIN": {
