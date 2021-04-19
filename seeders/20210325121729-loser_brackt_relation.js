@@ -176,7 +176,7 @@ module.exports = {
        {
         "bracket_id": 15,
         "round": 2,
-        "nextbracketid": 21,
+        "nextbracketid": 22,
         "nextround":1, 
         "point":0, 
          createdAt: new Date(),
@@ -186,9 +186,10 @@ module.exports = {
      {
       "bracket_id": 16,
       "round": 2,
-      "nextbracketid": 21,
+      "nextbracketid": 22,
       "nextround":1, 
       "point":0, 
+      "position_relation":"1:2,2:2",
        createdAt: new Date(),
        updatedAt: new Date(),
      
@@ -214,10 +215,21 @@ module.exports = {
        
     },
     {
-      "bracket_id": 17,
-      "round": 1,
+      "bracket_id": 15,
+      "round": 3,
       "nextbracketid": 17,
-      "nextround":2, 
+      "nextround":4, 
+      "point":0, 
+      "position_relation":"1:2,2:2",
+       createdAt: new Date(),
+       updatedAt: new Date(),
+     
+    },
+    {
+      "bracket_id": 16,
+      "round": 3,
+      "nextbracketid": 17,
+      "nextround":4, 
       "point":0, 
       "position_relation":"1:2,2:2",
        createdAt: new Date(),
@@ -226,9 +238,9 @@ module.exports = {
     },
     {
       "bracket_id": 20,
-      "round": 1,
+      "round": 2,
       "nextbracketid": 20,
-      "nextround":2, 
+      "nextround":3, 
       "point":0, 
       "position_relation":"1:2,2:2",
        createdAt: new Date(),
@@ -236,7 +248,27 @@ module.exports = {
      
     },
     
-
+    {
+      "bracket_id": 19,
+      "round": 1,
+      "nextbracketid": 21,
+      "nextround":1, 
+      "point":0, 
+      "position_relation":"1:2,2:2",
+       createdAt: new Date(),
+       updatedAt: new Date(),
+     
+    },
+    {
+      "bracket_id": 18,
+      "round": 1,
+      "nextbracketid": 21,
+      "nextround":1, 
+      "point":0, 
+       createdAt: new Date(),
+       updatedAt: new Date(),
+     
+    },
     {
       "bracket_id": 21,
       "round": 1,
@@ -258,9 +290,17 @@ module.exports = {
       "position_relation":"1:2,2:2",
        createdAt: new Date(),
        updatedAt: new Date(),
+    },
+    {
+      "bracket_id": 14,
+      "round": 2,
+      "nextbracketid": 14,
+      "nextround":3, 
+      "point":0, 
+      "position_relation":"1:2,2:2",
+       createdAt: new Date(),
+       updatedAt: new Date(),
     }
-
-
   ]);
   
   

@@ -181,7 +181,7 @@ module.exports = {
   "nextbracketid": 8,
   "nextround":3, 
   "point":60,
-  "position_relation":"1:2", 
+  "position_relation":"1:2,2:2", 
    createdAt: new Date(),
    updatedAt: new Date(),
  

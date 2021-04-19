@@ -303,6 +303,10 @@ const upsertBracketDetails = async (req, res) => {
 const getUserBracketDetails = async(req, res) =>{  
   try{
 
+      let isBracketEditable = true;
+      if(new Date() > process.env.BRACKET_SUBMIT_DEADLINE){
+        isBracketEditable = false;
+      }
       let userId = req.decoded.user_id;
       const userName = req.decoded.userName;
       let bracketType = req.params.bracketType;
@@ -407,7 +411,7 @@ const getUserBracketDetails = async(req, res) =>{
       return res.status(req.constants.HTTP_SUCCESS).json({ 
           status: req.constants.SUCCESS, 
           code: req.constants.HTTP_SUCCESS,
-          data: Object.values(final_data), 
+          data:  {isBracketEditable ,bracketDetails : Object.values(final_data),user_bracket_id}, 
           message: "game list fetched succesfully"
       });
   }catch(err){
