@@ -574,7 +574,7 @@ const updateMultiWinnerByScore = async (req, res)=>{
         const bracketType = req.body.bracket_type;   
         await updateLeaderboardFunction(req,bracketType)
 
-        let gameDATAArr = JOSN.parse(req.body.game_data);
+        let gameDATAArr = JSON.parse(req.body.game_data);
         //console.log(gameDATAArr[0]);
         let dataByGameID = [];    
         let gameIDs = [];    
