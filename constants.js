@@ -119,6 +119,10 @@ module.exports = (req) => {
         "NOTFOUND":"Bracket details not found",
         "UPSERT":"Bracket upserted successfully",
       },
+      "USER_BRACKET_TEAMS_INCOMPLETE":{
+        "FOUND":"Incomplete Bracket Details Found successfully",
+        "NOTFOUND":"Bracket details not found",
+      },
       "SCORE":{
         "SUCCESS":"Round Wise Score fetched successfully",
         "UNSUCCESSFULL": "Round wise score not found",

@@ -53,6 +53,10 @@ routes.get('/manage-user/validateUserName', userController.userNameValidation);
 routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameListsByUserBracketID);
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 
+routes.get('/getInCompleteBracketUsers',auth.isAuthenticated, userBreaketTeamController.getInCompleteBracketUsers);
+
+
+
 
 /*routes.get("/getEnv", (req, res)=>{
 
