@@ -569,11 +569,10 @@ const cupWiseDetails =  async(req, res) => {
 const updateMultiWinnerByScore = async (req, res)=>{
     try{
         // if(!req.decoded.admin){
-        //     return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed." });
+        //     return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed to update the score." });
         // }
+        
         const bracketType = req.body.bracket_type;   
-        await updateLeaderboardFunction(req,bracketType)
-
         let gameDATAArr = JSON.parse(req.body.game_data);
         //console.log(gameDATAArr[0]);
         let dataByGameID = [];    
@@ -602,84 +601,88 @@ const updateMultiWinnerByScore = async (req, res)=>{
             bracketData = bracketDataByGID[i];
             let loser_id = 0;
             let winner_id = 0;
-            if(dataByGameID[bracketData["game_id"]]["team1_score"]-dataByGameID[bracketData["game_id"]]["team2_score"] > 0){
-                winner_id = bracketData["team_1_id"];
-                loser_id = bracketData["team_2_id"] ;
-            }else{
-                winner_id = bracketData["team_2_id"];
-                loser_id = bracketData["team_1_id"] ;
-            }
-            
-            let nextPostion = 0 ;
-            let is_odd = true;
-            if(bracketData["position"]%2 == 0) is_odd = false;
-            let wbr_nextbracketid = bracketData["wbr_nextbracketid"];
-            let wbr_nextround = bracketData["wbr_nextround"];
-            let lbr_nextbracketid = bracketData["lbr_nextbracketid"];
-            let lbr_nextround = bracketData["lbr_nextround"];
-            if(bracketData["position_relation"]){
-                let found = bracketData["position_relation"].split(",").find(element => element.split(":")[0]==bracketData["position"]);
-                if(found){
-                    let splitData = found.split(":");
-                    nextPostion = splitData[1];
-                    if(splitData[2]) bracketData["wbr_point"] = splitData[2];
-                }
-            }
-            
-            if(!nextPostion && !is_odd){
-                    nextPostion = bracketData["position"]/2;    
-            }else if(!nextPostion) {
-                    nextPostion = (bracketData["position"]+1)/2; 
-            }
-            
-            const t = await req.database.transaction();
-            try {
-                let temaUpdate = {};
-                let temaUpdate2 = {};
-                if(is_odd){
-                    temaUpdate = {team_1_id:winner_id};
-                    temaUpdate2 = {team_1_id:loser_id};
+            if(dataByGameID[bracketData["game_id"]]["team1_score"] || dataByGameID[bracketData["game_id"]]["team2_score"]){
+                if(dataByGameID[bracketData["game_id"]]["team1_score"]-dataByGameID[bracketData["game_id"]]["team2_score"] > 0){
+                    winner_id = bracketData["team_1_id"];
+                    loser_id = bracketData["team_2_id"] ;
                 }else{
-                    temaUpdate = {team_2_id:winner_id};
-                    temaUpdate2 = {team_2_id:loser_id};
+                    winner_id = bracketData["team_2_id"];
+                    loser_id = bracketData["team_1_id"] ;
                 }
-                if(wbr_nextbracketid){
-                    const team1Updated = await req.models.tournament_game.update(temaUpdate,{
-                        where: { 
-                            bracket_id : wbr_nextbracketid, 
-                            position:nextPostion,
-                            round:wbr_nextround
+                
+                let nextPostion = 0 ;
+                let is_odd = true;
+                if(bracketData["position"]%2 == 0) is_odd = false;
+                let wbr_nextbracketid = bracketData["wbr_nextbracketid"];
+                let wbr_nextround = bracketData["wbr_nextround"];
+                let lbr_nextbracketid = bracketData["lbr_nextbracketid"];
+                let lbr_nextround = bracketData["lbr_nextround"];
+                if(bracketData["position_relation"]){
+                    let found = bracketData["position_relation"].split(",").find(element => element.split(":")[0]==bracketData["position"]);
+                    if(found){
+                        let splitData = found.split(":");
+                        nextPostion = splitData[1];
+                        if(splitData[2]) bracketData["wbr_point"] = splitData[2];
                     }
-                    }, { transaction: t });
                 }
-                if(lbr_nextbracketid){
-                    if(bracketData["lbr_position_relation"]){
-                        let found = bracketData["lbr_position_relation"].split(",").find(element => element.split(":")[0]==bracketData["position"]);
-                        if(found){
-                            nextPostion = found.split(":")[1];
+                
+                if(!nextPostion && !is_odd){
+                        nextPostion = bracketData["position"]/2;    
+                }else if(!nextPostion) {
+                        nextPostion = (bracketData["position"]+1)/2; 
+                }
+                
+                const t = await req.database.transaction();
+                try {
+                    let temaUpdate = {};
+                    let temaUpdate2 = {};
+                    if(is_odd){
+                        temaUpdate = {team_1_id:winner_id};
+                        temaUpdate2 = {team_1_id:loser_id};
+                    }else{
+                        temaUpdate = {team_2_id:winner_id};
+                        temaUpdate2 = {team_2_id:loser_id};
+                    }
+                    if(wbr_nextbracketid){
+                        const team1Updated = await req.models.tournament_game.update(temaUpdate,{
+                            where: { 
+                                bracket_id : wbr_nextbracketid, 
+                                position:nextPostion,
+                                round:wbr_nextround
                         }
+                        }, { transaction: t });
                     }
-                    const team2Updated = await req.models.tournament_game.update(temaUpdate2,{
+                    if(lbr_nextbracketid){
+                        if(bracketData["lbr_position_relation"]){
+                            let found = bracketData["lbr_position_relation"].split(",").find(element => element.split(":")[0]==bracketData["position"]);
+                            if(found){
+                                nextPostion = found.split(":")[1];
+                            }
+                        }
+                        const team2Updated = await req.models.tournament_game.update(temaUpdate2,{
+                            where: { 
+                                bracket_id : lbr_nextbracketid, 
+                                position:nextPostion,
+                                round:lbr_nextround
+                        }
+                        }, { transaction: t })
+                    }
+                    await req.models.tournament_game.update({winner_id:winner_id, looser_id:loser_id, winner_score:bracketData["wbr_point"], team1_score:dataByGameID[bracketData["game_id"]]["team1_score"], team2_score:dataByGameID[bracketData["game_id"]]["team2_score"]},{
                         where: { 
-                            bracket_id : lbr_nextbracketid, 
-                            position:nextPostion,
-                            round:lbr_nextround
+                        id:bracketData["id"]
                     }
                     }, { transaction: t })
+
+                    await t.commit();
+                    
+
+                } catch (error) { 
+                        await t.rollback();
+                        return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
+
                 }
-                await req.models.tournament_game.update({winner_id:winner_id, looser_id:loser_id, winner_score:bracketData["wbr_point"], team1_score:dataByGameID[bracketData["game_id"]]["team1_score"], team2_score:dataByGameID[bracketData["game_id"]]["team2_score"]},{
-                    where: { 
-                    id:bracketData["id"]
-                }
-                }, { transaction: t })
-
-                await t.commit();
-                
-
-            } catch (error) { 
-                    await t.rollback();
-                    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
-
+                if(bracketType)
+                await updateLeaderboardFunction(req,bracketType)
             }
           }
           return res.status(req.constants.HTTP_SUCCESS).json({ 
