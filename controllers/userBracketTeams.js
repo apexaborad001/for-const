@@ -321,6 +321,8 @@ const getUserBracketDetails = async (req, res) => {
     if (new Date() > new Date(req.constants.Bracket_submission_deadline)) {
       isBracketEditable = false;
     }
+    let isPartiallyFilled = false;
+
     let userId = req.decoded.user_id;
     const userName = req.decoded.userName;
     let bracketType = req.params.bracketType;
@@ -351,7 +353,8 @@ const getUserBracketDetails = async (req, res) => {
     let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
     let finalData = {};
     for (let row of bracketData) {
-
+      if(row.winner_id)
+      isPartiallyFilled = true
       // let league_id = row["league_id"];
       let { bracket_id, actual_winner_id, league_id, game_id, team_1_id, team_2_id, winner_id, round, position, t1_name, t1_thumbnails, t2_name, t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
       if (!finalData[league_id]) {
@@ -431,7 +434,7 @@ const getUserBracketDetails = async (req, res) => {
     return res.status(req.constants.HTTP_SUCCESS).json({
       status: req.constants.SUCCESS,
       code: req.constants.HTTP_SUCCESS,
-      data: { isBracketEditable, bracketDetails: Object.values(finalData), userBracketId },
+      data: {isPartiallyFilled,isBracketEditable, bracketDetails: Object.values(finalData), userBracketId },
       message: "game list fetched succesfully"
     });
   } catch (err) {
