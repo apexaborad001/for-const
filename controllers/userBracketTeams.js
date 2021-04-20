@@ -463,9 +463,33 @@ catch (err) {
 }
 
 const resetTournamentGames=async(req,res)=>{
-  exec("npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js")
-  exec("npx sequelize-cli db:seed --seed 20210325115904-create_games.js")
-  exec("npx sequelize-cli db:seed --seed 20210327164452-create_games.js")
+  
+  await new Promise((resolve, reject) => {
+    const migrate = exec(
+      'npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js',
+      {env: process.env},
+      err => (err ? reject(err): resolve())
+    );
+      console.log('migrate',migrate)
+     exec(
+      'npx sequelize-cli db:seed --seed 20210325115904-create_games.js',
+      {env: process.env},
+      err => (err ? reject(err): resolve())
+    );
+     exec(
+      'npx sequelize-cli db:seed --seed 20210327164452-create_games.js',
+      {env: process.env},
+      err => (err ? reject(err): resolve())
+    );
+  // Forward stdout+stderr to this process
+  // migrate.stdout.pipe(process.stdout);
+  // migrate.stderr.pipe(process.stderr);
+});
+
+  // await   exec("npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js")
+  // await exec("npx sequelize-cli db:seed --seed 20210325115904-create_games.js")
+  // await exec("npx sequelize-cli db:seed --seed 20210327164452-create_games.js")
+  
   res.status(req.constants.HTTP_SUCCESS).json({
     code: req.constants.HTTP_SUCCESS,
     status: req.constants.SUCCESS,
