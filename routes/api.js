@@ -55,6 +55,8 @@ routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.up
 
 routes.get('/getInCompleteBracketUsers',auth.isAuthenticated, userBreaketTeamController.getInCompleteBracketUsers);
 
+routes.get('/resetTournamentGames', userBreaketTeamController.resetTournamentGames);
+routes.get("/userBracketReset/:email",userBreaketTeamController.userBracketReset);
 
 
 
