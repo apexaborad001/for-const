@@ -438,6 +438,26 @@ const getUserBracketDetails = async(req, res) =>{
   }
 };
 
+const getInCompleteBracketUsers=async(req,res)=>{
+  try {
+    const sql = `select distinct ubs.type,user_bracket_id,ubs.id,ubs.user_id,users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
+    const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+    res.status(req.constants.HTTP_SUCCESS).json({
+      code: req.constants.HTTP_SUCCESS,
+      status: req.constants.SUCCESS,
+      message: req.messages.USER_BRACKET_TEAMS_INCOMPLETE.FOUND,
+      data: getQueryResult,
+    })
+}
+catch (err) {
+  logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
+    res.status(req.constants.HTTP_SERVER_ERROR).json({
+      status: req.constants.ERROR,
+      code: req.constants.HTTP_SERVER_ERROR,
+      message: req.messages.INTERNAL500 + err
+    })
+  }
+}
 
 module.exports = {
   getBracketDetails,
@@ -450,5 +470,6 @@ module.exports = {
   tieBreakerResolver,
   getUserRank,
   getUserBracketDetails,
-  updateLeaderboardFunction
+  updateLeaderboardFunction,
+  getInCompleteBracketUsers
 }

@@ -831,6 +831,33 @@
         }
       }
     },
+    "/getInCompleteBracketUsers": {
+      "get": {
+        "tags": [
+          "User Bracket"
+        ],
+        "description": "getInCompleteBracketUsers",
+        "operationId": "getInCompleteBracketUsers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Incomplete Bracket Details Found successfully"
+          }
+        }
+      }
+    },
     "/manage-user-bracket/getUserRank": {
       "post": {
         "tags": [
