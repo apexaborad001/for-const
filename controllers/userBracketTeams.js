@@ -6,8 +6,8 @@ const { exec } = require("child_process");
 
 // const userBracketTeams = require('../models/user_breakets');
 // const roundAndDifferentBracketJson = [{ id: 2, "bracketName": "Survivor Cup", round: 1 }, { id: 3, "bracketName": "Champions Cup", round: 2 }, { id: 4, "bracketName": "Challenge Cup", round: 1 }]
-const { roundWiseScoreDetails, getRoundWiseDetailsInFormat ,insertUserBracketDetails,tieBreakerResolverFunction} = require('../util')
-const util =require('../util')
+const { roundWiseScoreDetails, getRoundWiseDetailsInFormat, insertUserBracketDetails, tieBreakerResolverFunction } = require('../util')
+const util = require('../util')
 const topLeaderboardUser = 10;
 const MENSBRACKET = "male";
 const WOMENSBRACKET = "female";
@@ -19,7 +19,7 @@ const createUserBracket = async (req, res) => {
     let bracket = await req.models.user_breaket.findOne({
       where: {
         user_id: userId,
-        type:bracketType
+        type: bracketType
       }
     });
     if (bracket) {
@@ -35,10 +35,10 @@ const createUserBracket = async (req, res) => {
       let userBracketData = {
         user_id: userId,
         name: bracketName,
-        type:bracketType
+        type: bracketType
       };
       const createBreaket = await req.models.user_breaket.create(userBracketData);
-      await insertUserBracketDetails(req,bracketType,createBreaket.id)
+      await insertUserBracketDetails(req, bracketType, createBreaket.id)
       res.status(req.constants.HTTP_SUCCESS).json({
         status: req.constants.SUCCESS,
         code: req.constants.HTTP_SUCCESS,
@@ -57,9 +57,9 @@ const getRoundWiseScore = async (req, res) => {
   try {
     let userId = req.decoded.user_id;
     const bracketId = req.body.user_bracket_id;
-    const sqlQuery = `SELECT tls.gender,tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id,tls.gender,tgs.round order by round;` 
+    const sqlQuery = `SELECT tls.gender,tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id,tls.gender,tgs.round order by round;`
     const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
-    if(!roundWiseQueryResult.length){
+    if (!roundWiseQueryResult.length) {
       logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
       res.status(req.constants.HTTP_SUCCESS).json({
         code: req.constants.HTTP_SUCCESS,
@@ -69,9 +69,9 @@ const getRoundWiseScore = async (req, res) => {
       })
     }
 
-    let bracketgender=roundWiseQueryResult[0].gender
+    let bracketgender = roundWiseQueryResult[0].gender
     console.log(bracketgender)
-    const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult,bracketId,bracketgender)
+    const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender)
     logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
@@ -91,37 +91,36 @@ const getRoundWiseScore = async (req, res) => {
   }
 };
 
-const tieBreakerResolver=async(req,res)=>{
-try{
-  let userBracketId1=req.body.user_BracketId1
-  let userBracketId2=req.body.user_BracketId2
-  const tieBreakerResolverResult = await tieBreakerResolverFunction(req,userBracketId1,userBracketId2)
-  res.status(req.constants.HTTP_SUCCESS).json({
-    code: req.constants.HTTP_SUCCESS,
-    status: req.constants.SUCCESS,
-    message: req.messages.TIEBREAKER.SUCCESS,
-    data: tieBreakerResolverResult,
-  })
-}catch(err)
-{
-  logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
-  res.status(req.constants.HTTP_SERVER_ERROR).json({
-    status: req.constants.ERROR,
-    code: req.constants.HTTP_SERVER_ERROR,
-    message: req.messages.INTERNAL500 + err
-})
-}
+const tieBreakerResolver = async (req, res) => {
+  try {
+    let userBracketId1 = req.body.user_BracketId1
+    let userBracketId2 = req.body.user_BracketId2
+    const tieBreakerResolverResult = await tieBreakerResolverFunction(req, userBracketId1, userBracketId2)
+    res.status(req.constants.HTTP_SUCCESS).json({
+      code: req.constants.HTTP_SUCCESS,
+      status: req.constants.SUCCESS,
+      message: req.messages.TIEBREAKER.SUCCESS,
+      data: tieBreakerResolverResult,
+    })
+  } catch (err) {
+    logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
+    res.status(req.constants.HTTP_SERVER_ERROR).json({
+      status: req.constants.ERROR,
+      code: req.constants.HTTP_SERVER_ERROR,
+      message: req.messages.INTERNAL500 + err
+    })
+  }
 }
 
 
 const getRank = async (req, res) => {
   try {
-    let counter=1
+    let counter = 1
     const userBracketId = req.body.user_bracket_id;
     const sql = `SELECT userId,score,userName from leaderboards inner join user_breakets on user_breakets.type = leaderboards.bracketType where user_breakets.id = ${userBracketId}`
     const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-    for (ele of leaderboardData){
-      ele.rank=counter;
+    for (ele of leaderboardData) {
+      ele.rank = counter;
       counter++;
     }
     res.status(req.constants.HTTP_SUCCESS).json({
@@ -141,22 +140,22 @@ const getRank = async (req, res) => {
   }
 };
 
-const getUserRankFunction= async (req,bracketType)=>{
+const getUserRankFunction = async (req, bracketType) => {
   let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc`;
-  const userRank= await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+  const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
   return userRank;
 };
 
-const getUserRank = async (req,res) => {
+const getUserRank = async (req, res) => {
   try {
     // await updateLeaderboardFunction(req,"male")
     let index = -1;
     let userid = req.decoded.user_id;
     const bracketType = req.body.bracket_type;
-    const userRank = await getUserRankFunction(req,bracketType)
-    userRank.find((item, i)=>{
-      if(item.userId === userid){
-        index = i+1;
+    const userRank = await getUserRankFunction(req, bracketType)
+    userRank.find((item, i) => {
+      if (item.userId === userid) {
+        index = i + 1;
         return i;
       }
     })
@@ -164,7 +163,7 @@ const getUserRank = async (req,res) => {
       code: req.constants.HTTP_SUCCESS,
       status: req.constants.SUCCESS,
       message: req.messages.RANK.USERRANK,
-      data: ({Rank:index}),
+      data: ({ Rank: index }),
     })
   }
   catch (err) {
@@ -178,10 +177,10 @@ const getUserRank = async (req,res) => {
 }
 
 
-const updateLeaderboard = async (req,res) => {
+const updateLeaderboard = async (req, res) => {
   try {
-    const bracketType = req.body.bracket_type?req.body.bracket_type:MENSBRACKET;
-    const userWiseScore = await updateLeaderboardFunction(req,bracketType)
+    const bracketType = req.body.bracket_type ? req.body.bracket_type : MENSBRACKET;
+    const userWiseScore = await updateLeaderboardFunction(req, bracketType)
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
       status: req.constants.SUCCESS,
@@ -198,17 +197,17 @@ const updateLeaderboard = async (req,res) => {
     })
   }
 }
-const updateLeaderboardFunction =async (req,bracketType)=>{
-  try{
-      // let mainBracketIds ="(1,2,3,4,5,15,16,17,18,19)";
-      let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc limit ${topLeaderboardUser}`;
-      const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
-      sqlQuery = `delete from leaderboards where bracketType="${bracketType}"`
-      await req.database.query(sqlQuery)
-      await req.models.leaderboard.bulkCreate(userWiseScore);
-      return userWiseScore;
-  }catch(e){
-    console.log('e',e)
+const updateLeaderboardFunction = async (req, bracketType) => {
+  try {
+    // let mainBracketIds ="(1,2,3,4,5,15,16,17,18,19)";
+    let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc limit ${topLeaderboardUser}`;
+    const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+    sqlQuery = `delete from leaderboards where bracketType="${bracketType}"`
+    await req.database.query(sqlQuery)
+    await req.models.leaderboard.bulkCreate(userWiseScore);
+    return userWiseScore;
+  } catch (e) {
+    console.log('e', e)
   }
 
 }
@@ -289,159 +288,159 @@ const upsertBracketDetails = async (req, res) => {
         user_bracket_id: userBracketId
       }
     });
-     let userBracket = await req.models.user_breaket.findOne({
-      where:{
+    let userBracket = await req.models.user_breaket.findOne({
+      where: {
         id: userBracketId,
       }
     });
-    if(userBracket){
-    //const userBracketDetials = req.body.userBracketDetails;
-    
-    const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
-    res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
-  }else{
-    logger.log(req.messages.USER_BRACKET.UNSUCCESSFULL, req, 'user_breaket_team');
-    res.status(req.constants.HTTP_BAD_REQUEST).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_BAD_REQUEST,
-      message: req.messages.USER_BRACKET_TEAMS.INVALIDBRACKET,
-      data: null
-     })
+    if (userBracket) {
+      //const userBracketDetials = req.body.userBracketDetails;
+
+      const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
+      res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
+    } else {
+      logger.log(req.messages.USER_BRACKET.UNSUCCESSFULL, req, 'user_breaket_team');
+      res.status(req.constants.HTTP_BAD_REQUEST).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_BAD_REQUEST,
+        message: req.messages.USER_BRACKET_TEAMS.INVALIDBRACKET,
+        data: null
+      })
+    }
   }
-}
   catch (error) {
     logger.log('Upsert Bracket', req, error, 'user_breaket_team', req.decoded.user_id);
     res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
   }
 };
 
-const getUserBracketDetails = async(req, res) =>{  
-  try{
+const getUserBracketDetails = async (req, res) => {
+  try {
 
-      let isBracketEditable = true;
-      if(new Date() > new  Date(req.constants.Bracket_submission_deadline)){
-        isBracketEditable = false;
+    let isBracketEditable = true;
+    if (new Date() > new Date(req.constants.Bracket_submission_deadline)) {
+      isBracketEditable = false;
+    }
+    let userId = req.decoded.user_id;
+    const userName = req.decoded.userName;
+    let bracketType = req.params.bracketType;
+    let userBracketId;
+    let bracket = await req.models.user_breaket.findOne({
+      where: {
+        user_id: userId,
+        type: bracketType
       }
-      let userId = req.decoded.user_id;
-      const userName = req.decoded.userName;
-      let bracketType = req.params.bracketType;
-      let userBracketId;
-      let bracket = await req.models.user_breaket.findOne({
-        where: {
-          user_id: userId,
-          type:bracketType
-        }
-      });
-      if (!bracket) {
-        let bracketName = `${userName}-${bracketType}-bracket`;
-        let userBracketData = {
-          user_id: userId,
-          name: bracketName,
-          type:bracketType
-        };
-        const createBreaket = await req.models.user_breaket.create(userBracketData);
-        userBracketId=createBreaket.id;
+    });
+    if (!bracket) {
+      let bracketName = `${userName}-${bracketType}-bracket`;
+      let userBracketData = {
+        user_id: userId,
+        name: bracketName,
+        type: bracketType
+      };
+      const createBreaket = await req.models.user_breaket.create(userBracketData);
+      userBracketId = createBreaket.id;
 
-        await util.insertUserBracketDetails(req,bracketType,createBreaket.id)
-      }else{
-        userBracketId=bracket.id;
-      }
+      await util.insertUserBracketDetails(req, bracketType, createBreaket.id)
+    } else {
+      userBracketId = bracket.id;
+    }
 
-      let sql = `select ubt.user_bracket_id ,tgs.winner_id as actual_winner_id,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
+    let sql = `select ubt.user_bracket_id ,tgs.winner_id as actual_winner_id,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
       tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on  tgs.bracket_id = tbs.bracket_id left join user_breaket_teams ubt on ubt.game_id = tgs.game_id left join tournament_teams tm1 on tm1.team_id=ubt.team_1_id left join tournament_teams tm2 on tm2.team_id=ubt.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round  inner join user_breakets ubs on ubs.id=ubt.user_bracket_id where tls.gender = "${bracketType}" and ubs.user_id = ${userId};`
-      let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
-      let finalData={};
-      for(let row of bracketData){ 
+    let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+    let finalData = {};
+    for (let row of bracketData) {
 
-         // let league_id = row["league_id"];
-          let {bracket_id,actual_winner_id, league_id, game_id,team_1_id,team_2_id,winner_id,round, position, t1_name, t1_thumbnails,t2_name,t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
-          if(!finalData[league_id]) {
-              finalData[league_id] = {};
-              finalData[league_id].league_name = row["league_name"];
-              finalData[league_id]["league_team_gender"] = row["league_team_gender"];
-              finalData[league_id]["round_labels"] = row["round_labels"];
-              finalData[league_id]["brackets"] = {};
-              finalData[league_id]["brackets"][bracket_id] = {};
-              finalData[league_id]["brackets"][bracket_id]["bracket_position"] = row["bracket_position"];
-              finalData[league_id]["brackets"][bracket_id]["devision"] = row["devision"];
-              finalData[league_id]["brackets"][bracket_id]["games"] = [];
-          }else if(!finalData[league_id]["brackets"][bracket_id]){
-              finalData[league_id]["brackets"][bracket_id] = {};
-              finalData[league_id]["brackets"][bracket_id]["bracket_position"] = row["bracket_position"];
-              finalData[league_id]["brackets"][bracket_id]["devision"] = row["devision"];
-              finalData[league_id]["brackets"][bracket_id]["games"] = [];
-          }
-          let winner_nextbracketid = row["wbr_nextbracketid"];
-          let winner_nextround = row["wbr_nextround"];
-          let loser_nextbracketid = row["lbr_nextbracketid"];
-          let loser_nextround = row["lbr_nextround"];
-          let nextPostion = 0;
-          let is_odd = true;
-          let winner_team_key = "team_1_id";
-          let loser_team_key = "team_1_id";
-          if(row["position"]%2 == 0) {
-              is_odd = false;
-              winner_team_key = "team_2_id";
-              loser_team_key = "team_2_id";
-          }
-          if(row["position_relation"]){
-              let found = row["position_relation"].split(",").find(element => element.split(":")[0]==row["position"]);
-              if(found){
-              let splitData = found.split(":");
-              nextPostion = splitData[1];
-              }
-          }
+      // let league_id = row["league_id"];
+      let { bracket_id, actual_winner_id, league_id, game_id, team_1_id, team_2_id, winner_id, round, position, t1_name, t1_thumbnails, t2_name, t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
+      if (!finalData[league_id]) {
+        finalData[league_id] = {};
+        finalData[league_id].league_name = row["league_name"];
+        finalData[league_id]["league_team_gender"] = row["league_team_gender"];
+        finalData[league_id]["round_labels"] = row["round_labels"];
+        finalData[league_id]["brackets"] = {};
+        finalData[league_id]["brackets"][bracket_id] = {};
+        finalData[league_id]["brackets"][bracket_id]["bracket_position"] = row["bracket_position"];
+        finalData[league_id]["brackets"][bracket_id]["devision"] = row["devision"];
+        finalData[league_id]["brackets"][bracket_id]["games"] = [];
+      } else if (!finalData[league_id]["brackets"][bracket_id]) {
+        finalData[league_id]["brackets"][bracket_id] = {};
+        finalData[league_id]["brackets"][bracket_id]["bracket_position"] = row["bracket_position"];
+        finalData[league_id]["brackets"][bracket_id]["devision"] = row["devision"];
+        finalData[league_id]["brackets"][bracket_id]["games"] = [];
+      }
+      let winner_nextbracketid = row["wbr_nextbracketid"];
+      let winner_nextround = row["wbr_nextround"];
+      let loser_nextbracketid = row["lbr_nextbracketid"];
+      let loser_nextround = row["lbr_nextround"];
+      let nextPostion = 0;
+      let is_odd = true;
+      let winner_team_key = "team_1_id";
+      let loser_team_key = "team_1_id";
+      if (row["position"] % 2 == 0) {
+        is_odd = false;
+        winner_team_key = "team_2_id";
+        loser_team_key = "team_2_id";
+      }
+      if (row["position_relation"]) {
+        let found = row["position_relation"].split(",").find(element => element.split(":")[0] == row["position"]);
+        if (found) {
+          let splitData = found.split(":");
+          nextPostion = splitData[1];
+        }
+      }
 
-          if(!nextPostion && !is_odd){
-              nextPostion = row["position"]/2;    
-          }else if(!nextPostion) {
-              nextPostion = (row["position"]+1)/2; 
-          }
-          let loserNextPosition = nextPostion;
-          if(row["lbr_position_relation"]){
-              let found = row["lbr_position_relation"].split(",").find(element => element.split(":")[0]==row["position"]);
-              if(found){
-                  loserNextPosition = found.split(":")[1];
-              }
-          }
-          
-          let team1 = {
-              team_id:team_1_id,
-              name:t1_name,
-              thumbnails:t1_thumbnails,
-              division_teamid:division_teamid1
-          }
-          let team2 = {
-              team_id:team_2_id,
-              name:t2_name,
-              thumbnails:t2_thumbnails,
-              division_teamid:division_teamid2
-          }
-          finalData[league_id]["brackets"][bracket_id]["games"].push({game_id, bracket_id, round, position, winner_id,actual_winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score })
+      if (!nextPostion && !is_odd) {
+        nextPostion = row["position"] / 2;
+      } else if (!nextPostion) {
+        nextPostion = (row["position"] + 1) / 2;
       }
-      finalData = Object.values(finalData);
-      for(let i in finalData){
-              finalData[i].user_bracket_id=userBracketId;
-              let brackts = [];
-              for(let j in finalData[i]['brackets']){
-                  brackts.push(finalData[i]['brackets'][j])
-              }
-              finalData[i]['brackets'] = brackts;
+      let loserNextPosition = nextPostion;
+      if (row["lbr_position_relation"]) {
+        let found = row["lbr_position_relation"].split(",").find(element => element.split(":")[0] == row["position"]);
+        if (found) {
+          loserNextPosition = found.split(":")[1];
+        }
       }
-      //console.log(finalData);
-      return res.status(req.constants.HTTP_SUCCESS).json({ 
-          status: req.constants.SUCCESS, 
-          code: req.constants.HTTP_SUCCESS,
-          data:  {isBracketEditable ,bracketDetails : Object.values(finalData),userBracketId}, 
-          message: "game list fetched succesfully"
-      });
-  }catch(err){
-      console.log(err);
-     return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
+
+      let team1 = {
+        team_id: team_1_id,
+        name: t1_name,
+        thumbnails: t1_thumbnails,
+        division_teamid: division_teamid1
+      }
+      let team2 = {
+        team_id: team_2_id,
+        name: t2_name,
+        thumbnails: t2_thumbnails,
+        division_teamid: division_teamid2
+      }
+      finalData[league_id]["brackets"][bracket_id]["games"].push({ game_id, bracket_id, round, position, winner_id, actual_winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score })
+    }
+    finalData = Object.values(finalData);
+    for (let i in finalData) {
+      finalData[i].user_bracket_id = userBracketId;
+      let brackts = [];
+      for (let j in finalData[i]['brackets']) {
+        brackts.push(finalData[i]['brackets'][j])
+      }
+      finalData[i]['brackets'] = brackts;
+    }
+    //console.log(finalData);
+    return res.status(req.constants.HTTP_SUCCESS).json({
+      status: req.constants.SUCCESS,
+      code: req.constants.HTTP_SUCCESS,
+      data: { isBracketEditable, bracketDetails: Object.values(finalData), userBracketId },
+      message: "game list fetched succesfully"
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
   }
 };
 
-const getInCompleteBracketUsers=async(req,res)=>{
+const getInCompleteBracketUsers = async (req, res) => {
   try {
     const sql = `select distinct ubs.type,user_bracket_id,ubs.id,ubs.user_id,users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
     const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
@@ -451,9 +450,9 @@ const getInCompleteBracketUsers=async(req,res)=>{
       message: req.messages.USER_BRACKET_TEAMS_INCOMPLETE.FOUND,
       data: getQueryResult,
     })
-}
-catch (err) {
-  logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
+  }
+  catch (err) {
+    logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
     res.status(req.constants.HTTP_SERVER_ERROR).json({
       status: req.constants.ERROR,
       code: req.constants.HTTP_SERVER_ERROR,
@@ -462,34 +461,32 @@ catch (err) {
   }
 }
 
-const resetTournamentGames=async(req,res)=>{
-  
+const resetTournamentGames = async (req, res) => {
+
   await new Promise((resolve, reject) => {
     const migrate = exec(
       'npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js',
-      {env: process.env},
-      err => (err ? reject(err): resolve())
+      { env: process.env },
+      err => (err ? reject(err) : resolve())
     );
-      console.log('migrate',migrate)
-     exec(
+  });
+  await new Promise((resolve, reject) => {
+    exec(
       'npx sequelize-cli db:seed --seed 20210325115904-create_games.js',
-      {env: process.env},
-      err => (err ? reject(err): resolve())
+      { env: process.env },
+      err => (err ? reject(err) : resolve())
     );
-     exec(
+    exec(
       'npx sequelize-cli db:seed --seed 20210327164452-create_games.js',
-      {env: process.env},
-      err => (err ? reject(err): resolve())
+      { env: process.env },
+      err => (err ? reject(err) : resolve())
     );
-  // Forward stdout+stderr to this process
-  // migrate.stdout.pipe(process.stdout);
-  // migrate.stderr.pipe(process.stderr);
-});
+  });
 
   // await   exec("npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js")
   // await exec("npx sequelize-cli db:seed --seed 20210325115904-create_games.js")
   // await exec("npx sequelize-cli db:seed --seed 20210327164452-create_games.js")
-  
+
   res.status(req.constants.HTTP_SUCCESS).json({
     code: req.constants.HTTP_SUCCESS,
     status: req.constants.SUCCESS,
@@ -497,7 +494,7 @@ const resetTournamentGames=async(req,res)=>{
   })
 }
 
-const userBracketReset=async(req,res)=>{
+const userBracketReset = async (req, res) => {
   try {
     let email = req.params.email;
     const sql = `delete ubs FROM user_breakets ubs inner join users on ubs.user_id=users.id where users.email="${email}"`;
@@ -507,8 +504,8 @@ const userBracketReset=async(req,res)=>{
       status: req.constants.SUCCESS,
       message: "deleted",
     })
-}
-catch (err) {
+  }
+  catch (err) {
     res.status(req.constants.HTTP_SERVER_ERROR).json({
       status: req.constants.ERROR,
       code: req.constants.HTTP_SERVER_ERROR,
