@@ -4,7 +4,7 @@ const Op = Sequelize.Op;
 const logger = require('../helper/logger-helper');
 // const userBracketTeams = require('../models/user_breakets');
 // const roundAndDifferentBracketJson = [{ id: 2, "bracketName": "Survivor Cup", round: 1 }, { id: 3, "bracketName": "Champions Cup", round: 2 }, { id: 4, "bracketName": "Challenge Cup", round: 1 }]
-const { roundWiseScoreDetails, getRoundWiseDetailsInFormat } = require('../util')
+const { roundWiseScoreDetails, getRoundWiseDetailsInFormat ,insertUserBracketDetails,tieBreakerResolverFunction} = require('../util')
 const util =require('../util')
 const topLeaderboardUser = 10;
 const MENSBRACKET = "male";
@@ -36,7 +36,7 @@ const createUserBracket = async (req, res) => {
         type:bracketType
       };
       const createBreaket = await req.models.user_breaket.create(userBracketData);
-      await util.insertUserBracketDetails(req,bracketType,createBreaket.id)
+      await insertUserBracketDetails(req,bracketType,createBreaket.id)
       res.status(req.constants.HTTP_SUCCESS).json({
         status: req.constants.SUCCESS,
         code: req.constants.HTTP_SUCCESS,
@@ -93,7 +93,7 @@ const tieBreakerResolver=async(req,res)=>{
 try{
   let userBracketId1=req.body.user_BracketId1
   let userBracketId2=req.body.user_BracketId2
-  const tieBreakerResolverResult = await util.tieBreakerResolverFunction(req,userBracketId1,userBracketId2)
+  const tieBreakerResolverResult = await tieBreakerResolverFunction(req,userBracketId1,userBracketId2)
   res.status(req.constants.HTTP_SUCCESS).json({
     code: req.constants.HTTP_SUCCESS,
     status: req.constants.SUCCESS,
