@@ -57,7 +57,7 @@ const inviteFriends = async (req, res) => {
             comment = req.body.comment,
             replacements = { user: userData.firstName+" "+userData.lastName, comment: comment, url:req.BASE_URL_FRONTEND};
             for(ele of to_id){
-                helper.sendEmail(process.env.mailFrom, ele, subject, template_name, replacements);
+               await helper.sendEmail(process.env.mailFrom, ele, subject, template_name, replacements);
             }
         res.status(req.constants.HTTP_SUCCESS).json({
             code: req.constants.HTTP_SUCCESS,
@@ -84,12 +84,13 @@ const contactUs = async (req, res) => {
             template_name = template,
             message = req.body.message,
             replacements = { user: firstName+" "+lastName,  message: message, url:req.BASE_URL_FRONTEND};
-            helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+            let outData = await helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
 
         res.status(req.constants.HTTP_SUCCESS).json({
             code: req.constants.HTTP_SUCCESS,
             status: req.constants.SUCCESS,
-            message: req.messages.COMMONDATA.CONTACTUS_SUCCESS
+            message: req.messages.COMMONDATA.CONTACTUS_SUCCESS,
+            outData:outData
         })
     }
     catch (err) {
