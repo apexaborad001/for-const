@@ -858,12 +858,12 @@
         }
       }
     },
-    "/manage-user-bracket/getUserRank": {
+    "/leaderboard/getUserRank": {
       "post": {
         "tags": [
-          "User Bracket"
+          "leaderboard"
         ],
-        "description": "User Bracket",
+        "description": "get user rank",
         "produces": [
           "application/json"
         ],

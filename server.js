@@ -3,12 +3,16 @@ require('dotenv').config();
 process.env.fromId = `NCRRUGBY <${process.env.mailFrom}>`;
 process.env.BUCKET_NAME = "ncrrugbyuat";
 const compression = require('compression');
-//const xFrameOptions = require('x-frame-options');
-//const helmet = require('helmet')
 const path = require('path');
 var fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const api_routes = require("./routes/api");
+const userRoutes = require("./routes/user");
+const webpushNotificationsRoutes = require("./routes/webpushNotifications");
+const userBracketRoutes = require("./routes/userBracket");
+const leaderboardRoutes = require("./routes/leaderboard");
+const resetDatabaseRoutes = require("./routes/resetDatabase");
+
 const models = require("./models");
 const dbSwitch = require("./middlewares/databaseSwitch");
 const checkAppVersion = require("./middlewares/checkAppVersion");
@@ -47,10 +51,10 @@ app.use((req, res, next) => {
 //app.use(helmet.noSniff());
 app.use(compression());
 app.use(fileUpload());
-
+const baseUrl = '/api/v1';
 app.use('/logs', express.static("logs"));
 //app.use('/api/v1/docs', express.static("docs"));
-app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(`${baseUrl}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/assets', express.static("public"));
 app.engine('html', require('ejs').renderFile);  
 
@@ -73,7 +77,13 @@ app.use(mung.json(function transform(body, req, res, next) {
   }
 }));
 
-app.use('/api/v1', dbSwitch, api_routes);
+app.use(baseUrl, dbSwitch, api_routes);
+app.use(baseUrl, dbSwitch, resetDatabaseRoutes);
+
+app.use(`${baseUrl}/manage-user`, dbSwitch, userRoutes);
+app.use(`${baseUrl}/notifications`, dbSwitch, webpushNotificationsRoutes);
+app.use(`${baseUrl}/manage-user-bracket`, dbSwitch, userBracketRoutes);
+app.use(`${baseUrl}/leaderboard`, dbSwitch, leaderboardRoutes);
 
 app.get('/hello_world', (req,res)=>{
   res.send('Hello World');

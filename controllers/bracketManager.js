@@ -4,7 +4,7 @@ const Op = Sequelize.Op;
 const helper = require('../helper/common-helper');
 const logger = require('../helper/logger-helper');
 const util =require('../util')
-const {updateLeaderboardFunction}=require('./userBracketTeams')
+const {updateLeaderboardFunction}=require('./leaderboard')
 
 const getGameLists = async(req, res) =>{  
         try{

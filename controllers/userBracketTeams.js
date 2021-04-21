@@ -1,16 +1,10 @@
-const { indexOf, forEach } = require('lodash');
 const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
 const logger = require('../helper/logger-helper');
 const { exec } = require("child_process");
 
-// const userBracketTeams = require('../models/user_breakets');
-// const roundAndDifferentBracketJson = [{ id: 2, "bracketName": "Survivor Cup", round: 1 }, { id: 3, "bracketName": "Champions Cup", round: 2 }, { id: 4, "bracketName": "Challenge Cup", round: 1 }]
-const { roundWiseScoreDetails, getRoundWiseDetailsInFormat, insertUserBracketDetails, tieBreakerResolverFunction } = require('../util')
+const {  insertUserBracketDetails, tieBreakerResolverFunction } = require('../util')
 const util = require('../util')
-const topLeaderboardUser = 10;
-const MENSBRACKET = "male";
-const WOMENSBRACKET = "female";
+
 const createUserBracket = async (req, res) => {
   try {
     let userId = req.decoded.user_id
@@ -53,43 +47,7 @@ const createUserBracket = async (req, res) => {
   }
 };
 
-const getRoundWiseScore = async (req, res) => {
-  try {
-    let userId = req.decoded.user_id;
-    const bracketId = req.body.user_bracket_id;
-    const sqlQuery = `SELECT tls.gender,tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id,tls.gender,tgs.round order by round;`
-    const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
-    if (!roundWiseQueryResult.length) {
-      logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
-      res.status(req.constants.HTTP_SUCCESS).json({
-        code: req.constants.HTTP_SUCCESS,
-        status: req.constants.SUCCESS,
-        message: req.messages.SCORE.SUCCESS,
-        data: roundWiseQueryResult,
-      })
-    }
 
-    let bracketgender = roundWiseQueryResult[0].gender
-    console.log(bracketgender)
-    const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender)
-    logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: req.messages.SCORE.SUCCESS,
-      data: roundWiseScoreObject,
-    })
-  }
-
-  catch (err) {
-    logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-};
 
 const tieBreakerResolver = async (req, res) => {
   try {
@@ -103,7 +61,7 @@ const tieBreakerResolver = async (req, res) => {
       data: tieBreakerResolverResult,
     })
   } catch (err) {
-    logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
+    logger.log('tieBreakerResolver', req, err, 'user_breaket_team', userId);
     res.status(req.constants.HTTP_SERVER_ERROR).json({
       status: req.constants.ERROR,
       code: req.constants.HTTP_SERVER_ERROR,
@@ -113,104 +71,6 @@ const tieBreakerResolver = async (req, res) => {
 }
 
 
-const getRank = async (req, res) => {
-  try {
-    let counter = 1
-    const userBracketId = req.body.user_bracket_id;
-    const sql = `SELECT userId,score,userName from leaderboards inner join user_breakets on user_breakets.type = leaderboards.bracketType where user_breakets.id = ${userBracketId}`
-    const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-    for (ele of leaderboardData) {
-      ele.rank = counter;
-      counter++;
-    }
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: req.messages.RANK.SUCCESS,
-      data: leaderboardData,
-    })
-  }
-  catch (err) {
-    logger.log('getRank', req, err, 'user_breaket_team', 0);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-};
-
-const getUserRankFunction = async (req, bracketType) => {
-  let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc`;
-  const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
-  return userRank;
-};
-
-const getUserRank = async (req, res) => {
-  try {
-    // await updateLeaderboardFunction(req,"male")
-    let index = -1;
-    let userid = req.decoded.user_id;
-    const bracketType = req.body.bracket_type;
-    const userRank = await getUserRankFunction(req, bracketType)
-    userRank.find((item, i) => {
-      if (item.userId === userid) {
-        index = i + 1;
-        return i;
-      }
-    })
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: req.messages.RANK.USERRANK,
-      data: ({ Rank: index }),
-    })
-  }
-  catch (err) {
-    logger.log('getUserRank', req, err, 'getUserRank', userid);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-}
-
-
-const updateLeaderboard = async (req, res) => {
-  try {
-    const bracketType = req.body.bracket_type ? req.body.bracket_type : MENSBRACKET;
-    const userWiseScore = await updateLeaderboardFunction(req, bracketType)
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: req.messages.RANK.UPDATE,
-      data: userWiseScore,
-    })
-  }
-  catch (err) {
-    logger.log('updateLeaderboard', req, err, 'user_breaket_team', req.decoded.user_id);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-}
-const updateLeaderboardFunction = async (req, bracketType) => {
-  try {
-    // let mainBracketIds ="(1,2,3,4,5,15,16,17,18,19)";
-    let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc limit ${topLeaderboardUser}`;
-    const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
-    sqlQuery = `delete from leaderboards where bracketType="${bracketType}"`
-    await req.database.query(sqlQuery)
-    await req.models.leaderboard.bulkCreate(userWiseScore);
-    return userWiseScore;
-  } catch (e) {
-    console.log('e', e)
-  }
-
-}
 const getUserBracket = async (req, res) => {
   try {
     let userId = req.decoded.user_id
@@ -313,6 +173,28 @@ const upsertBracketDetails = async (req, res) => {
     res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
   }
 };
+
+const getInCompleteBracketUsers = async (req, res) => {
+  try {
+    const sql = `select distinct ubs.type,user_bracket_id,ubs.id,ubs.user_id,users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
+    const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+    res.status(req.constants.HTTP_SUCCESS).json({
+      code: req.constants.HTTP_SUCCESS,
+      status: req.constants.SUCCESS,
+      message: req.messages.USER_BRACKET_TEAMS_INCOMPLETE.FOUND,
+      data: getQueryResult,
+    })
+  }
+  catch (err) {
+    logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
+    res.status(req.constants.HTTP_SERVER_ERROR).json({
+      status: req.constants.ERROR,
+      code: req.constants.HTTP_SERVER_ERROR,
+      message: req.messages.INTERNAL500 + err
+    })
+  }
+}
+
 
 const getUserBracketDetails = async (req, res) => {
   try {
@@ -443,79 +325,6 @@ const getUserBracketDetails = async (req, res) => {
   }
 };
 
-const getInCompleteBracketUsers = async (req, res) => {
-  try {
-    const sql = `select distinct ubs.type,user_bracket_id,ubs.id,ubs.user_id,users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
-    const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: req.messages.USER_BRACKET_TEAMS_INCOMPLETE.FOUND,
-      data: getQueryResult,
-    })
-  }
-  catch (err) {
-    logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-}
-
-const resetTournamentGames = async (req, res) => {
-
-  await new Promise((resolve, reject) => {
-    const migrate = exec(
-      'npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js',
-      { env: process.env },
-      err => (err ? reject(err) : resolve())
-    );
-  });
-  await new Promise((resolve, reject) => {
-    exec(
-      'npx sequelize-cli db:seed --seed 20210325115904-create_games.js',
-      { env: process.env },
-      err => (err ? reject(err) : resolve())
-    );
-    exec(
-      'npx sequelize-cli db:seed --seed 20210327164452-create_games.js',
-      { env: process.env },
-      err => (err ? reject(err) : resolve())
-    );
-  });
-
-  // await   exec("npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js")
-  // await exec("npx sequelize-cli db:seed --seed 20210325115904-create_games.js")
-  // await exec("npx sequelize-cli db:seed --seed 20210327164452-create_games.js")
-
-  res.status(req.constants.HTTP_SUCCESS).json({
-    code: req.constants.HTTP_SUCCESS,
-    status: req.constants.SUCCESS,
-    message: "Tournament games reset successfully",
-  })
-}
-
-const userBracketReset = async (req, res) => {
-  try {
-    let email = req.params.email;
-    const sql = `delete ubs FROM user_breakets ubs inner join users on ubs.user_id=users.id where users.email="${email}"`;
-    const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.DELETE })
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: "deleted",
-    })
-  }
-  catch (err) {
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-}
 
 
 module.exports = {
@@ -523,14 +332,8 @@ module.exports = {
   getUserBracket,
   upsertBracketDetails,
   createUserBracket,
-  getRoundWiseScore,
-  getRank,
-  updateLeaderboard,
   tieBreakerResolver,
-  getUserRank,
   getUserBracketDetails,
-  updateLeaderboardFunction,
   getInCompleteBracketUsers,
-  resetTournamentGames,
-  userBracketReset
+  
 }
