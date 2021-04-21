@@ -10,8 +10,6 @@ const commonValidation = require("../validations/commonSchema");
 
 const routes = require('express').Router();
 
-
-
 routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
 
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
