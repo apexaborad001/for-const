@@ -46,14 +46,10 @@ app.use((req, res, next) => {
 });
 // 
 
-//app.use(xFrameOptions());
-//app.use(helmet());
-//app.use(helmet.noSniff());
 app.use(compression());
 app.use(fileUpload());
 const baseUrl = '/api/v1';
 app.use('/logs', express.static("logs"));
-//app.use('/api/v1/docs', express.static("docs"));
 app.use(`${baseUrl}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/assets', express.static("public"));
 app.engine('html', require('ejs').renderFile);  
