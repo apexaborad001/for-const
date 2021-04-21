@@ -56,12 +56,13 @@ let sendEmail = async(...args) => {
       }, (err, result) => {
         if (err) console.log("error in send email function",err);
         else console.log(result);
+        resolve(result)
       });
 
     } catch (err) {
       reject(err)
     } finally {
-      resolve('success!!!!!!!!!')
+      //resolve('success!!!!!!!!!')
     }
   })
 };
