@@ -454,6 +454,41 @@ const getUserBracketDetails = async (req, res) => {
   }
 };
 
+const getLatestGames = async (req, res) => {
+  try {
+    let sql = `SELECT tgs.game_id,tgs.round,tgs.position,tls.gender,tls.name as league_name,tgs.team_1_id,tgs.team_2_id,tgs.winner_id,tm1.name as t1_name,tm1.team_id as team_1_id,tgs.team1_score,tm1.thumbnails as t1_thumbnails,tm2.name as t2_name,tm2.team_id as team_2_id,tgs.team2_score,tm2.thumbnails as t2_thumbnails FROM tournament_games tgs inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on tm2.team_id=tgs.team_2_id where tgs.winner_id is not null and tgs.team1_score is not null and tgs.team2_score is not null order by tgs.updatedAt desc;`
+    let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+    let finalData = [];
+    for (let row of bracketData) {
+      let {league_name,game_id, round, position,gender,winner_id, team_1_id, team_2_id, t1_name, t1_thumbnails, t2_name, t2_thumbnails,team1_score,team2_score } = row;
+      let team1 = {
+        team_id: team_1_id,
+        name: t1_name,
+        thumbnails: t1_thumbnails,
+        score:team1_score
+      }
+      let team2 = {
+        team_id: team_2_id,
+        name: t2_name,
+        thumbnails: t2_thumbnails,
+        score:team2_score
+      }
+    finalData.push({ league_name,game_id, round, position,gender,winner_id,  team1, team2})
+    }
+    finalData = Object.values(finalData);
+    return res.status(req.constants.HTTP_SUCCESS).json({
+      status: req.constants.SUCCESS,
+      code: req.constants.HTTP_SUCCESS,
+      message: "Scores fetched succesfully",
+      data: {games:finalData},
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
+  }
+};
+
+
 const getInCompleteBracketUsers = async (req, res) => {
   try {
     const sql = `select distinct ubs.type,user_bracket_id,ubs.id,ubs.user_id,users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
@@ -543,5 +578,6 @@ module.exports = {
   updateLeaderboardFunction,
   getInCompleteBracketUsers,
   resetTournamentGames,
-  userBracketReset
+  userBracketReset,
+  getLatestGames
 }
