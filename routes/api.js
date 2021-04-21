@@ -10,14 +10,8 @@ const commonValidation = require("../validations/commonSchema");
 
 const routes = require('express').Router();
 
-routes.post("/manage-user-bracket/create",auth.isAuthenticated,userBreaketTeamController.createUserBracket);
-routes.get("/manage-user-bracket/getBracketById",auth.isAuthenticated,userBreaketTeamController.getUserBracket);
-routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeamController.getBracketDetails);
 
 
-routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
-routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
-routes.get("/manage-user-bracket/bracketDetails/:bracketType",auth.isAuthenticated, userBreaketTeamController.getUserBracketDetails);
 routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
 
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
@@ -34,12 +28,6 @@ routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameLists
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 
 routes.get('/getInCompleteBracketUsers',auth.isAuthenticated, userBreaketTeamController.getInCompleteBracketUsers);
-
-
-
-
-
-
 
 
 /*routes.get("/getEnv", (req, res)=>{
@@ -106,10 +94,6 @@ routes.get("/s3test5", async (req, res)=>{
 	  res.send({"res":err})
 	}
 })
-
-
-
-
 
 // routes.get("*", (req, res, next) => {
 //     res.send("Un-authorized access");
