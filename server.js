@@ -19,10 +19,10 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./docs/swagger.json');
 const cron=require('./cron.js')
 
-
+const cors = require('cors')
 //const cron = require("./cron");
 const app = express();
-
+app.use(cors());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, device_token, access_token,device_type, language");

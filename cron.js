@@ -26,7 +26,7 @@ let data=[
 module.exports = {
   updateGames: (time) => {
     cron.schedule(time, async() => {
-      var a=data
+      let a=data
         try {
         for(let key of a){ 
          if(today >= key.callApiAt && key.status==1){
