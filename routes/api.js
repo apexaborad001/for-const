@@ -69,7 +69,7 @@ routes.get("/userBracketReset/:email",userBreaketTeamController.userBracketReset
 res.send({"env":process.env})
 
 });
-routes.get("/getConfig", (req, res)=>{
+/*routes.get("/getConfig", (req, res)=>{
 
 			const  fs = require('fs');
 			let path =  require("path");
