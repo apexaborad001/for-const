@@ -54,12 +54,12 @@ routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameLists
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 
 
-/*routes.get("/getEnv", (req, res)=>{
+routes.get("/getEnv", (req, res)=>{
 
 res.send({"env":process.env})
 
 });
-routes.get("/getConfig", (req, res)=>{
+/*routes.get("/getConfig", (req, res)=>{
 
 			const  fs = require('fs');
 			let path =  require("path");
