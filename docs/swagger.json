@@ -797,6 +797,32 @@
         }
       }
     },
+    "/getLatestGames": {
+      "get": {
+        "tags": [
+          "Common"
+        ],
+        "description": "getLatestGames",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scores fetched succesfully"
+          }
+        }
+      }
+    },
     "/manage-user-bracket/getById": {
       "post": {
         "tags": [

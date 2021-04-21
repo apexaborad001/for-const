@@ -230,16 +230,27 @@ const getUserBracketDetails = async (req, res) => {
       userBracketId = bracket.id;
     }
 
-    let sql = `select ubt.user_bracket_id ,tgs.winner_id as actual_winner_id,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
+    let sql = `select ubt.user_bracket_id ,tgs.team_1_id as actual_team_1_id,tgs.team_2_id as actual_team_2_id,tgs.winner_id as actual_winner_id,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
       tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on  tgs.bracket_id = tbs.bracket_id left join user_breaket_teams ubt on ubt.game_id = tgs.game_id left join tournament_teams tm1 on tm1.team_id=ubt.team_1_id left join tournament_teams tm2 on tm2.team_id=ubt.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round  inner join user_breakets ubs on ubs.id=ubt.user_bracket_id where tls.gender = "${bracketType}" and ubs.user_id = ${userId};`
     let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+    let sqlTeam=`SELECT name,team_id FROM ncruat.tournament_teams;`
+    let allteamArray = await req.database.query(sqlTeam, { type: req.database.QueryTypes.SELECT });
+    let actual_team_1_name;
+    let actual_team_2_name;
     let finalData = {};
     for (let row of bracketData) {
+    
       if(row.winner_id)
       isPartiallyFilled = true
       // let league_id = row["league_id"];
-      let { bracket_id, actual_winner_id, league_id, game_id, team_1_id, team_2_id, winner_id, round, position, t1_name, t1_thumbnails, t2_name, t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
-      if (!finalData[league_id]) {
+      let { bracket_id, actual_winner_id, actual_team_1_id,actual_team_2_id,league_id, game_id, team_1_id, team_2_id, winner_id, round, position, t1_name, t1_thumbnails, t2_name, t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
+      const allteamArrayResult=allteamArray.filter(ele=>ele.team_id===actual_team_1_id);
+      
+      actual_team_1_name=allteamArrayResult && allteamArrayResult.length ? allteamArrayResult[0].name : ''
+      //console.log(allteamArrayResult[0].name)
+      const allteamArrayResult2=allteamArray.filter(ele=>ele.team_id===actual_team_2_id)
+      actual_team_2_name=allteamArrayResult2 && allteamArrayResult2.length ? allteamArrayResult2[0].name : ''
+       if (!finalData[league_id]) {
         finalData[league_id] = {};
         finalData[league_id].league_name = row["league_name"];
         finalData[league_id]["league_team_gender"] = row["league_team_gender"];
@@ -301,7 +312,7 @@ const getUserBracketDetails = async (req, res) => {
         thumbnails: t2_thumbnails,
         division_teamid: division_teamid2
       }
-      finalData[league_id]["brackets"][bracket_id]["games"].push({ game_id, bracket_id, round, position, winner_id, actual_winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score })
+      finalData[league_id]["brackets"][bracket_id]["games"].push({ game_id,actual_team_1_id,actual_team_1_name,actual_team_2_name,actual_team_2_id, bracket_id, round, position, winner_id, actual_winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score })
     }
     finalData = Object.values(finalData);
     for (let i in finalData) {
@@ -325,6 +336,42 @@ const getUserBracketDetails = async (req, res) => {
   }
 };
 
+const getLatestGames = async (req, res) => {
+  try {
+    let sql = `SELECT tgs.game_id,tgs.round,tgs.position,tls.gender,tls.name as league_name,tgs.team_1_id,tgs.team_2_id,tgs.winner_id,tm1.name as t1_name,tm1.team_id as team_1_id,tgs.team1_score,tm1.thumbnails as t1_thumbnails,tm2.name as t2_name,tm2.team_id as team_2_id,tgs.team2_score,tm2.thumbnails as t2_thumbnails FROM tournament_games tgs inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on tm2.team_id=tgs.team_2_id where tgs.winner_id is not null and tgs.team1_score is not null and tgs.team2_score is not null order by tgs.updatedAt desc;`
+    let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+    let finalData = [];
+    for (let row of bracketData) {
+      let {league_name,game_id, round, position,gender,winner_id, team_1_id, team_2_id, t1_name, t1_thumbnails, t2_name, t2_thumbnails,team1_score,team2_score } = row;
+      let team1 = {
+        team_id: team_1_id,
+        name: t1_name,
+        thumbnails: t1_thumbnails,
+        score:team1_score
+      }
+      let team2 = {
+        team_id: team_2_id,
+        name: t2_name,
+        thumbnails: t2_thumbnails,
+        score:team2_score
+      }
+    finalData.push({ league_name,game_id, round, position,gender,winner_id,  team1, team2})
+    }
+    finalData = Object.values(finalData);
+    return res.status(req.constants.HTTP_SUCCESS).json({
+      status: req.constants.SUCCESS,
+      code: req.constants.HTTP_SUCCESS,
+      message: "Scores fetched succesfully",
+      data: {games:finalData},
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
+  }
+};
+
+
+
 
 
 module.exports = {
@@ -335,5 +382,5 @@ module.exports = {
   tieBreakerResolver,
   getUserBracketDetails,
   getInCompleteBracketUsers,
-  
+  getLatestGames
 }

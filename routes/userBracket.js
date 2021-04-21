@@ -11,6 +11,6 @@ routes.post("/getById",auth.isAuthenticated, userBreaketTeamController.getBracke
 
 routes.post("/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
 routes.get("/bracketDetails/:bracketType",auth.isAuthenticated, userBreaketTeamController.getUserBracketDetails);
-// routes.post("/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
+
 
 module.exports = routes;

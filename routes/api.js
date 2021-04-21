@@ -10,6 +10,15 @@ const commonValidation = require("../validations/commonSchema");
 
 const routes = require('express').Router();
 
+routes.post("/manage-user-bracket/create",auth.isAuthenticated,userBreaketTeamController.createUserBracket);
+routes.get("/manage-user-bracket/getBracketById",auth.isAuthenticated,userBreaketTeamController.getUserBracket);
+routes.post("/manage-user-bracket/getById",auth.isAuthenticated, userBreaketTeamController.getBracketDetails);
+
+
+routes.post("/manage-user-bracket/insertDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
+routes.post("/manage-user-bracket/updateDetails",auth.isAuthenticated, userBreaketTeamController.upsertBracketDetails);
+routes.get("/manage-user-bracket/bracketDetails/:bracketType",auth.isAuthenticated, userBreaketTeamController.getUserBracketDetails);
+routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
 
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
 routes.get("/commonData", commondataController.getCommonData);
@@ -30,12 +39,15 @@ routes.get('/getInCompleteBracketUsers',auth.isAuthenticated, userBreaketTeamCon
 
 
 
+
+
+
 /*routes.get("/getEnv", (req, res)=>{
 
 res.send({"env":process.env})
 
 });
-routes.get("/getConfig", (req, res)=>{
+/*routes.get("/getConfig", (req, res)=>{
 
 			const  fs = require('fs');
 			let path =  require("path");
