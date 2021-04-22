@@ -118,6 +118,7 @@ module.exports = (req) => {
         "FOUND":"Bracket Details Found successfully",
         "NOTFOUND":"Bracket details not found",
         "UPSERT":"Bracket upserted successfully",
+        "FETCH":"Bracket data fetched successfully"
       },
       "USER_BRACKET_TEAMS_INCOMPLETE":{
         "FOUND":"Incomplete Bracket Details Found successfully",
@@ -141,6 +142,10 @@ module.exports = (req) => {
       },
       "TIEBREAKER":{
         "SUCCESS":"Winner fetched successfully",
+      },
+      "GAME":{
+        "SUCCESS":"Scores fetched succesfully",
+        "BLANK":"No data found",
       }
 
     }
