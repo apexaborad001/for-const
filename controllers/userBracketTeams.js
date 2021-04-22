@@ -203,8 +203,8 @@ const getUserBracketDetails = async (req, res) => {
     if (new Date() > new Date(req.constants.Bracket_submission_deadline)) {
       isBracketEditable = false;
     }
-    let isPartiallyFilled = false;
-
+    let isPartiallyFilledBracket = {"male":false, "female":false};
+    let isPartiallyFilled=false;
     let userId = req.decoded.user_id;
     const userName = req.decoded.userName;
     let bracketType = req.params.bracketType;
@@ -231,8 +231,14 @@ const getUserBracketDetails = async (req, res) => {
     }
 
     let sql = `select ubt.user_bracket_id ,tgs.team_1_id as actual_team_1_id,tgs.team_2_id as actual_team_2_id,tgs.winner_id as actual_winner_id,tls.league_id, tls.name as league_name, tls.gender as league_team_gender, tbs.bracket_id, tbs.bracket_position, tbs.devision, tbs.round_labels,ubt.game_id, ubt.team_1_id,ubt.team_2_id,ubt.winner_id, tgs.round,tgs.position, tm1.name as t1_name, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tm2.thumbnails as t2_thumbnails, tm2.division_teamid as division_teamid2, tm1.division_teamid as division_teamid1, lbr.position_relation as lbr_position_relation, wbr.position_relation, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, lbr.nextbracketid as lbr_nextbracketid, lbr.nextround as lbr_nextround, tgs.team1_score, tgs.team2_score from tournament_leagues tls inner join 
-      tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on  tgs.bracket_id = tbs.bracket_id left join user_breaket_teams ubt on ubt.game_id = tgs.game_id left join tournament_teams tm1 on tm1.team_id=ubt.team_1_id left join tournament_teams tm2 on tm2.team_id=ubt.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round  inner join user_breakets ubs on ubs.id=ubt.user_bracket_id where tls.gender = "${bracketType}" and ubs.user_id = ${userId};`
-    let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+      tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on  tgs.bracket_id = tbs.bracket_id left join user_breaket_teams ubt on ubt.game_id = tgs.game_id left join tournament_teams tm1 on tm1.team_id=ubt.team_1_id left join tournament_teams tm2 on tm2.team_id=ubt.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round  inner join user_breakets ubs on ubs.id=ubt.user_bracket_id where ubs.user_id = ${userId};`
+    let AllBracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+    let bracketData =AllBracketData.filter(ele=>ele.league_team_gender === bracketType)
+    let otherbracketType = bracketType==="male"?"female":"male";
+    let otherBracketData = AllBracketData.filter(ele=>ele.league_team_gender=== otherbracketType)
+    if(otherBracketData && otherBracketData.length)isPartiallyFilledBracket[otherbracketType] = true;
+    isPartiallyFilledBracket[bracketType]=true;
+
     let sqlTeam=`SELECT name,team_id FROM ncruat.tournament_teams;`
     let allteamArray = await req.database.query(sqlTeam, { type: req.database.QueryTypes.SELECT });
     let actual_team_1_name;
@@ -327,7 +333,7 @@ const getUserBracketDetails = async (req, res) => {
     return res.status(req.constants.HTTP_SUCCESS).json({
       status: req.constants.SUCCESS,
       code: req.constants.HTTP_SUCCESS,
-      data: {isPartiallyFilled,isBracketEditable, bracketDetails: Object.values(finalData), userBracketId },
+      data: {isPartiallyFilledBracket,isBracketEditable, bracketDetails: Object.values(finalData), userBracketId },
       message: "game list fetched succesfully"
     });
   } catch (err) {
