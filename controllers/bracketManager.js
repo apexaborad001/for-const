@@ -8,6 +8,8 @@ const {updateLeaderboardFunction}=require('./leaderboard')
 
 const getGameLists = async(req, res) =>{  
         try{
+            let currentScoreRound = 0;
+            let currentScoreRoundFlag=true;
            // const user_id = req.decoded.user_id;
             const gender = req.query.gender || "male";
             const league_id = req.query.league_id  || "";
@@ -24,10 +26,20 @@ const getGameLists = async(req, res) =>{
             let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
             let final_data={};
             for(let row of bracketData){ 
+                
                // let league_id = row["league_id"];
                 let {bracket_id, league_id, game_id,team_1_id,team_2_id,winner_id,round, position, t1_name, t1_thumbnails,t2_name,t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
+                if(currentScoreRoundFlag && !(row.team2_score || row.team1_score)){
+                    currentScoreRound=row.round ;
+                    currentScoreRoundFlag=false;
+                    if(final_data[league_id])final_data[league_id]['current_score_round'] =currentScoreRound;
+                    
+                }
                 if(!final_data[league_id]) {
+                    currentScoreRoundFlag = true;
+                    currentScoreRound =0;
                     final_data[league_id] = {};
+                    // final_data['current_score_round']=currentScoreRound
                     final_data[league_id].league_name = row["league_name"];
                     final_data[league_id]["league_team_gender"] = row["league_team_gender"];
                     final_data[league_id]["round_labels"] = row["round_labels"];
@@ -36,6 +48,7 @@ const getGameLists = async(req, res) =>{
                     final_data[league_id]["brackets"][bracket_id]["bracket_position"] = row["bracket_position"];
                     final_data[league_id]["brackets"][bracket_id]["devision"] = row["devision"];
                     final_data[league_id]["brackets"][bracket_id]["games"] = [];
+                    
                 }else if(!final_data[league_id]["brackets"][bracket_id]){
                     final_data[league_id]["brackets"][bracket_id] = {};
                     final_data[league_id]["brackets"][bracket_id]["bracket_position"] = row["bracket_position"];
