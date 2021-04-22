@@ -1,5 +1,6 @@
+const { exec } = require("child_process");
 const resetTournamentGames = async (req, res) => {
-
+  try{
     await new Promise((resolve, reject) => {
       const migrate = exec(
         'npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js',
@@ -19,11 +20,9 @@ const resetTournamentGames = async (req, res) => {
         err => (err ? reject(err) : resolve())
       );
     });
-  
-    // await   exec("npx sequelize-cli db:seed:undo --seed 20210325115904-create_games.js")
-    // await exec("npx sequelize-cli db:seed --seed 20210325115904-create_games.js")
-    // await exec("npx sequelize-cli db:seed --seed 20210327164452-create_games.js")
-  
+  }catch(e){
+    console.log('e',e)
+  }
     res.status(req.constants.HTTP_SUCCESS).json({
       code: req.constants.HTTP_SUCCESS,
       status: req.constants.SUCCESS,
