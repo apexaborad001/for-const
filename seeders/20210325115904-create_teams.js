@@ -7,7 +7,7 @@ module.exports = {
   [
     {
         "team_id": 1,
-        "name": "team1",
+        "name": "Army West Point",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -16,7 +16,7 @@ module.exports = {
      },
      {
         "team_id": 2,
-        "name": "team2",
+        "name": "Notre Dame College",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -25,7 +25,7 @@ module.exports = {
      },
      {
         "team_id": 3,
-        "name": "team3",
+        "name": "Clemson University",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -34,7 +34,7 @@ module.exports = {
      },
      {
         "team_id": 4,
-        "name": "team4",
+        "name": "Wheeling University",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -43,7 +43,7 @@ module.exports = {
      },
      {
         "team_id": 5,
-        "name": "team5",
+        "name": "University of Iowa",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -52,7 +52,7 @@ module.exports = {
      },
       {
         "team_id": 6,
-        "name": "team6",
+        "name": "Christendom College",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -61,7 +61,7 @@ module.exports = {
      },
      {
         "team_id": 7,
-        "name": "team7",
+        "name": "Tulane University",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -70,7 +70,7 @@ module.exports = {
      },
      {
         "team_id": 8,
-        "name": "team8",
+        "name": "College of St. Scholastica",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -79,7 +79,7 @@ module.exports = {
      },
      {
         "team_id": 9,
-        "name": "team9",
+        "name": "Life University",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -88,7 +88,7 @@ module.exports = {
      },
      {
         "team_id": 10,
-        "name": "team10",
+        "name": "Dartmouth College",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -97,7 +97,7 @@ module.exports = {
      },
      {
         "team_id": 11,
-        "name": "team11",
+        "name": "Queens University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -106,7 +106,7 @@ module.exports = {
         },
      {
         "team_id": 12,
-        "name": "team12",
+        "name": "Iowa State University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -115,7 +115,7 @@ module.exports = {
      },
      {
         "team_id": 13,
-        "name": "team13",
+        "name": "James Madison University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -124,7 +124,7 @@ module.exports = {
      },
       {
         "team_id": 14,
-        "name": "team15",
+        "name": "Denver University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -133,7 +133,7 @@ module.exports = {
      },
      {
         "team_id": 15,
-        "name": "team15",
+        "name": "New Mexico Tech",
         "gender": "male",
         "league_id": 202105,     
         "current_subseason_ids": 291621,
@@ -142,7 +142,7 @@ module.exports = {
      },
      {
         "team_id": 16,
-        "name": "team16",
+        "name": "Central College",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -151,7 +151,7 @@ module.exports = {
      },
      {
         "team_id": 17,
-        "name": "team17",
+        "name": "Lindenwood University",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -160,7 +160,7 @@ module.exports = {
      },
      {
         "team_id": 18,
-        "name": "team18",
+        "name": "American International College",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -169,7 +169,7 @@ module.exports = {
      },
      {
         "team_id": 19,
-        "name": "team19",
+        "name": "Virginia Tech",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -178,7 +178,7 @@ module.exports = {
      },
      {
         "team_id": 20,
-        "name": "team20",
+        "name": "Spring Hill College",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -187,7 +187,7 @@ module.exports = {
      },
      {
         "team_id": 21,
-        "name": "team21",
+        "name": "Marian University",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -196,7 +196,7 @@ module.exports = {
      },
       {
         "team_id": 22,
-        "name": "team22",
+        "name": "Loyola University-Maryland",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -205,7 +205,7 @@ module.exports = {
      },
      {
         "team_id": 23,
-        "name": "team23",
+        "name": "Franciscan University",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -214,7 +214,7 @@ module.exports = {
      },
      {
         "team_id": 24,
-        "name": "team24",
+        "name": "Taylor University",
         "gender": "male",
         "league_id": 202105,       
         "current_subseason_ids": 291621,
@@ -223,7 +223,7 @@ module.exports = {
      },
      {
         "team_id": 25,
-        "name": "team25",
+        "name": "Davenport University",
         "gender": "male",
         "league_id": 202105,  
         "current_subseason_ids": 291621,
@@ -232,7 +232,7 @@ module.exports = {
      },
      {
         "team_id": 26,
-        "name": "team16",
+        "name": "Mount St. Mary’s University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -241,7 +241,7 @@ module.exports = {
      },
      {
         "team_id": 27,
-        "name": "team27",
+        "name": "Western Michigan University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -250,7 +250,7 @@ module.exports = {
         },
      {
         "team_id": 28,
-        "name": "team28",
+        "name": "Furman University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -259,7 +259,7 @@ module.exports = {
      },
      {
         "team_id": 29,
-        "name": "team29",
+        "name": "McKendree University",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -268,7 +268,7 @@ module.exports = {
      },
       {
         "team_id": 30,
-        "name": "team30",
+        "name": "Nazareth College",
         "gender": "male",
         "league_id": 27737,
         "current_subseason_ids": 291621,
@@ -277,7 +277,7 @@ module.exports = {
      },
      {
         "team_id": 31,
-        "name": "team31",
+        "name": "Salve Regina University",
         "gender": "male",
         "league_id": 202105,     
         "current_subseason_ids": 291621,
@@ -286,7 +286,7 @@ module.exports = {
      },
      {
       "team_id": 32,
-      "name": "team32",
+      "name": "Lander University",
       "gender": "male",
       "league_id": 202105,       
       "current_subseason_ids": 291621,
@@ -296,7 +296,7 @@ module.exports = {
    {
     "team_id": 33,
     "name": "team33",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -305,7 +305,7 @@ module.exports = {
  {
     "team_id": 34,
     "name": "team34",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -314,7 +314,7 @@ module.exports = {
  {
     "team_id": 35,
     "name": "team35",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -323,7 +323,7 @@ module.exports = {
  {
     "team_id": 36,
     "name": "team36",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,  
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -332,7 +332,7 @@ module.exports = {
  {
     "team_id": 37,
     "name": "team37",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -341,7 +341,7 @@ module.exports = {
   {
     "team_id": 38,
     "name": "team38",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -350,7 +350,7 @@ module.exports = {
  {
     "team_id": 39,
     "name": "team39",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -359,7 +359,7 @@ module.exports = {
  {
     "team_id": 40,
     "name": "team40",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -368,7 +368,7 @@ module.exports = {
  {
     "team_id": 41,
     "name": "team40",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,  
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -377,7 +377,7 @@ module.exports = {
  {
     "team_id": 42,
     "name": "team42",
-    "gender": "male",
+    "gender": "female",
     "league_id": 27737,
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -386,7 +386,7 @@ module.exports = {
  {
     "team_id": 43,
     "name": "team43",
-    "gender": "male",
+    "gender": "female",
     "league_id": 27737,
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -395,7 +395,7 @@ module.exports = {
  {
     "team_id": 44,
     "name": "team44",
-    "gender": "male",
+    "gender": "female",
     "league_id": 27737,
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -404,7 +404,7 @@ module.exports = {
  {
     "team_id": 45,
     "name": "team45",
-    "gender": "male",
+    "gender": "female",
     "league_id": 27737,
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -413,7 +413,7 @@ module.exports = {
   {
     "team_id": 46,
     "name": "team46",
-    "gender": "male",
+    "gender": "female",
     "league_id": 27737,
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -422,7 +422,7 @@ module.exports = {
  {
     "team_id": 47,
     "name": "team47",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,     
     "current_subseason_ids": 291621,
      createdAt: new Date(),
@@ -431,7 +431,7 @@ module.exports = {
  {
     "team_id": 48,
     "name": "team48",
-    "gender": "male",
+    "gender": "female",
     "league_id": 202105,       
     "current_subseason_ids": 291621,
      createdAt: new Date(),

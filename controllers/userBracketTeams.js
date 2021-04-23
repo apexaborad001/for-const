@@ -364,6 +364,11 @@ const getLatestGames = async (req, res) => {
         thumbnails: t2_thumbnails,
         score:team2_score
       }
+      if(gender == "male"){
+        gender = "mens";
+      }else{
+        gender = "womens";
+      }
       games.push({ league_name,game_id, round, position,gender,winner_id,  team1, team2})
     }
     let responseMessage ;
