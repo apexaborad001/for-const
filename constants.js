@@ -70,7 +70,7 @@ module.exports = (req) => {
       "FORGOT_PASSWORD": {
         "SUCCESS": "Password updated successfully",
         "FAILURE": "Invalid Username/Password",
-        "FOLLOW_EMAIL":"Password Reset link has been sent to your registered Email ID"
+        "FOLLOW_EMAIL":"Please check the E-mail sent to your registered Email ID"
       },
       "RESET_TOKEN": {
         "VERIFIED": "Reset token verified",
@@ -93,11 +93,11 @@ module.exports = (req) => {
         "CREATED": "Device token created successfully.",
       },
       "MAIL_SUBJECT":{
-		    "PASSWORD_RESET":"NcrRugby | Forgot Password",
-		    "WELCOME_MAIL":"NcrRugby | Welcome Aboard",
-        "INVITEFRIEND":"NcrRugby Invitation| May Madness 7s Rugby",
-        "CONTACTUS":"NcrRugby | Contact Us",
-        "ACTIVATE_MAIL":"Activate Your Account | NcrRugby"
+		    "PASSWORD_RESET":"National Collegiate Rugby | Password RESET",
+		    "WELCOME_MAIL":"National Collegiate Rugby | Welcome Aboard",
+        "INVITEFRIEND":"National Collegiate Rugby Invitation| May Madness 7s Rugby",
+        "CONTACTUS":"National Collegiate Rugby | Contact Us",
+        "ACTIVATE_MAIL":"Activate Your Account | National Collegiate Rugby"
       },
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",

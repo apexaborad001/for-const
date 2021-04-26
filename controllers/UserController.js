@@ -492,7 +492,7 @@ const verifyEmailToken = async(req,res) =>{
               id:tokenExists.id
             }
           });
-          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "Account verified successfully" })
+          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "Your account has been successfully Verified" })
         }else{
         return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Your email verification link has expired." })
         }
