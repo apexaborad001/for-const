@@ -10,5 +10,8 @@ routes.post("/getRoundWiseScore",auth.isAuthenticated,leaderboardController.getR
 routes.post("/getRank",auth.isAuthenticated,leaderboardController.getRank);
 routes.post("/updateLeaderboard",auth.isAuthenticated,leaderboardController.updateLeaderboard);
 routes.post("/getUserRank",auth.isAuthenticated, leaderboardController.getUserRank);
+routes.get("/getUserScore",auth.isAuthenticated, leaderboardController.getUserScore);
+
+
 
 module.exports = routes;

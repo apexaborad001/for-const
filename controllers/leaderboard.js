@@ -133,6 +133,47 @@ const getUserRank = async (req, res) => {
     }
   
   }
+  
+  const getUserScore = async (req, res) => {
+    try {
+      let userId = req.decoded.user_id;
+      const sqlQuery = `SELECT sum(tgs.winner_score) as score, ubs.type as gemder FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id  and ubt.winner_id=tgs.winner_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id where ubs.user_id=${userId} group by ubs.type order by ubs.type;`
+      const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
+      let result = {"mens":0, "womens":0};
+      if (!roundWiseQueryResult.length) {
+        res.status(req.constants.HTTP_SUCCESS).json({
+          code: req.constants.HTTP_SUCCESS,
+          status: req.constants.SUCCESS,
+          message: req.messages.SCORE.SUCCESS,
+          data: result,
+        })
+      }
+      for(let score of roundWiseQueryResult){
+        if(score["gemder"] == "male"){
+          result["mens"] = score["score"];
+        }else{
+          result["mens"] = score["score"];
+        }
+      }
+      res.status(req.constants.HTTP_SUCCESS).json({
+        code: req.constants.HTTP_SUCCESS,
+        status: req.constants.SUCCESS,
+        message: req.messages.SCORE.SUCCESS,
+        data: result,
+      })
+    }
+  
+    catch (err) {
+      //logger.log('getRoundWiseScore', req, err, 'user_breaket_team', userId);
+      res.status(req.constants.HTTP_SERVER_ERROR).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_SERVER_ERROR,
+        message: req.messages.INTERNAL500 + err
+      })
+    }
+  };
+  
+
 
   module.exports = {
     getRoundWiseScore,
@@ -140,4 +181,5 @@ const getUserRank = async (req, res) => {
     updateLeaderboard,
     getUserRank,
     updateLeaderboardFunction,
+    getUserScore
   }
