@@ -24,7 +24,7 @@ const editProfile = async(req,res) =>{
               is_email_updated = true;
               userData['emailVerified'] = 0;
             }*/
-            let keyToUpdate = ["firstName", "lastName", "countryCode", "isSubscribed", "stateId", "countryId", "date_of_birth", "role", "phoneNumber", "gender"];
+            let keyToUpdate = ["firstName", "lastName", "isSubscribed", "stateId", "countryId", "date_of_birth", "role", "phoneNumber", "gender"];
             for(let key of keyToUpdate){ 
             	if(req.body[key]) userData[key] = req.body[key]
             }
@@ -112,7 +112,6 @@ const signUp = async(req, res) => {
             lastName: req.body.lastName,
             userName: req.body.userName,
             phoneNumber: req.body.phoneNumber,
-            countryCode: req.body.countryCode,
             gender: req.body.gender,
             role: req.body.role,
             stateId: req.body.stateId,
