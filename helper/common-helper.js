@@ -31,7 +31,7 @@ let sendEmail = async(...args) => {
       }
 
       let content = {
-        from: `NcrRugby <${process.env.MAIL_FROM}>`, // sender address
+        from: `National Collegiate Rugby <${process.env.MAIL_FROM}>`, // sender address
         to: args[1], // list of receivers
         subject: args[2],
       }
