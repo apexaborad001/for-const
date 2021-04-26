@@ -4,12 +4,15 @@ const topLeaderboardUser = 10;
 const getUserRank = async (req, res) => {
     try {
       let index = -1;
+      let score = [];
       let userid = req.decoded.user_id;
       const bracketType = req.body.bracket_type;
       const userRank = await getUserRankFunction(req, bracketType)
       userRank.find((item, i) => {
         if (item.userId === userid) {
           index = i + 1;
+          score = item;
+          
           return i;
         }
       })
@@ -17,7 +20,7 @@ const getUserRank = async (req, res) => {
         code: req.constants.HTTP_SUCCESS,
         status: req.constants.SUCCESS,
         message: req.messages.RANK.USERRANK,
-        data: ({ Rank: index }),
+        data: ({ Rank: index, score }),
       })
     }
     catch (err) {
@@ -95,7 +98,7 @@ const getUserRank = async (req, res) => {
   
   
   const getUserRankFunction = async (req, bracketType) => {
-    let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc`;
+    let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id order by score desc`;
     const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
     return userRank;
   };
