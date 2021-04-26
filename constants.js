@@ -70,7 +70,7 @@ module.exports = (req) => {
       "FORGOT_PASSWORD": {
         "SUCCESS": "Password updated successfully",
         "FAILURE": "Invalid Username/Password",
-        "FOLLOW_EMAIL":"Please check the E-mail sent to your registered Email ID"
+        "FOLLOW_EMAIL":"Password Reset link has been sent to your registered Email ID"
       },
       "RESET_TOKEN": {
         "VERIFIED": "Reset token verified",
