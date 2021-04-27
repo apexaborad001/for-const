@@ -614,6 +614,9 @@ const updateMultiWinnerByScore = async (req, res)=>{
             bracketData = bracketDataByGID[i];
             let loser_id = 0;
             let winner_id = 0;
+            if(dataByGameID[bracketData["game_id"]]["team1_score"] == bracketData['team1_score'] && dataByGameID[bracketData["game_id"]]["team2_score"] == bracketData['team2_score']){
+            	continue;
+            }
             if(dataByGameID[bracketData["game_id"]]["team1_score"] || dataByGameID[bracketData["game_id"]]["team2_score"]){
                 if(dataByGameID[bracketData["game_id"]]["team1_score"]-dataByGameID[bracketData["game_id"]]["team2_score"] > 0){
                     winner_id = bracketData["team_1_id"];
