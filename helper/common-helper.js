@@ -33,6 +33,7 @@ let sendEmail = async(...args) => {
       let content = {
         from: `National Collegiate Rugby <${process.env.MAIL_FROM}>`, // sender address
         to: args[1], // list of receivers
+        cc:args[7],
         subject: args[2],
       }
 

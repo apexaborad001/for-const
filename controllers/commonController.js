@@ -76,14 +76,14 @@ const inviteFriends = async (req, res) => {
 
 const contactUs = async (req, res) => {
     try { 
-          let to_id = process.env.SUPPORT_MAIL,
+          let to_id = "mm7brackets@ncr.rugby",
             subject = req.messages.MAIL_SUBJECT.CONTACTUS,
             firstName = req.body.firstName,
             lastName = req.body.lastName || "",
             message = req.body.message,
             email = req.body.email,
             replacements = { user: firstName+" "+lastName,  message: message, url:req.BASE_URL_FRONTEND, firstName, lastName, email};
-            helper.sendEmail(process.env.mailFrom, to_id, subject, "contactUs2.html", replacements);
+            helper.sendEmail(process.env.mailFrom, to_id, subject, "contactUs2.html", replacements,"","", "sagar@mobikasa.com");
             helper.sendEmail(process.env.mailFrom, email, subject, "contactUs1.html", replacements);
         res.status(req.constants.HTTP_SUCCESS).json({
             code: req.constants.HTTP_SUCCESS,
