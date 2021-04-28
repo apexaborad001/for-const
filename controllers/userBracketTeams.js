@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize');
 const logger = require('../helper/logger-helper');
 const { exec } = require("child_process");
-
+const helper = require('../helper/common-helper');
+const path = require("path");
+const fs = require("fs");
 const {  insertUserBracketDetails, tieBreakerResolverFunction } = require('../util')
 const util = require('../util')
 
@@ -245,11 +247,15 @@ const getUserBracketDetails = async (req, res) => {
     let actual_team_1_name;
     let actual_team_2_name;
     let finalData = {};
-    let loser_ids = [];
+    let loser_ids = {};
     for (let row of bracketData) {
       
       if(row.actual_looser_id){
-      	loser_ids.push(row.actual_looser_id);
+        if(!loser_ids[row.league_name]){
+             loser_ids[row.league_name] = [row.actual_looser_id];
+        }else{
+       	     loser_ids[row.league_name].push(row.actual_looser_id);
+        }      	
       }
       
       if(row.winner_id)
@@ -392,6 +398,167 @@ const getLatestGames = async (req, res) => {
   }
 };
 
+const sendScore = async (req, res) => {
+  try {
+    let sql = `SELECT tgs.game_id, tgs.bracket_id, tgs.winner_id, tm1.name as t1_name, tgs.team1_score, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tgs.team2_score, tm2.thumbnails as t2_thumbnails, tls.name as league_name, tls.gender as gender FROM tournament_games tgs inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on tm2.team_id=tgs.team_2_id where tgs.winner_id is not null and tgs.team1_score is not null and tgs.team2_score is not null order by tgs.bracket_id;`
+    let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+    let games = {};
+    for (let row of bracketData) {
+      let {league_name, game_id, winner_id, t1_name, t1_thumbnails, t2_name, t2_thumbnails, team1_score,team2_score, gender} = row;
+      if(games[league_name]){
+         games[league_name].push({t1_name, t2_name, team1_score, team2_score})
+      }else{
+      	games[league_name] = [{t1_name, t2_name, team1_score, team2_score}];
+      }
+    }
+    let scorep = ` <p
+                                  style="
+                                    text-align: right;
+                                    font-family: MaisonNeue;
+                                    font-size: 12px;
+                                    font-weight: normal;
+                                    display: inline-block;
+                                    width: 14%;
+                                    float: right;
+                                    margin: 0;
+                                    font-stretch: normal;
+                                    opacity: 0.5;
+                                    font-style: normal;
+                                    padding: 8px 5px;
+                                    line-height: normal;
+                                    letter-spacing: normal;
+                                    text-align: right;
+                                    color: #525252;
+                                  "
+                                >`;
+   let teamp = ` <p
+                                  style="
+                                    font-family: MaisonNeue;
+                                    font-size: 12px;
+                                    margin: 0;
+                                    font-weight: normal;
+                                    font-stretch: normal;
+                                    font-style: normal;
+                                    padding: 5px;
+                                    display: inline-block;
+                                    line-height: normal;
+                                    width: 50%;
+                                    letter-spacing: normal;
+                                    color: #333333;
+                                  "
+                                >`;    
+   
+    let strData = "";
+    for(let key in games){
+    	strData += `<table>
+                  <tr>
+                    <td align="center">
+                      <p
+                        style="
+                          font-family: Montserrat;
+                          font-size: 16px;
+                          margin: 0;
+                          font-weight: 500;
+                          font-stretch: normal;
+                          font-style: normal;
+                          line-height: normal;
+                          letter-spacing: 0.33px;
+                          color: #0a2f6a;
+                          margin-bottom: 5px;
+                          margin-top: 10px;
+                        "
+                      >
+                       `+key+`
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+                             
+                `;
+           let startstr = `<table>
+                  <tbody>
+                    <tr class="tabletdrow" style="width: 100%">
+                         ` ;
+            let endStr = `</tr></tbody></table>` 
+           let teamList =  games[key];   
+           let gct = 0;
+           for(let rowd of teamList){
+               if(gct == 0){
+                  strData +=startstr;
+               }
+               gct = gct+1;
+               strData +=`<td style="width: 20%" align="center">
+                        <table style="width: 100%;box-shadow: 0 3px 16px -4px rgba(0, 0, 0, 0.12);padding: 3px;">
+                          <tbody>
+                            <tr style=" background-color: rgba(156, 0, 0, 0.15);height: 32px;">
+                              <td>
+                               
+                                `+teamp+`
+                                  `+rowd["t1_name"]+`
+                                </p>
+                                 `+scorep+`
+                                  54
+                                </p>
+                              </td>
+                            </tr>
+                            <tr style="background-color: #dafad9; height: 32px">
+                              <td>
+                               
+                               `+teamp+`
+                                   `+rowd["t2_name"]+`
+                                </p>
+                                `+scorep+`
+                                  56
+                                </p>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>` 
+               if(gct == 4){
+                  strData +=endStr;
+                  gct = 0
+               } 
+               
+              
+           }
+           	
+    }
+    
+    
+    
+       let template = "Score.html";
+       let template2 = "scoretosend.html";
+       let template_path = path.join(__dirname, "../", "templates/")
+       let html = fs.readFileSync(template_path + template, "utf8");
+       html = html.replace("women_cup_score", strData, html);
+       fs.writeFileSync(template_path + template2, html);
+
+      
+    
+
+          let subject = req.messages.MAIL_SUBJECT.INVITEFRIEND,
+            template_name = template2,
+            comment = req.body.comment,
+            replacements = { women_cup_score: strData, url:req.BASE_URL_FRONTEND};
+            helper.sendEmail(process.env.mailFrom, "surendramaurya@mobikasa.com", subject, template_name, replacements);
+            
+    
+    
+    
+    return res.status(req.constants.HTTP_SUCCESS).json({
+      status: req.constants.SUCCESS,
+      code: req.constants.HTTP_SUCCESS,
+      message: "Wel",
+      data: games,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
+  }
+};
+
+
 
 
 
@@ -404,5 +571,6 @@ module.exports = {
   tieBreakerResolver,
   getUserBracketDetails,
   getInCompleteBracketUsers,
-  getLatestGames
+  getLatestGames,
+  sendScore
 }

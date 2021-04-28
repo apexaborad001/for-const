@@ -133,7 +133,7 @@ module.exports = (req) => {
         "SUCCESS":"Data fetched successfully",
         "UNSUCCESSFULL": "Failed to fetched data",
         "CONTACTUS_SUCCESS":"Thank you for contacting us. We will get back to you as soon as possible",
-        "INVITE_SUCCESS":"Your invitation is sent successfully"
+        "INVITE_SUCCESS":"Your invitation has been sent."
       },
       "RANK":{
         "SUCCESS":"Rank Data fetched successfully",
