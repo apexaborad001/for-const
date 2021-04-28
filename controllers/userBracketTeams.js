@@ -249,12 +249,14 @@ const getUserBracketDetails = async (req, res) => {
     let finalData = {};
     let loser_ids = {};
     for (let row of bracketData) {
+      let tem_le_name = row.league_name.replace(" ","_");
+      tem_le_name = tem_le_name.replace("'s","");
       
       if(row.actual_looser_id){
-        if(!loser_ids[row.league_name]){
-             loser_ids[row.league_name] = [row.actual_looser_id];
+        if(!loser_ids[tem_le_name]){
+             loser_ids[tem_le_name] = [row.actual_looser_id];
         }else{
-       	     loser_ids[row.league_name].push(row.actual_looser_id);
+       	     loser_ids[tem_le_name].push(row.actual_looser_id);
         }      	
       }
       
