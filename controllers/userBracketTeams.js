@@ -257,7 +257,11 @@ const getUserBracketDetails = async (req, res) => {
              loser_ids[tem_le_name] = [row.actual_looser_id];
         }else{
        	     loser_ids[tem_le_name].push(row.actual_looser_id);
-        }      	
+        }
+        
+        if(row.actual_winner_id != row.winner_id){
+           loser_ids[tem_le_name].push(row.winner_id);
+        }        	
       }
       
       if(row.winner_id)
