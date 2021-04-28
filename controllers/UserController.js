@@ -149,7 +149,7 @@ const signUp = async(req, res) => {
 	    return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.SIGNUP.SUCCESS});  
     }               
     } catch (error) {
-      logger.log('Create Admin', req, error, 'user', 0);
+      logger.log('Sign UP', req, error, 'user', 0);
       res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
     }
   };
@@ -342,10 +342,19 @@ const forgotPassword = async(req, res) => {
 try {
   let userName = req.body.userName;
   let email = userName;
-  let userInfoQuery = `SELECT id,email, firstName from users where userName =  '${userName}' or email =  '${email}'`
+  let userInfoQuery = `SELECT id,email, firstName, reset_password_expires from users where userName =  '${userName}' or email =  '${email}'`
+   
   let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
   if (userInfo.length > 0) {
       userInfo = userInfo[0];
+      let expiresIn = userInfo.reset_password_expires,
+      currTime = (new Date()).getTime(),
+      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) / 60);
+      //console.log(timeDiff);
+      if(timeDiff <= 1){
+      	return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.FORGOT_PASSWORD.FOLLOW_EMAIL });
+      }
+      //console.log(timeDiff,"wwwwwwwwwwwwwww");
       let token = "";
       if(userName){
         token = userName + userInfo.id;
@@ -381,10 +390,10 @@ try {
   let resetToken = req.params.token,
     userInfo = await req.models.user.findOne({ where: { resetPasswordToken: resetToken } });
   if (userInfo != null) {
-    let expTime = 86400000, // 1 Day
+    let expTime = 1440, // 1 Day
       expiresIn = userInfo.resetPasswordExpires,
       currTime = (new Date()).getTime(),
-      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) % 60);
+      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) / 60);
     if (timeDiff > expTime) {
       res.status(401).send({
         status: false,
@@ -409,10 +418,10 @@ try {
     password = req.body.password,
     userInfo = await req.models.user.findOne({ where: { resetPasswordToken: resetToken } });
   if (userInfo != null) {
-    let expTime = 86400000, // 1 Day
+    let expTime = 1440, // 1 Day
       expiresIn = userInfo.resetPasswordExpires,
       currTime = (new Date()).getTime(),
-      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) % 60);
+      timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) / 60);
     if (timeDiff > expTime) {
       return res.status(req.constants.HTTP_NOT_EXISTS).send({
         status: false,
@@ -496,6 +505,7 @@ const verifyEmailToken = async(req,res) =>{
         return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Your email verification link has expired." })
         }
     } catch (err) {
+      logger.log('verifyEmailToken', req, error, 'user', 0);
       return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, code: req.constants.HTTP_SERVER_ERROR, message: req.messages.INTERNAL500 + err })
     }
   }
@@ -514,6 +524,57 @@ const userNameValidation = async(req,res) =>{
     }
   }
   
+  
+  
+  const TestUserCreattion = async(req, res) => {   
+    try {    
+      let date = new Date();
+      for(let i = 18000; i < 100000; i++){
+      let userData = {
+      firstName:"user"+i,
+      lastName:"last",
+      userName:"user"+i,
+      password: "$2a$10$DIGUM31FXT6qApfEOB558O.ZoF5L88oSMoQyNbHzAPQxh0Fi0onTu",
+      email_verified:1,
+      role: 3,
+      admin:0,
+      status:1,
+      createdAt: date,
+      updatedAt: date      
+    };
+        
+    let newUserData = await req.models.user.create(userData);
+    let user_id = newUserData.id;
+    let bracketName = `${newUserData.userName}-male-bracket`; 
+    let userBracketData = {
+		user_id: user_id,
+		name: bracketName,
+		type: "male"
+     };
+      const createBreaket = await req.models.user_breaket.create(userBracketData);
+      await insertUserBracketDetails(req, "male", createBreaket.id)
+      }
+      return res.send({"status":"done"})         
+    } catch (error) {
+      logger.log('Create Admin', req, error, 'user', 0);
+      res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
+    }
+  };
+  const insertUserBracketDetails =  async function insertUserBracketDetails(req, bracketType,userBracketId) {
+    try{
+         let sql = `select  tgs.game_id , tgs.team_1_id ,tgs.team_2_id,${userBracketId} as user_bracket_id
+        from tournament_leagues tls inner join tournament_breakets tbs on tls.current_subseason_id = tbs.subseason_id inner join tournament_games tgs on 
+          tgs.bracket_id = tbs.bracket_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on 
+          tm2.team_id=tgs.team_2_id left join winner_brackt_relation wbr on wbr.bracket_id =tgs.bracket_id and wbr.round = tgs.round left join loser_brackt_relation lbr on lbr.bracket_id =tgs.bracket_id and lbr.round = tgs.round
+           where tls.gender = "${bracketType}"`;
+        const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+        await req.models.user_breaket_team.bulkCreate(getQueryResult);
+
+        return getQueryResult
+     }catch(err){
+         console.log(err);
+     }
+ };
 module.exports = {
   login,
   signUp, 
@@ -525,5 +586,6 @@ module.exports = {
   resetPassword,
   changePassword,
   verifyEmailToken,
-  userNameValidation
+  userNameValidation,
+  TestUserCreattion
 };
