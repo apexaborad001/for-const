@@ -95,7 +95,7 @@ module.exports = (req) => {
       "MAIL_SUBJECT":{
 		    "PASSWORD_RESET":"National Collegiate Rugby | Password RESET",
 		    "WELCOME_MAIL":"National Collegiate Rugby | Welcome Aboard",
-        "INVITEFRIEND":"National Collegiate Rugby Invitation| May Madness 7s Rugby",
+        "INVITEFRIEND":"Join the May Madness Bracket Challenge",
         "CONTACTUS":"National Collegiate Rugby | Contact Us",
         "ACTIVATE_MAIL":"Activate Your Account | National Collegiate Rugby"
       },
