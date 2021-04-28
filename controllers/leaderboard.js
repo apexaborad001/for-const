@@ -6,7 +6,22 @@ const getUserRank = async (req, res) => {
       let index = -1;
       let score = [];
       let userid = req.decoded.user_id;
-      const bracketType = req.body.bracket_type;
+      const UserData      = await getUserBracketGender(req, req.decoded.user_id);
+      let mensRank = {"score":0, "rank":"-1"};
+      let weMensRank = {"score":0, "rank":"-1"};
+      if(UserData.length > 0){
+      	for(let row of UserData){
+		if(row["type"] == "male"){
+			mensRank = await getUserRankFunctionNew(req, "male", req.decoded.user_id);
+		}else{
+                   weMensRank = await getUserRankFunctionNew(req, "female", req.decoded.user_id);
+                }
+	}
+      }
+
+      
+      
+      /*const bracketType = req.body.bracket_type;
       const userRank = await getUserRankFunction(req, bracketType)
       userRank.find((item, i) => {
         if (item.userId === userid) {
@@ -15,12 +30,12 @@ const getUserRank = async (req, res) => {
           
           return i;
         }
-      })
+      })*/
       res.status(req.constants.HTTP_SUCCESS).json({
         code: req.constants.HTTP_SUCCESS,
         status: req.constants.SUCCESS,
         message: req.messages.RANK.USERRANK,
-        data: ({ Rank: index, score }),
+        data: ({ mensRank, "womensRank":weMensRank }),
       })
     }
     catch (err) {
@@ -102,6 +117,18 @@ const getUserRank = async (req, res) => {
     const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
     return userRank;
   };
+   const getUserRankFunctionNew = async (req, bracketType, userID) => {
+    let sqlQuery = `select * from (select sum(tgs.winner_score ) as score,users.id as userId,users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id) as t where t.userId = ${userID} ;`;
+    const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+    return userRank;
+  };
+  
+  const getUserBracketGender = async (req, userID) => {
+    let sqlQuery = `select type from user_breakets where user_id = ${userID};`;
+    const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+    return userRank;
+  };
+  
   const updateLeaderboard = async (req, res) => {
     try {
       const bracketType = req.body.bracket_type;
@@ -122,6 +149,7 @@ const getUserRank = async (req, res) => {
       })
     }
   }
+  
   const updateLeaderboardFunction = async (req, bracketType) => {
     try {
       // let mainBracketIds ="(1,2,3,4,5,15,16,17,18,19)";
