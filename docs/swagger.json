@@ -1025,6 +1025,51 @@
         }
       }
     },
+    "/leaderboard/getUserBrackets": {
+      "get": {
+        "tags": [
+          "leaderboard"
+        ],
+        "description": "Scores",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name":"access_token",
+            "in":"header",
+            "description":"access_token",
+            "required":false,
+            "type":"string",
+            "default":""
+         }
+        ],
+        "responses": {
+          "200": {
+            "description": "Round wise score found"
+          }
+        }
+      }
+    },
+    "/leaderboard/getTopRanks": {
+      "get": {
+        "tags": [
+          "leaderboard"
+        ],
+        "description": "Scores",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+         
+        ],
+        "responses": {
+          "200": {
+            "description": "Round wise score found"
+          }
+        }
+      }
+    },
     "/leaderboard/updateLeaderboard": {
       "post": {
         "tags": [

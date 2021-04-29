@@ -5,7 +5,7 @@ const commonHelper = require("../helper/common-helper");
 const commondataController = require("../controllers/commonController");
 const bracketManagerController = require("../controllers/bracketManager.js");
 const userBreaketTeamController = require("../controllers/userBracketTeams");
-
+const UserController = require("../controllers/UserController");
 const commonValidation = require("../validations/commonSchema");
 
 const routes = require('express').Router();
@@ -27,6 +27,9 @@ routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.up
 
 routes.get('/getInCompleteBracketUsers',auth.isAuthenticated, userBreaketTeamController.getInCompleteBracketUsers);
 
+routes.get('/sendScore', userBreaketTeamController.sendScore);
+
+routes.get('/TestUserCreattion', UserController.TestUserCreattion);
 
 /*routes.get("/getEnv", (req, res)=>{
 

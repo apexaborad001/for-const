@@ -11,6 +11,10 @@ routes.post("/getRank",auth.isAuthenticated,leaderboardController.getRank);
 routes.post("/updateLeaderboard",auth.isAuthenticated,leaderboardController.updateLeaderboard);
 routes.post("/getUserRank",auth.isAuthenticated, leaderboardController.getUserRank);
 routes.get("/getUserScore",auth.isAuthenticated, leaderboardController.getUserScore);
+routes.get("/getUserBrackets", auth.isAuthenticated, leaderboardController.getUserBrackets);
+routes.get("/getTopRanks", leaderboardController.getTopRanks);
+
+
 
 
 

@@ -47,11 +47,34 @@ const getUserRank = async (req, res) => {
       })
     }
   }
+  const getUserBrackets = async (req, res) => {
+    try {
+      let userid = req.decoded.user_id;
+      let sqlQuery = `select type as gender, id as user_bracket_id from user_breakets where user_id = ${userid};`;
+       const userBrackets = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+    
+       res.status(req.constants.HTTP_SUCCESS).json({
+        code: req.constants.HTTP_SUCCESS,
+        status: req.constants.SUCCESS,
+        message: "date fetched",
+        data: ({ userBrackets}),
+      })
+    }
+    catch (err) {
+      logger.log('getUserBrackets', req, err, 'getUserBrackets', req.decoded.user_id);
+      res.status(req.constants.HTTP_SERVER_ERROR).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_SERVER_ERROR,
+        message: req.messages.INTERNAL500 + err
+      })
+    }
+  }
+  
   const getRank = async (req, res) => {
     try {
       let counter = 1
       const userBracketId = req.body.user_bracket_id;
-      const sql = `SELECT userId,score,userName from leaderboards inner join user_breakets on user_breakets.type = leaderboards.bracketType where user_breakets.id = ${userBracketId}`
+      const sql = `SELECT userId, score, userName from leaderboards inner join user_breakets on user_breakets.type = leaderboards.bracketType where user_breakets.id = ${userBracketId}`
       const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       for (ele of leaderboardData) {
         ele.rank = counter;
@@ -90,14 +113,19 @@ const getUserRank = async (req, res) => {
       }
   
       let bracketgender = roundWiseQueryResult[0].gender
-      console.log(bracketgender)
-      const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender)
-      logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
+      //console.log(bracketgender)
+      const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender);
+      const sql = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketgender}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
+      const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+      
+      let userRankData = await getUserRankFunctionNew(req, bracketgender, req.decoded.user_id);
+      
+      //logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
       res.status(req.constants.HTTP_SUCCESS).json({
         code: req.constants.HTTP_SUCCESS,
         status: req.constants.SUCCESS,
         message: req.messages.SCORE.SUCCESS,
-        data: roundWiseScoreObject,
+        data: {roundWiseScoreObject, leaderboardData, userRankData}
       })
     }
   
@@ -204,7 +232,33 @@ const getUserRank = async (req, res) => {
     }
   };
   
+  const getTopRanks = async (req, res) => {
+    try {
+       const sql = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "male" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
+       const maleRanks = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+      
+       const sql2 = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "female" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
+      const femaleRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
+      
+       res.status(req.constants.HTTP_SUCCESS).json({
+        code: req.constants.HTTP_SUCCESS,
+        status: req.constants.SUCCESS,
+        message: req.messages.SCORE.SUCCESS,
+        data: {maleRanks, femaleRank}
+      })
+    }
+  
+    catch (err) {
+      logger.log('getTopRanks', req, err, 'getTopRanks', userId);
+      res.status(req.constants.HTTP_SERVER_ERROR).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_SERVER_ERROR,
+        message: req.messages.INTERNAL500 + err
+      })
+    }
+  };
 
+   
 
   module.exports = {
     getRoundWiseScore,
@@ -212,5 +266,7 @@ const getUserRank = async (req, res) => {
     updateLeaderboard,
     getUserRank,
     updateLeaderboardFunction,
-    getUserScore
+    getUserScore,
+    getUserBrackets,
+    getTopRanks
   }
