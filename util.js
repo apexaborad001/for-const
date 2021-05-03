@@ -47,72 +47,34 @@ async function roundWiseScoreDetails(req, option, round, bracketName, bracketId,
 const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender) => {
     let genderWiseArray
     let scoreRoundFinalArray = [];
-    let scoreRoundFinalObject = [];
+    let scoreRoundFinalObject = {};
     let lastRoundBracketName;
     let roundCounter = 0;
     let differentBracketFlag = false;
     if(gender=="female"){
-        genderWiseArray=femaleRoundArray
+           genderWiseArray =  {"Women_League": {1:{"score":0, "title":"1st ROUND"}, 2:{"score":0, "title":"QUARTERFINALS"}, 3:{"score":0, "title":"SEMI FINALS"}, 4:{"score":0, "title":"CHAMPIONSHIP"}}, "Survivor_Cup":{1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"CHAMPIONSHIP"}}, "Champions_Cup":{1:{"score":0, "title":"SEMI FINALS"}, 2:{"score":0, "title":"CHAMPIONSHIP"}}, "Challenge_Cup":{ 1:{"score":0, "title":"SEMI FINALS"}, 2:{"score":0, "title":"CHAMPIONSHIP"}}};
     }
     else{
-        genderWiseArray=maleRoundArray
+        genderWiseArray = {"Men_League": {1:{"score":0, "title":"1st ROUND"}, 2:{"score":0, "title":"2nd ROUND"}, 3:{"score":0, "title":"QUARTERFINALS"}, 4:{"score":0, "title":"SEMI FINALS"}, 5:{"score":0, "title":"CHAMPIONSHIP"}}, "Survivor_Cup":{1:{"score":0, "title":"2nd ROUND"}, 2:{"score":0, "title":"QUARTERFINALS"}, 3:{"score":0, "title":"SEMI FINALS"}, 4:{"score":0, "title":"CHAMPIONSHIP"}}, "Champions_Cup":{1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"CHAMPIONSHIP"}}, "Challenge_Cup":{ 1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"CHAMPIONSHIP"}}};
     }
-    for (let i = 0; i < roundWiseQueryResult.length; i++) {
-        let ele = roundWiseQueryResult[i];
-        let roundEle = ele;
-        differentBracketFlag = false;
-        roundCounter++;
-        if (!lastRoundBracketName) lastRoundBracketName = ele.name
-        if (lastRoundBracketName != ele.name) {
-            differentBracketFlag = true;
-            if (roundCounter < genderWiseArray.length) {
-                for (let i = roundCounter; i < genderWiseArray.length; i++) {
-                    if (i !== ele.round) roundEle = { round: i, user_bracket_id: bracketId, score: 0 ,name:lastRoundBracketName}
-                    // else roundEle = ele;
-                    scoreRoundFinalArray.push(roundEle)
-                }
-            }
-            roundCounter = 1;
-        }
-        roundEle = ele;
-        if (!(ele.round && ele.score) || (i === (roundWiseQueryResult.length - 1))) {
-            let isRoundBracketThere = 0;
-            if (!(ele.round && ele.score)) {
-                const isRoundAlreadyPresent = roundWiseQueryResult.filter(el => el.user_bracket_id === ele.user_bracket_id && el.round && el.score)
-                if (isRoundAlreadyPresent && isRoundAlreadyPresent.length) isRoundBracketThere = true
-            }
-            if (!isRoundBracketThere) {
-                lastRoundBracketName=null;
-                if (roundCounter < genderWiseArray.length) {
-                    for (let i = roundCounter; i < genderWiseArray.length; i++) {
-                        if (i !== ele.round) roundEle = { round: i, user_bracket_id: ele.user_bracket_id, score: 0 ,name:ele.name}
-                        else roundEle = ele;
-                        scoreRoundFinalArray.push(roundEle)
-                    }
-                }
-                roundCounter = 0;
-            }
-            else {
-                --roundCounter;
-            }
-        }
-        else {
-            if (differentBracketFlag) roundCounter=1;
-            if (roundCounter !== ele.round) {
-                if (roundCounter < ele.round) {
-                    let roundEle1;
-                    for (let i = roundCounter; i < ele.round; i++) {
-                        roundCounter++;
-                        roundEle1 = { round: i, user_bracket_id: ele.user_bracket_id, score: 0,name:ele.name }
-                        scoreRoundFinalArray.push(roundEle1)
-                    }
-                }
-            }
-            scoreRoundFinalArray.push(roundEle)
-            lastRoundBracketName = ele.name;
-        }
+    try{
+	    for (let i = 0; i < roundWiseQueryResult.length; i++) {
+		let ele = roundWiseQueryResult[i];
+		
+		let tem_le_name = ele.name.replace(" ","_");
+		tem_le_name = tem_le_name.replace("'s","");
+		console.log(tem_le_name);
+		genderWiseArray[tem_le_name][ele["round"]]["score"] = ele.score;
+		
+		
+	    }
+	 for(let key in genderWiseArray){
+         	scoreRoundFinalObject[key] = Object.values(genderWiseArray[key])
+         }
+    }catch(err){
+    	console.log(err);
     }
-    return scoreRoundFinalArray;
+    return scoreRoundFinalObject;
 };
 const tieBreakerResolverFunction=async(req,userBracketId1,userBracketId2)=> {
     try {
