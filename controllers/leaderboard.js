@@ -101,18 +101,19 @@ const getUserRank = async (req, res) => {
       let userId = req.decoded.user_id;
       const bracketId = req.body.user_bracket_id;
       const sqlQuery = `SELECT tls.gender,tgs.round,sum(tgs.winner_score ) as score ,ubt.user_bracket_id, tls.name FROM user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id where ubs.user_id=${userId} and ubt.winner_id=tgs.winner_id and ubt.user_bracket_id=${bracketId} and tls.gender=ubs.type group by user_bracket_id, tls.name, tls.gender,tgs.round order by tls.name, round;`
-      const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
+      const roundWiseQueryResult = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+      let bracketgender = "male";
       if (!roundWiseQueryResult.length) {
-        logger.log('getRoundWiseScore', req, '', 'user_breaket_team', userId);
-        res.status(req.constants.HTTP_SUCCESS).json({
-          code: req.constants.HTTP_SUCCESS,
-          status: req.constants.SUCCESS,
-          message: req.messages.SCORE.SUCCESS,
-          data: roundWiseQueryResult,
-        })
+        let sqlQuery = `select type from user_breakets where id = ${bracketId};`;
+    	const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+    	if(userRank[0] && userRank[0]["type"] == "female"){
+    		bracketgender = "female"	
+    	}
+      }else{
+	    bracketgender = roundWiseQueryResult[0].gender;      
       }
   
-      let bracketgender = roundWiseQueryResult[0].gender
+
       //console.log(bracketgender)
       const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender);
       const sql = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", user_images.image_path, user_images.name as image_name from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id left join user_images on user_images.user_id = users.id  where tls.gender = "${bracketgender}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
