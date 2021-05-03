@@ -242,10 +242,12 @@ const getUserBracketDetails = async (req, res) => {
     let otherBracketData = AllBracketData.filter(ele=>ele.league_team_gender=== otherbracketType && ele.winner_id)
     if(otherBracketData && otherBracketData.length)isPartiallyFilledBracket[otherbracketType] = true;
 
-    let sqlTeam=`SELECT name,team_id FROM tournament_teams;`
+    let sqlTeam=`SELECT name,team_id, division_teamid FROM tournament_teams;`
     let allteamArray = await req.database.query(sqlTeam, { type: req.database.QueryTypes.SELECT });
-    let actual_team_1_name;
-    let actual_team_2_name;
+    let actual_team_1_name="";
+    let actual_team_2_name="";
+    let actual_team_1_division_teamid="";
+    let actual_team_2_division_teamid="";
     let finalData = {};
     let loser_ids = {};
     for (let row of bracketData) {
@@ -269,11 +271,17 @@ const getUserBracketDetails = async (req, res) => {
       // let league_id = row["league_id"];
       let { team_1_score,team_2_score,bracket_id, actual_winner_id, actual_team_1_id,actual_team_2_id,league_id, game_id, team_1_id, team_2_id, winner_id, round, position, t1_name, t1_thumbnails, t2_name, t2_thumbnails, division_teamid2, division_teamid1, team1_score, team2_score } = row;
       const allteamArrayResult=allteamArray.filter(ele=>ele.team_id===actual_team_1_id);
-      
-      actual_team_1_name=allteamArrayResult && allteamArrayResult.length ? allteamArrayResult[0].name : ''
+      if(allteamArrayResult && allteamArrayResult.length){
+      		actual_team_1_name= allteamArrayResult[0].name;
+      		actual_team_1_division_teamid = allteamArrayResult[0].division_teamid;
+      }
       //console.log(allteamArrayResult[0].name)
       const allteamArrayResult2=allteamArray.filter(ele=>ele.team_id===actual_team_2_id)
-      actual_team_2_name=allteamArrayResult2 && allteamArrayResult2.length ? allteamArrayResult2[0].name : ''
+      if(allteamArrayResult2 && allteamArrayResult2.length){
+      	      	actual_team_2_name= allteamArrayResult2[0].name;
+      		actual_team_2_division_teamid = allteamArrayResult2[0].division_teamid;
+      }
+
        if (!finalData[league_id]) {
         finalData[league_id] = {};
         finalData[league_id].league_name = row["league_name"];
@@ -338,7 +346,7 @@ const getUserBracketDetails = async (req, res) => {
         division_teamid: division_teamid2,
         team_2_score
       }
-      finalData[league_id]["brackets"][bracket_id]["games"].push({ game_id,actual_team_1_id,actual_team_1_name,actual_team_2_name,actual_team_2_id, bracket_id, round, position, winner_id, actual_winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score })
+      finalData[league_id]["brackets"][bracket_id]["games"].push({ game_id,actual_team_1_id,actual_team_1_name,actual_team_2_name,actual_team_2_id, bracket_id, round, position, winner_id, actual_winner_id, team1, team2, winner_nextbracketid, winner_nextround, nextPostion, loser_nextbracketid, loserNextPosition, loser_nextround, winner_team_key, loser_team_key, team1_score, team2_score, actual_team_1_division_teamid, actual_team_2_division_teamid })
     }
     isPartiallyFilledBracket[bracketType]=isPartiallyFilled;
     for (let i in finalData) {
