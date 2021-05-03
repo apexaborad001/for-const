@@ -46,7 +46,7 @@ module.exports = (req) => {
     messages = {
       "LOGIN": {
         "SUCCESS": "Logged in successfully",
-        "FAILURE": "Invalid username/email or password",
+        "FAILURE": "Invalid Email/Username or Password",
         "NOT_VERIFIED": "Please verify your account",
         "BLOCKED": "Your account is not active yet. Please contact Admin for activation.",
         "NOT_FOUND": "Invalid username or password"
