@@ -57,17 +57,17 @@ const resetTournamentGames = async (req, res) => {
       let sql2 = `delete from users where admin = 0`;
       let getQueryResult2 = await req.database.query(sql2, { type: req.database.QueryTypes.DELETE })
       
-      let sql3 = `delete from devices;`;
+      let sql3 = `TRUNCATE TABLE devices;`;
       let getQueryResult3 = await req.database.query(sql3, { type: req.database.QueryTypes.DELETE })
       
       
-       let sql4 = `delete from user_images;`;
+       let sql4 = `TRUNCATE TABLE  user_images;`;
        let getQueryResult4 = await req.database.query(sql4, { type: req.database.QueryTypes.DELETE })
       
-       let sql5 = `delete from user_breakets;`;
+       let sql5 = `TRUNCATE TABLE user_breakets;`;
        let getQueryResult5 = await req.database.query(sql5, { type: req.database.QueryTypes.DELETE })
        
-       let sql = `delete from user_breaket_teams;`;
+       let sql = `TRUNCATE TABLE user_breaket_teams;`;
        let getQueryResult6 = await req.database.query(sql, { type: req.database.QueryTypes.DELETE })
       res.status(req.constants.HTTP_SUCCESS).json({
         code: req.constants.HTTP_SUCCESS,
