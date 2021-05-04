@@ -65,7 +65,7 @@ routes.get("/s3test5", async (req, res)=>{
 		contentType["jpg"] = "image/jpeg";
 		contentType["png"] = "image/png";
 		contentType["gif"] = "image/gif";
-		contentType["svg"] = "image/svg";
+		contentType["svg"] = "image/svg+xml";
 		let absolute_path = path.join(__dirname, "../templates/common/");
 		let filenames = fs.readdirSync(absolute_path);
 		console.log("\nCurrent directory files:");
@@ -91,7 +91,7 @@ routes.get("/s3test5", async (req, res)=>{
 			});
 			 
 		}
-		return res.send({"Success":filenames, "s3Data":s3Data});
+		return res.send({"Success1":filenames, "s3Data":s3Data});
 	} catch (err) {
 	  res.send({"res":err})
 	}
