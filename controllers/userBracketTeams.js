@@ -202,7 +202,9 @@ const getUserBracketDetails = async (req, res) => {
   try {
 
     let isBracketEditable = true;
-    if (new Date() > new Date(req.constants.Bracket_submission_deadline)) {
+    let sqlCheck = `select winner_id from tournament_games where winner_id is not null and  winner_id <>"" ;`
+    let isAdminUpdated = await req.database.query(sqlCheck, { type: req.database.QueryTypes.SELECT });
+    if (new Date() > new Date(req.constants.Bracket_submission_deadline) || isAdminUpdated.length > 0) {
       isBracketEditable = false;
     }
     let isPartiallyFilledBracket = {"male":false, "female":false};
@@ -536,6 +538,10 @@ const sendScore = async (req, res) => {
                } 
                
               
+           }
+           if(gct != 0){
+                  strData +=endStr;
+                  gct = 0
            }
            	
     }
