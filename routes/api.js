@@ -65,7 +65,7 @@ routes.get("/s3test5", async (req, res)=>{
 		contentType["jpg"] = "image/jpeg";
 		contentType["png"] = "image/png";
 		contentType["gif"] = "image/gif";
-		contentType["svg"] = "image/png";
+		contentType["svg"] = "image/svg";
 		let absolute_path = path.join(__dirname, "../templates/common/");
 		let filenames = fs.readdirSync(absolute_path);
 		console.log("\nCurrent directory files:");
