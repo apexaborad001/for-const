@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 config.pool = {
-    max: 500,
+    max: 1500,
     min: 0,
     acquire: 300000,
     idle: 10000
