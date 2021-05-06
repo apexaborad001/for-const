@@ -585,7 +585,8 @@ const updateMultiWinnerByScore = async (req, res)=>{
         //     return res.status(req.constants.HTTP_FORBIDDEN).json({ status: req.constants.ERROR, code: req.constants.HTTP_FORBIDDEN, message: "You are not allowed to update the score." });
         // }
         
-        const bracketType = req.body.bracket_type;   
+        let bracketType = req.body.bracket_type; 
+        
         let gameDATAArr = JSON.parse(req.body.game_data);
         //console.log(gameDATAArr[0]);
         let dataByGameID = [];    
@@ -603,6 +604,13 @@ const updateMultiWinnerByScore = async (req, res)=>{
                 message: "Invalid req params"
             })
         }
+        if(!bracketType){
+        	if(gameIDs[0] < 65){
+        	   bracketType = "male";
+        	}else{
+        	   bracketType = "female";
+        	}
+        } 
         gameIDs = gameIDs.join(",");
         let updateError = [];
         let sql = "select tgms.*, wbr.nextbracketid as wbr_nextbracketid, wbr.nextround as wbr_nextround, wbr.position_relation, wbr.point as wbr_point, lbr.nextbracketid as";
