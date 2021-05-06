@@ -295,7 +295,7 @@ module.exports = {
    },
    {
     "team_id": 33,
-    "name": "team33",
+    "name": "Life",
     "gender": "female",
         
     
@@ -304,7 +304,7 @@ module.exports = {
  },
  {
     "team_id": 34,
-    "name": "team34",
+    "name": "Wayne State",
     "gender": "female",
         
     
@@ -313,7 +313,7 @@ module.exports = {
  },
  {
     "team_id": 35,
-    "name": "team35",
+    "name": "Iowa Univ.",
     "gender": "female",
         
     
@@ -322,7 +322,7 @@ module.exports = {
  },
  {
     "team_id": 36,
-    "name": "team36",
+    "name": "Clemson",
     "gender": "female",
       
     
@@ -331,7 +331,7 @@ module.exports = {
  },
  {
     "team_id": 37,
-    "name": "team37",
+    "name": "Baldwin Wallace",
     "gender": "female",
         
     
@@ -340,7 +340,7 @@ module.exports = {
  },
   {
     "team_id": 38,
-    "name": "team38",
+    "name": "Allegheny Rep",
     "gender": "female",
         
     
@@ -349,7 +349,7 @@ module.exports = {
  },
  {
     "team_id": 39,
-    "name": "team39",
+    "name": "Grace College",
     "gender": "female",
         
     
@@ -358,7 +358,7 @@ module.exports = {
  },
  {
     "team_id": 40,
-    "name": "team40",
+    "name": "SARC Rep #1",
     "gender": "female",
         
     
@@ -367,7 +367,7 @@ module.exports = {
  },
  {
     "team_id": 41,
-    "name": "team40",
+    "name": "Lindenwood",
     "gender": "female",
       
     
@@ -376,7 +376,7 @@ module.exports = {
  },
  {
     "team_id": 42,
-    "name": "team42",
+    "name": "UNI",
     "gender": "female",
     
     
@@ -385,7 +385,7 @@ module.exports = {
  },
  {
     "team_id": 43,
-    "name": "team43",
+    "name": "Iowa State Univ",
     "gender": "female",
     
     
@@ -394,7 +394,7 @@ module.exports = {
     },
  {
     "team_id": 44,
-    "name": "team44",
+    "name": "Davenport",
     "gender": "female",
     
     
@@ -403,7 +403,7 @@ module.exports = {
  },
  {
     "team_id": 45,
-    "name": "team45",
+    "name": "Bryant",
     "gender": "female",
     
     
@@ -412,7 +412,7 @@ module.exports = {
  },
   {
     "team_id": 46,
-    "name": "team46",
+    "name": "UW Eau Claire",
     "gender": "female",
     
     
@@ -421,7 +421,7 @@ module.exports = {
  },
  {
     "team_id": 47,
-    "name": "team47",
+    "name": "Northern Lights",
     "gender": "female",
       
     
@@ -430,7 +430,7 @@ module.exports = {
  },
  {
     "team_id": 48,
-    "name": "team48",
+    "name": "SARC Rep #2",
     "gender": "female",
         
     
