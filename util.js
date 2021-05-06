@@ -52,10 +52,10 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender
     let roundCounter = 0;
     let differentBracketFlag = false;
     if(gender=="female"){
-           genderWiseArray =  {"Women_League": {1:{"score":0, "title":"1st ROUND"}, 2:{"score":0, "title":"QUARTERFINALS"}, 3:{"score":0, "title":"SEMI FINALS"}, 4:{"score":0, "title":"National Championship"}}, "Survivor_Cup":{1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"National Championship"}}, "Champions_Cup":{1:{"score":0, "title":"SEMI FINALS"}, 2:{"score":0, "title":"National Championship"}}, "Challenge_Cup":{ 1:{"score":0, "title":"SEMI FINALS"}, 2:{"score":0, "title":"National Championship"}}};
+           genderWiseArray =  {"Women_League": {1:{"score":0, "title":"1st ROUND"}, 2:{"score":0, "title":"QUARTERFINALS"}, 3:{"score":0, "title":"SEMI FINALS"}, 4:{"score":0, "title":"National Championship"},  5:{"score":0, "title":"3rd Place"}}, "Survivor_Cup":{1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"National Championship"},4:{"score":0, "title":"3rd Place"}}, "Champions_Cup":{1:{"score":0, "title":"SEMI FINALS"}, 2:{"score":0, "title":"National Championship"},3:{"score":0, "title":"3rd Place"}}, "Challenge_Cup":{ 1:{"score":0, "title":"SEMI FINALS"}, 2:{"score":0, "title":"National Championship"},3:{"score":0, "title":"3rd Place"}}};
     }
     else{
-        genderWiseArray = {"Men_League": {1:{"score":0, "title":"1st ROUND"}, 2:{"score":0, "title":"2nd ROUND"}, 3:{"score":0, "title":"QUARTERFINALS"}, 4:{"score":0, "title":"SEMI FINALS"}, 5:{"score":0, "title":"National Championship"}}, "Survivor_Cup":{1:{"score":0, "title":"2nd ROUND"}, 2:{"score":0, "title":"QUARTERFINALS"}, 3:{"score":0, "title":"SEMI FINALS"}, 4:{"score":0, "title":"National Championship"}}, "Champions_Cup":{1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"National Championship"}}, "Challenge_Cup":{ 1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"National Championship"}}};
+        genderWiseArray = {"Men_League": {1:{"score":0, "title":"1st ROUND"}, 2:{"score":0, "title":"2nd ROUND"}, 3:{"score":0, "title":"QUARTERFINALS"}, 4:{"score":0, "title":"SEMI FINALS"}, 5:{"score":0, "title":"National Championship"}, 6:{"score":0, "title":"3rd Place"}}, "Survivor_Cup":{1:{"score":0, "title":"2nd ROUND"}, 2:{"score":0, "title":"QUARTERFINALS"}, 3:{"score":0, "title":"SEMI FINALS"}, 4:{"score":0, "title":"National Championship"}, 5:{"score":0, "title":"3rd Place"}}, "Champions_Cup":{1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"National Championship"}, 4:{"score":0, "title":"3rd Place"}}, "Challenge_Cup":{ 1:{"score":0, "title":"QUARTERFINALS"}, 2:{"score":0, "title":"SEMI FINALS"}, 3:{"score":0, "title":"National Championship"},5:{"score":0, "title":"3rd Place"}}};
     }
     try{
 	    for (let i = 0; i < roundWiseQueryResult.length; i++) {
@@ -65,7 +65,17 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender
 		tem_le_name = tem_le_name.replace("'s","");
 		console.log(tem_le_name);
 		genderWiseArray[tem_le_name][ele["round"]]["score"] = ele.score;
-		
+		if(genderWiseArray[tem_le_name][ele["round"]]["title"] == "National Championship"){
+			if(genderWiseArray[tem_le_name][ele["round"]]["score"] == 360){
+				genderWiseArray[tem_le_name][ele["round"]]["score"] = 240;
+				let nround = (ele["round"]+1);
+				genderWiseArray[tem_le_name][nround]["score"] = 120;
+			}else if(genderWiseArray[tem_le_name][ele["round"]]["score"] == 120){
+				genderWiseArray[tem_le_name][ele["round"]]["score"] = 0;
+				let nround = (ele["round"]+1);
+				genderWiseArray[tem_le_name][nround]["score"] = 120;
+			}
+		}
 		
 	    }
 	 for(let key in genderWiseArray){
