@@ -697,10 +697,11 @@ const updateMultiWinnerByScore = async (req, res)=>{
                         return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
 
                 }
-                if(bracketType)
-                await updateLeaderboardFunction(req,bracketType)
+                
             }
           }
+          
+          await updateLeaderboardFunction(req, bracketType);
           return res.status(req.constants.HTTP_SUCCESS).json({ 
             status: req.constants.SUCCESS, 
             code: req.constants.HTTP_SUCCESS,
