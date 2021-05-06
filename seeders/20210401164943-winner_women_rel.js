@@ -49,7 +49,7 @@ module.exports = {
       "round": 3,
       "nextbracketid": 17,
       "nextround":4, 
-      "point":60,
+      "point":120,
        createdAt: new Date(),
        updatedAt: new Date(),
    },
@@ -58,7 +58,7 @@ module.exports = {
       "round": 3,
       "nextbracketid": 17,
       "nextround":4, 
-      "point":60, 
+      "point":120, 
        createdAt: new Date(),
        updatedAt: new Date() 
     },
@@ -105,7 +105,7 @@ module.exports = {
     "round": 2,
     "nextbracketid": 20,
     "nextround":3, 
-    "point":60, 
+    "point":120, 
      createdAt: new Date(),
      updatedAt: new Date(),
    

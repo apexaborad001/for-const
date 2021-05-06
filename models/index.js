@@ -7,6 +7,12 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
+config.pool = {
+    max: 1500,
+    min: 0,
+    acquire: 300000,
+    idle: 10000
+  }
 
 let sequelize;
 if (config.use_env_variable) {

@@ -579,8 +579,10 @@ const sendScore = async (req, res) => {
   }
 };
 
-const getUserRankFunctionNew = async (req, bracketType, userID) => {
-    let sqlQuery = `select * from (select sum(tgs.winner_score ) as score,users.id as userId,users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id) as t where t.userId = ${userID} ;`;
+const getUserRankFunctionNew = async (req, bracketType, userID) => { 
+   
+    //let sqlQuery = `select * from (select sum(tgs.winner_score ) as score,users.id as userId,users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id) as t where t.userId = ${userID} ;`;
+    let sqlQuery = `select * from leaderboards where userId = ${userID} and bracketType = "${bracketType}" ;`;
     const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
     return userRank;
   };

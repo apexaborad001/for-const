@@ -1,6 +1,7 @@
 const logger = require('../helper/logger-helper');
 const {  getRoundWiseDetailsInFormat } = require('../util')
 const topLeaderboardUser = 10;
+const moment = require("moment");
 const getUserRank = async (req, res) => {
     try {
       let index = -1;
@@ -116,7 +117,7 @@ const getUserRank = async (req, res) => {
 
       //console.log(bracketgender)
       const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender);
-      const sql = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", user_images.image_path, user_images.name as image_name from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id left join user_images on user_images.user_id = users.id  where tls.gender = "${bracketgender}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
+      const sql = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "${bracketgender}" limit 20`
       const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       
       let userRankData = await getUserRankFunctionNew(req, bracketgender, req.decoded.user_id);
@@ -147,7 +148,8 @@ const getUserRank = async (req, res) => {
     return userRank;
   };
    const getUserRankFunctionNew = async (req, bracketType, userID) => {
-    let sqlQuery = `select * from (select sum(tgs.winner_score ) as score,users.id as userId,users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id) as t where t.userId = ${userID} ;`;
+    //let sqlQuery = `select * from (select sum(tgs.winner_score ) as score,users.id as userId,users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id) as t where t.userId = ${userID} ;`;
+    let sqlQuery = `select * from leaderboards where userId = ${userID} and bracketType = "${bracketType}" ;`;
     const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
     return userRank;
   };
@@ -182,11 +184,19 @@ const getUserRank = async (req, res) => {
   const updateLeaderboardFunction = async (req, bracketType) => {
     try {
       // let mainBracketIds ="(1,2,3,4,5,15,16,17,18,19)";
-      let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc limit ${topLeaderboardUser}`;
-      const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
-      sqlQuery = `delete from leaderboards where bracketType="${bracketType}"`
-      await req.database.query(sqlQuery)
-      await req.models.leaderboard.bulkCreate(userWiseScore);
+      //let sqlQuery = `select sum(tgs.winner_score ) as score,users.id as userId,users.userName ,tls.gender as bracketType ,user_bracket_id  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by user_bracket_id,users.id,users.userName,tls.gender order by score desc limit ${topLeaderboardUser}`;
+      
+      let sqlQuery1 = `delete from leaderboards where bracketType="${bracketType}"`
+      await req.database.query(sqlQuery1)
+      
+      
+      let date2 = new Date();
+      let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+
+      let sqlQuery = `insert INTO leaderboards select NULL as id, users.id as userId, users.userName, ubs.type, sum(tgs.winner_score ) as score, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", "${dateTime}" as createdAt, "${dateTime}" as updatedAt from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id and ubt.winner_id=tgs.winner_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join users on users.id = ubs.user_id  where ubs.type = "${bracketType}" group by users.id;`;
+      
+      const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.UPDATE });
+      //await req.models.leaderboard.bulkCreate(userWiseScore);
       return userWiseScore;
     } catch (e) {
       console.log('e', e)
