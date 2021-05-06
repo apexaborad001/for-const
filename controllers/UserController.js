@@ -500,7 +500,7 @@ const verifyEmailToken = async(req,res) =>{
               id:tokenExists.id
             }
           });
-          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "Your account has been successfully Verified" })
+          return res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: "Your email has been successfully verified." })
         }else{
         return res.status(req.constants.HTTP_NOT_FOUND).json({ status: req.constants.ERROR, code: req.constants.HTTP_NOT_FOUND, message: "Your email verification link has expired." })
         }
@@ -529,7 +529,7 @@ const userNameValidation = async(req,res) =>{
   const TestUserCreattion = async(req, res) => {   
     try {    
       let date = new Date();
-      for(let i = 18000; i < 100000; i++){
+      for(let i = 58020; i < 100000; i++){
       let userData = {
       firstName:"user"+i,
       lastName:"last",
