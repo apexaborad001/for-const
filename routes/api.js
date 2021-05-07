@@ -11,45 +11,12 @@ const commonValidation = require("../validations/commonSchema");
 const routes = require('express').Router();
 
 routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
-
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
 routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
 routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.inviteFriend), commondataController.inviteFriends);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
-//routes.post('/getUserGameLists', auth.isAuthenticated,bracketManagerController.getUserGameLists);
-
-//routes.get('/updateWinner', bracketManagerController.updateWinner);
-//routes.post('/updateMultiWinner', bracketManagerController.updateMultiWinner);
-
-routes.get('/getGameListsByUserBracketID', bracketManagerController.getGameListsByUserBracketID);
-
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
-
-routes.get('/getInCompleteBracketUsers',auth.isAuthenticated, userBreaketTeamController.getInCompleteBracketUsers);
-
-routes.get('/sendScore', userBreaketTeamController.sendScore);
-
-//routes.get('/TestUserCreattion', UserController.TestUserCreattion);
-
-/*routes.get("/getEnv", (req, res)=>{
-
-res.send({"env":process.env})
-
-});
-/*routes.get("/getConfig", (req, res)=>{
-
-			const  fs = require('fs');
-			let path =  require("path");
-			let absolute_path = path.join(__dirname, "../config/");
-			let absolutePathToImage = absolute_path+"config.json";
-    		let filebuffer = fs.readFileSync(absolutePathToImage);
-
-
-res.send({"filebuffer":JSON.parse(filebuffer)})
-
-});
-*/
 
 
 routes.get("/s3test5", async (req, res)=>{

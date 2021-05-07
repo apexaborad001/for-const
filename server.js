@@ -21,6 +21,7 @@ const swaggerDocument = require('./docs/swagger.json');
 
 const cors = require('cors')
 const app = express();
+const cron = require("./cron");
 app.use(cors());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -46,12 +47,6 @@ app.use(`${baseUrl}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/assets', express.static("public"));
 app.engine('html', require('ejs').renderFile);
 
-app.get('/pdfdemo', function (req, res) {
-  res.render(__dirname + '/test.html', {
-    string: 'random_value',
-    other: 'value'
-  });
-});
 
 app.use(mung.json(function transform(body, req, res, next) {
   let name = req.url;
@@ -73,17 +68,6 @@ app.use(`${baseUrl}/notifications`, dbSwitch, webpushNotificationsRoutes);
 app.use(`${baseUrl}/manage-user-bracket`, dbSwitch, userBracketRoutes);
 app.use(`${baseUrl}/leaderboard`, dbSwitch, leaderboardRoutes);
 
-app.get('/hello_world', (req, res) => {
-  res.send('Hello World');
-})
-
-app.get('/hello_world2', (req, res) => {
-  res.send('Hello data 2');
-})
-
-app.get('/hello_world3', (req, res) => {
-  res.send('Hello data 3');
-})
 
 //end middlewares
 //connection checking
@@ -92,14 +76,15 @@ models.sequelize.authenticate()
     try {
       let con = models.sequelize;
       await con.query(`SET sql_mode = ""`);
+     // await con.query(`SET global sql_mode = ""`);
       //await con.close();
       let port = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
       app.listen(port, () => {
         console.log(`started1 on port  ${port}`);
-        //cron.updateGames('*/10 * * * * * ');
+        cron.DailyCron('59 * * * * * ');
       });
     } catch (err) {
-      console.log("cannot catch connection");
+      console.log("cannot catch connection", err);
     }
   })
   .catch((err) => {

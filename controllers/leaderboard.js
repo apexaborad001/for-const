@@ -71,32 +71,7 @@ const getUserRank = async (req, res) => {
     }
   }
   
-  const getRank = async (req, res) => {
-    try {
-      let counter = 1
-      const userBracketId = req.body.user_bracket_id;
-      const sql = `SELECT userId, score, userName from leaderboards inner join user_breakets on user_breakets.type = leaderboards.bracketType where user_breakets.id = ${userBracketId}`
-      const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-      for (ele of leaderboardData) {
-        ele.rank = counter;
-        counter++;
-      }
-      res.status(req.constants.HTTP_SUCCESS).json({
-        code: req.constants.HTTP_SUCCESS,
-        status: req.constants.SUCCESS,
-        message: req.messages.RANK.SUCCESS,
-        data: leaderboardData,
-      })
-    }
-    catch (err) {
-      logger.log('getRank', req, err, 'user_breaket_team', 0);
-      res.status(req.constants.HTTP_SERVER_ERROR).json({
-        status: req.constants.ERROR,
-        code: req.constants.HTTP_SERVER_ERROR,
-        message: req.messages.INTERNAL500 + err
-      })
-    }
-  };
+ 
   const getRoundWiseScore = async (req, res) => {
     try {
       let userId = req.decoded.user_id;
@@ -245,10 +220,10 @@ const getUserRank = async (req, res) => {
   
   const getTopRanks = async (req, res) => {
     try {
-       const sql = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", user_images.image_path, user_images.name as image_name  from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id left join user_images on user_images.user_id = users.id where tls.gender = "male" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
+       const sql = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "male" limit 20`
        const maleRanks = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       
-       const sql2 = `select sum(tgs.winner_score ) as score, users.id as userId, users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", user_images.image_path, user_images.name as image_name from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id left join user_images on user_images.user_id = users.id  where tls.gender = "female" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id limit 20`
+       const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "female" limit 20`
       const femaleRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
       
        res.status(req.constants.HTTP_SUCCESS).json({
@@ -273,7 +248,6 @@ const getUserRank = async (req, res) => {
 
   module.exports = {
     getRoundWiseScore,
-    getRank,
     updateLeaderboard,
     getUserRank,
     updateLeaderboardFunction,
