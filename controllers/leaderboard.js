@@ -92,8 +92,8 @@ const getUserRank = async (req, res) => {
 
       //console.log(bracketgender)
       const roundWiseScoreObject = await getRoundWiseDetailsInFormat(roundWiseQueryResult, bracketId, bracketgender);
-      const sql = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "${bracketgender}" limit 20`
-      const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+      //const sql = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "${bracketgender}" limit 20`
+      //const leaderboardData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       
       let userRankData = await getUserRankFunctionNew(req, bracketgender, req.decoded.user_id);
       
@@ -102,7 +102,7 @@ const getUserRank = async (req, res) => {
         code: req.constants.HTTP_SUCCESS,
         status: req.constants.SUCCESS,
         message: req.messages.SCORE.SUCCESS,
-        data: {roundWiseScoreObject, leaderboardData, userRankData, image_prefix:process.env.BUCKET_ACCESS_URL}
+        data: {roundWiseScoreObject,  userRankData, image_prefix:process.env.BUCKET_ACCESS_URL}
       })
     }
   
@@ -220,17 +220,34 @@ const getUserRank = async (req, res) => {
   
   const getTopRanks = async (req, res) => {
     try {
-       const sql = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "male" limit 20`
-       const maleRanks = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-      
-       const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "female" limit 20`
-      const femaleRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
-      
+       
+       let maleRanks = [];
+       let femaleRank = [];
+       let allRank = [];
+       let count = [];
+       let gender = req.query.gender;
+       let start = req.query.start;
+       let end = req.query.end;
+       if(gender == "male" || gender == "female"){
+       		let sql = `select count(id) as count from leaderboards ldr where ldr.bracketType = "${gender}"`
+      		count = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+      		count = count[0];
+      		const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId where ldr.bracketType = "${gender}" limit ${start}, ${end}`
+     		allRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
+       
+       }else{
+       
+	       let sql = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "male" limit 20`
+	       maleRanks = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
+	      
+	       const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId  where ldr.bracketType = "female" limit 20`
+	       femaleRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
+       }
        res.status(req.constants.HTTP_SUCCESS).json({
         code: req.constants.HTTP_SUCCESS,
         status: req.constants.SUCCESS,
         message: req.messages.SCORE.SUCCESS,
-        data: {maleRanks, femaleRank, image_prefix:process.env.BUCKET_ACCESS_URL}
+        data: {maleRanks, femaleRank, count, allRank, image_prefix:process.env.BUCKET_ACCESS_URL}
       })
     }
   
