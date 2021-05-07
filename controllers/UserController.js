@@ -529,11 +529,12 @@ const userNameValidation = async(req,res) =>{
   const TestUserCreattion = async(req, res) => {   
     try {    
       let date = new Date();
-      for(let i = 58020; i < 100000; i++){
+      const crypto = require("crypto");
+      let verifyEmailToken = crypto.createHash('sha256').digest('hex');
       let userData = {
-      firstName:"user"+i,
+      firstName:verifyEmailToken,
       lastName:"last",
-      userName:"user"+i,
+      userName:verifyEmailToken,
       password: "$2a$10$DIGUM31FXT6qApfEOB558O.ZoF5L88oSMoQyNbHzAPQxh0Fi0onTu",
       email_verified:1,
       role: 3,
@@ -553,7 +554,7 @@ const userNameValidation = async(req,res) =>{
      };
       const createBreaket = await req.models.user_breaket.create(userBracketData);
       await insertUserBracketDetails(req, "male", createBreaket.id)
-      }
+      
       return res.send({"status":"done"})         
     } catch (error) {
       logger.log('Create Admin', req, error, 'user', 0);

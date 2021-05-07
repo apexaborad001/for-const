@@ -17,6 +17,7 @@ routes.post("/contactUs", validate(commonValidation.contactUs), commondataContro
 routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.inviteFriend), commondataController.inviteFriends);
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
+routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 
 
 routes.get("/s3test5", async (req, res)=>{
