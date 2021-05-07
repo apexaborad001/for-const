@@ -232,7 +232,7 @@ const getUserRank = async (req, res) => {
        		let sql = `select count(id) as count from leaderboards ldr where ldr.bracketType = "${gender}"`
       		count = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       		count = count[0];
-      		const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name from leaderboards ldr left join user_images on user_images.user_id = ldr.userId where ldr.bracketType = "${gender}" limit ${start}, ${end}`
+      		const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name, tms.name as winner_team from leaderboards ldr left join user_images on user_images.user_id = ldr.userId left join tournament_teams tms on tms.team_id = ldr.winner_id where ldr.bracketType = "${gender}" limit ${start}, ${end}`
      		allRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
        
        }else{
