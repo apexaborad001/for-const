@@ -168,7 +168,7 @@ const getUserRank = async (req, res) => {
       let date2 = new Date();
       let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
 
-      let sqlQuery = `insert INTO leaderboards select NULL as id, users.id as userId, users.userName, ubs.type, sum(tgs.winner_score ) as score, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", "${dateTime}" as createdAt, "${dateTime}" as updatedAt from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id and ubt.winner_id=tgs.winner_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join users on users.id = ubs.user_id  where ubs.type = "${bracketType}" group by users.id;`;
+      let sqlQuery = `insert INTO leaderboards select NULL as id, users.id as userId, users.userName, ubs.type, sum(tgs.winner_score ) as score, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", "${dateTime}" as createdAt, "${dateTime}" as updatedAt, group_concat(if(tgs.game_id =47 or tgs.game_id = 31,  ubt.winner_id, NULL)) as winner_id from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id and ubt.winner_id=tgs.winner_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join users on users.id = ubs.user_id  where ubs.type = "${bracketType}" group by users.id;`;
       
       const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.UPDATE });
       //await req.models.leaderboard.bulkCreate(userWiseScore);
