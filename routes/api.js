@@ -22,6 +22,13 @@ routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 
 routes.get("/s3test5", async (req, res)=>{
 	try {
+	
+	     var os = require('os');
+        let cup = os.cpus();
+        let totalMemo = os.totalmem();
+        let freeMOm = os.freemem();
+        return res.send({cup, totalMemo, freeMOm})
+        /*
 		const  fs = require('fs');
 		let path =  require("path");
 		var AWS = require('aws-sdk');
@@ -60,7 +67,7 @@ routes.get("/s3test5", async (req, res)=>{
 			});
 			 
 		}
-		return res.send({"Success1":filenames, "s3Data":s3Data});
+		return res.send({"Success1":filenames, "s3Data":s3Data});*/
 	} catch (err) {
 	  res.send({"res":err})
 	}
