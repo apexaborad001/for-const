@@ -13,7 +13,7 @@ config.pool = {
     acquire: 300000,
     idle: 10000
   }
-
+config.logging = false;
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
