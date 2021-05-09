@@ -196,7 +196,39 @@ const getUserBrackets = async (req, res) => {
     }
   };
 
-   
+  const getUserRank = async (req, res) => {
+    try {
+      let userid = req.decoded.user_id;      
+      let sqlQuery = `select type from user_breakets where user_id = ${userid};`;
+      const UserData = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+      let mensRank = {"score":0, "rank":"-1"};
+      let weMensRank = {"score":0, "rank":"-1"};
+      if(UserData.length > 0){
+      	for(let row of UserData){
+		if(row["type"] == "male"){
+			mensRank = await getUserRankFunctionNew(req, "male", req.decoded.user_id);
+		}else{
+                   weMensRank = await getUserRankFunctionNew(req, "female", req.decoded.user_id);
+                }
+	}
+      }
+
+      return res.status(req.constants.HTTP_SUCCESS).json({
+        code: req.constants.HTTP_SUCCESS,
+        status: req.constants.SUCCESS,
+        message: req.messages.RANK.USERRANK,
+        data: ({ mensRank, "womensRank":weMensRank }),
+      })
+    }
+    catch (err) {
+      logger.log('getUserRank', req, err, 'getUserRank', req.decoded.user_id);
+      return res.status(req.constants.HTTP_SERVER_ERROR).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_SERVER_ERROR,
+        message: req.messages.INTERNAL500 + err
+      })
+    }
+  }
 
   module.exports = {
     getRoundWiseScore,
@@ -204,5 +236,6 @@ const getUserBrackets = async (req, res) => {
     updateLeaderboardFunction,
     getUserScore,
     getUserBrackets,
-    getTopRanks
+    getTopRanks,
+    getUserRank
   }
