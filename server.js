@@ -1,7 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 process.env.fromId = `NCRRUGBY <${process.env.mailFrom}>`;
-process.env.BUCKET_NAME = "ncrrugbyuat";
+//process.env.BUCKET_NAME = "ncrrugbyuat";
 const compression = require('compression');
 var fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
