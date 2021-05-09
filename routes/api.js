@@ -66,9 +66,4 @@ routes.get("/s3test5", async (req, res)=>{
 	}
 })
 
-// routes.get("*", (req, res, next) => {
-//     res.send("Un-authorized access");
-// });
-
-
 module.exports = routes;

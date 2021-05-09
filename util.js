@@ -1,49 +1,3 @@
-const maleRoundArray = [1, 2, 3, 4, 5, 6]
-const femaleRoundArray =[1, 2, 3, 4]
-async function userBracketDetails(req, option, round,userId) {
-    try {
-        const sql = `SELECT ncrrugby.user_breaket_teams.game_id,team_id,user_bracket_id,round FROM ncrrugby.user_breaket_teams inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id INNER JOIN ncrrugby.tournament_games ON ncrrugby.user_breaket_teams.game_id=ncrrugby.tournament_games.game_id where ncrrugby.user_breaket_teams.team_id=ncrrugby.tournament_games.${option} and tournament_games.round= ${round} and user_id = ${userId}`;
-        const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-        return getQueryResult
-    }
-    catch (err) {
-        console.log(err)
-    }
-}
-
-async function liveBracketDetails(req, name) {
-    try {
-        const sql = `SELECT distinct game_id,winner_id,winner_score,round,tournament_leagues.name from tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name="` + name + `"`;
-        const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-        return getQueryResult
-    }
-    catch (err) {
-        console.log(err)
-    }
-}
-const sortJSONArrayByKey = (prop) => {
-    return function (a, b) {
-        if (a[prop] > b[prop]) {
-            return 1;
-        } else if (a[prop] < b[prop]) {
-            return -1;
-        }
-        return 0;
-    }
-}
-async function roundWiseScoreDetails(req, option, round, bracketName, bracketId, userId) {
-
-    try {
-        const sqlQuery = `SELECT sum(winner_score) as score,round,${bracketId} as user_bracket_id FROM tournament_games inner join tournament_breakets on tournament_games.bracket_id=tournament_breakets.bracket_id inner join tournament_leagues on tournament_breakets.subseason_id=tournament_leagues.current_subseason_id where tournament_leagues.name="${bracketName}" and winner_id IN (SELECT team_id FROM user_breaket_teams INNER JOIN tournament_games ON user_breaket_teams.game_id=tournament_games.game_id and user_breaket_teams.team_id=tournament_games.looser_id inner join user_breakets on user_breakets.id = user_breaket_teams.user_bracket_id where tournament_games.round=${round} and user_id=${userId}) group by round`
-        let roundWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT })
-        if (!(roundWiseScore && roundWiseScore.length)) roundWiseScore.push({ "round": null, score: null, user_bracket_id: bracketId })
-        roundWiseScore = getRoundWiseDetailsInFormat(roundWiseScore)
-        return roundWiseScore;
-    } catch (e) {
-        console.log('e', e)
-    }
-
-}
 const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender) => {
     let genderWiseArray
     let scoreRoundFinalArray = [];
@@ -113,9 +67,6 @@ const tieBreakerResolverFunction=async(req,userBracketId1,userBracketId2)=> {
  };
 
 module.exports = {
-    userBracketDetails,
-    liveBracketDetails,
-    roundWiseScoreDetails,
     getRoundWiseDetailsInFormat,
     tieBreakerResolverFunction,
     insertUserBracketDetails

@@ -8,7 +8,6 @@ const routes = require('express').Router();
 
 routes.post("/getRoundWiseScore",auth.isAuthenticated,leaderboardController.getRoundWiseScore);
 routes.post("/updateLeaderboard",auth.isAuthenticated,leaderboardController.updateLeaderboard);
-routes.post("/getUserRank",auth.isAuthenticated, leaderboardController.getUserRank);
 routes.get("/getUserBrackets", auth.isAuthenticated, leaderboardController.getUserBrackets);
 routes.get("/getTopRanks", leaderboardController.getTopRanks);
 routes.get("/getUserScore",auth.isAuthenticated, leaderboardController.getUserScore);

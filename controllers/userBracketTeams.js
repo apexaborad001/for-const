@@ -7,50 +7,6 @@ const fs = require("fs");
 const {  insertUserBracketDetails, tieBreakerResolverFunction } = require('../util')
 const util = require('../util')
 
-const createUserBracket = async (req, res) => {
-  try {
-    let userId = req.decoded.user_id
-    let bracketName = req.body.bracketName
-    let bracketType = req.body.bracketType
-    let bracket = await req.models.user_breaket.findOne({
-      where: {
-        user_id: userId,
-        type: bracketType
-      }
-    });
-    if (bracket) {
-      logger.log(req.messages.USER_BRACKET.UNSUCCESSFULL, req, 'user_breaket', userId);
-      res.status(req.constants.HTTP_ALREADY_EXISTS).json({
-        status: req.constants.ERROR,
-        code: req.constants.HTTP_ALREADY_EXISTS,
-        message: req.messages.USER_BRACKET.UNSUCCESSFULL,
-        data: null
-      });
-    }
-    else {
-      let userBracketData = {
-        user_id: userId,
-        name: bracketName,
-        type: bracketType
-      };
-      const createBreaket = await req.models.user_breaket.create(userBracketData);
-      await insertUserBracketDetails(req, bracketType, createBreaket.id)
-      res.status(req.constants.HTTP_SUCCESS).json({
-        status: req.constants.SUCCESS,
-        code: req.constants.HTTP_SUCCESS,
-        message: req.messages.USER_BRACKET.SUCCESS,
-        data: createBreaket
-      });
-    }
-  }
-  catch (error) {
-    logger.log('User bracket', req, error, 'user_breaket', req.decoded.user_id);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
-  }
-};
-
-
-
 const tieBreakerResolver = async (req, res) => {
   try {
     let userBracketId1 = req.body.user_BracketId1
@@ -63,7 +19,6 @@ const tieBreakerResolver = async (req, res) => {
       data: tieBreakerResolverResult,
     })
   } catch (err) {
-    logger.log('tieBreakerResolver', req, err, 'user_breaket_team', userId);
     res.status(req.constants.HTTP_SERVER_ERROR).json({
       status: req.constants.ERROR,
       code: req.constants.HTTP_SERVER_ERROR,
@@ -72,77 +27,9 @@ const tieBreakerResolver = async (req, res) => {
   }
 }
 
-
-const getUserBracket = async (req, res) => {
-  try {
-    let userId = req.decoded.user_id
-    let bracket = await req.models.user_breaket.findAll({
-      where: {
-        user_id: userId
-      }
-    });
-    if (bracket) {
-      res.status(req.constants.HTTP_SUCCESS).json({
-        status: req.constants.SUCCESS,
-        code: req.constants.HTTP_SUCCESS,
-        message: req.messages.USER_BRACKET.FOUND,
-        data: bracket
-      });
-    }
-    else {
-      logger.log(req.messages.USER_BRACKET.NOTFOUND, req, 'user_breaket', userId);
-      res.status(req.constants.HTTP_NOT_FOUND).json({
-        status: req.constants.SUCCESS,
-        code: req.constants.HTTP_NOT_FOUND,
-        message: req.messages.USER_BRACKET.NOTFOUND,
-        data: null
-      });
-    }
-  }
-  catch (error) {
-    logger.log('User bracket', req, error, 'user_breaket', req.decoded.user_id);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
-  }
-};
-
-const getBracketDetails = async (req, res) => {
-  try {
-    let userBracketId = req.body.userBracketId
-    let findUserBrackets = await req.models.user_breaket_team.findAll({
-      where: {
-        user_bracket_id: userBracketId
-      },
-      attributes: { exclude: ['password', 'createdAt', 'updatedAt'] },
-    });
-    if (findUserBrackets && findUserBrackets.length) {
-      res.status(req.constants.HTTP_SUCCESS).json({
-        code: req.constants.HTTP_SUCCESS,
-        status: req.constants.SUCCESS,
-        message: req.messages.USER_BRACKET_TEAMS.FOUND,
-        data: findUserBrackets,
-      })
-    }
-    else {
-      res.status(req.constants.HTTP_SUCCESS).json({
-        code: req.constants.HTTP_SUCCESS,
-        status: req.constants.SUCCESS,
-        message: req.messages.USER_BRACKET_TEAMS.NOTFOUND,
-        data: findUserBrackets,
-      })
-    }
-  } catch (err) { //console.log(err);
-    logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-}
 
 const upsertBracketDetails = async (req, res) => {
   try {
-    // let userBracketId
     const userBracketDetails = JSON.parse(req.body.userBracketDetails);
     let userBracketId = userBracketDetails[0].user_bracket_id;
     req.models.user_breaket_team.destroy({
@@ -156,12 +43,9 @@ const upsertBracketDetails = async (req, res) => {
       }
     });
     if (userBracket) {
-      //const userBracketDetials = req.body.userBracketDetails;
-
-      const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
-      res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
+	const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
+       res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
     } else {
-      logger.log(req.messages.USER_BRACKET.UNSUCCESSFULL, req, 'user_breaket_team');
       res.status(req.constants.HTTP_BAD_REQUEST).json({
         status: req.constants.ERROR,
         code: req.constants.HTTP_BAD_REQUEST,
@@ -175,28 +59,6 @@ const upsertBracketDetails = async (req, res) => {
     res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + error });
   }
 };
-
-const getInCompleteBracketUsers = async (req, res) => {
-  try {
-    const sql = `select distinct ubs.type,user_bracket_id,ubs.id,ubs.user_id,users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
-    const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-    res.status(req.constants.HTTP_SUCCESS).json({
-      code: req.constants.HTTP_SUCCESS,
-      status: req.constants.SUCCESS,
-      message: req.messages.USER_BRACKET_TEAMS_INCOMPLETE.FOUND,
-      data: getQueryResult,
-    })
-  }
-  catch (err) {
-    logger.log('User bracket', req, err, 'user_breaket_team', req.decoded.user_id);
-    res.status(req.constants.HTTP_SERVER_ERROR).json({
-      status: req.constants.ERROR,
-      code: req.constants.HTTP_SERVER_ERROR,
-      message: req.messages.INTERNAL500 + err
-    })
-  }
-}
-
 
 const getUserBracketDetails = async (req, res) => {
   try {
@@ -360,7 +222,6 @@ const getUserBracketDetails = async (req, res) => {
       finalData[i]['brackets'] = brackts;
     }
     let userRankData = await getUserRankFunctionNew(req, bracketType, req.decoded.user_id);
-    //console.log(finalData);
     return res.status(req.constants.HTTP_SUCCESS).json({
       status: req.constants.SUCCESS,
       code: req.constants.HTTP_SUCCESS,
@@ -368,7 +229,6 @@ const getUserBracketDetails = async (req, res) => {
       message: req.messages.USER_BRACKET_TEAMS.FETCH
     });
   } catch (err) {
-    console.log(err);
     return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
   }
 };
@@ -410,194 +270,22 @@ const getLatestGames = async (req, res) => {
       data: {games},
     });
   } catch (err) {
-    console.log(err);
-    return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
-  }
-};
-
-const sendScore = async (req, res) => {
-  try {
-    let sql = `SELECT tgs.game_id, tgs.bracket_id, tgs.winner_id, tm1.name as t1_name, tgs.team1_score, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tgs.team2_score, tm2.thumbnails as t2_thumbnails, tls.name as league_name, tls.gender as gender FROM tournament_games tgs inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on tm2.team_id=tgs.team_2_id where tgs.winner_id is not null and tgs.team1_score is not null and tgs.team2_score is not null order by tgs.bracket_id;`
-    let bracketData = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
-    let games = {};
-    for (let row of bracketData) {
-      let {league_name, game_id, winner_id, t1_name, t1_thumbnails, t2_name, t2_thumbnails, team1_score,team2_score, gender} = row;
-      if(games[league_name]){
-         games[league_name].push({t1_name, t2_name, team1_score, team2_score})
-      }else{
-      	games[league_name] = [{t1_name, t2_name, team1_score, team2_score}];
-      }
-    }
-    let scorep = ` <p
-                                  style="
-                                    text-align: right;
-                                    font-family: MaisonNeue;
-                                    font-size: 12px;
-                                    font-weight: normal;
-                                    display: inline-block;
-                                    width: 14%;
-                                    float: right;
-                                    margin: 0;
-                                    font-stretch: normal;
-                                    opacity: 0.5;
-                                    font-style: normal;
-                                    padding: 8px 5px;
-                                    line-height: normal;
-                                    letter-spacing: normal;
-                                    text-align: right;
-                                    color: #525252;
-                                  "
-                                >`;
-   let teamp = ` <p
-                                  style="
-                                    font-family: MaisonNeue;
-                                    font-size: 12px;
-                                    margin: 0;
-                                    font-weight: normal;
-                                    font-stretch: normal;
-                                    font-style: normal;
-                                    padding: 5px;
-                                    display: inline-block;
-                                    line-height: normal;
-                                    width: 50%;
-                                    letter-spacing: normal;
-                                    color: #333333;
-                                  "
-                                >`;    
-   
-    let strData = "";
-    for(let key in games){
-    	strData += `<table>
-                  <tr>
-                    <td align="center">
-                      <p
-                        style="
-                          font-family: Montserrat;
-                          font-size: 16px;
-                          margin: 0;
-                          font-weight: 500;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 0.33px;
-                          color: #0a2f6a;
-                          margin-bottom: 5px;
-                          margin-top: 10px;
-                        "
-                      >
-                       `+key+`
-                      </p>
-                    </td>
-                  </tr>
-                </table>
-                             
-                `;
-           let startstr = `<table>
-                  <tbody>
-                    <tr class="tabletdrow" style="width: 100%">
-                         ` ;
-            let endStr = `</tr></tbody></table>` 
-           let teamList =  games[key];   
-           let gct = 0;
-           for(let rowd of teamList){
-               if(gct == 0){
-                  strData +=startstr;
-               }
-               gct = gct+1;
-               strData +=`<td style="width: 20%" align="center">
-                        <table style="width: 100%;box-shadow: 0 3px 16px -4px rgba(0, 0, 0, 0.12);padding: 3px;">
-                          <tbody>
-                            <tr style=" background-color: rgba(156, 0, 0, 0.15);height: 32px;">
-                              <td>
-                               
-                                `+teamp+`
-                                  `+rowd["t1_name"]+`
-                                </p>
-                                 `+scorep+`
-                                  54
-                                </p>
-                              </td>
-                            </tr>
-                            <tr style="background-color: #dafad9; height: 32px">
-                              <td>
-                               
-                               `+teamp+`
-                                   `+rowd["t2_name"]+`
-                                </p>
-                                `+scorep+`
-                                  56
-                                </p>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </td>` 
-               if(gct == 4){
-                  strData +=endStr;
-                  gct = 0
-               } 
-               
-              
-           }
-           if(gct != 0){
-                  strData +=endStr;
-                  gct = 0
-           }
-           	
-    }
-    
-    
-    
-       let template = "Score.html";
-       let template2 = "scoretosend.html";
-       let template_path = path.join(__dirname, "../", "templates/")
-       let html = fs.readFileSync(template_path + template, "utf8");
-       html = html.replace("women_cup_score", strData, html);
-       fs.writeFileSync(template_path + template2, html);
-
-      
-    
-
-          let subject = req.messages.MAIL_SUBJECT.INVITEFRIEND,
-            template_name = template2,
-            comment = req.body.comment,
-            replacements = { women_cup_score: strData, url:req.BASE_URL_FRONTEND};
-            helper.sendEmail(process.env.mailFrom, "surendramaurya@mobikasa.com", subject, template_name, replacements);
-            
-    
-    
-    
-    return res.status(req.constants.HTTP_SUCCESS).json({
-      status: req.constants.SUCCESS,
-      code: req.constants.HTTP_SUCCESS,
-      message: "Wel",
-      data: games,
-    });
-  } catch (err) {
-    console.log(err);
     return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
   }
 };
 
 const getUserRankFunctionNew = async (req, bracketType, userID) => { 
-   
-    //let sqlQuery = `select * from (select sum(tgs.winner_score ) as score,users.id as userId,users.userName, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank" from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join tournament_breakets tbs on tbs.bracket_id=tgs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id inner join users on users.id=ubs.user_id  where tls.gender = "${bracketType}" and ubt.winner_id=tgs.winner_id and ubs.id = ubt.user_bracket_id group by users.id) as t where t.userId = ${userID} ;`;
     let sqlQuery = `select * from leaderboards where userId = ${userID} and bracketType = "${bracketType}" ;`;
     const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
     return userRank;
-  };
+};
 
 
 
 
 module.exports = {
-  getBracketDetails,
-  getUserBracket,
   upsertBracketDetails,
-  createUserBracket,
   tieBreakerResolver,
   getUserBracketDetails,
-  getInCompleteBracketUsers,
-  getLatestGames,
-  sendScore
+  getLatestGames
 }
