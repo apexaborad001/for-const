@@ -64,7 +64,7 @@ const getUserBracketDetails = async (req, res) => {
   try {
 
     let isBracketEditable = true;
-    let sqlCheck = `select winner_id from tournament_games where winner_id is not null and  winner_id <>"" ;`
+    let sqlCheck = `select winner_id from tournament_games where winner_id is not null and  winner_id <>"" limit 1 ;`
     let isAdminUpdated = await req.database.query(sqlCheck, { type: req.database.QueryTypes.SELECT });
     if (new Date() > new Date(req.constants.Bracket_submission_deadline) || isAdminUpdated.length > 0) {
       isBracketEditable = false;
