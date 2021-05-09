@@ -35,7 +35,7 @@ routes.get("/s3test5", async (req, res)=>{
 			replacements = { };
 			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
         
-        return res.send({cup, totalMemo, freeMOm, instance:process.env.NODE_APP_INSTANCE})
+        return res.send({cup, totalMemo, freeMOm, "instance":process.env.NODE_APP_INSTANCE})
         /*
 		const  fs = require('fs');
 		let path =  require("path");
