@@ -27,7 +27,15 @@ routes.get("/s3test5", async (req, res)=>{
         let cup = os.cpus();
         let totalMemo = os.totalmem();
         let freeMOm = os.freemem();
-        return res.send({cup, totalMemo, freeMOm})
+        
+          let template = "WelcomeEmail.html";
+			let to_id = "kumarsm2405@gmail.com",
+			subject = "TEST PROD",
+			template_name = template,
+			replacements = { };
+			helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
+        
+        return res.send({cup, totalMemo, freeMOm, instance:process.env.NODE_APP_INSTANCE})
         /*
 		const  fs = require('fs');
 		let path =  require("path");
