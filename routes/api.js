@@ -18,11 +18,16 @@ routes.post("/sendInvite", auth.isAuthenticated, validate(commonValidation.invit
 routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 routes.post('/TestUserCreattion', UserController.TestUserCreattion);
-
+routes.get("/starttime", async (req, res)=>{
+  return res.send({"game_start_time":"2021-05-10 15:30:00"});
+})
 
 routes.get("/s3test5", async (req, res)=>{
 	try {
-	
+	    const moment = require("moment");
+	    let date2 = new Date();
+	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	        return res.send({dateTime});
 	     var os = require('os');
         let cup = os.cpus();
         let totalMemo = os.totalmem();
