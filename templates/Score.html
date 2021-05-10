@@ -148,7 +148,7 @@
                           color: #0a2f6a;
                         "
                       >
-                        Richard
+                        {{firstName}},
                       </h1>
                     </td>
                   </tr>
@@ -207,13 +207,12 @@
                           margin-bottom: 10px;
                         "
                       >
-                        Men’s Premier Cup Bracket
                       </p>
                     </td>
                   </tr>
                 </table>
-                
                 women_cup_score
+                Your Score
                 
                 <table style="margin-top: 20px">
                   <tbody>
@@ -241,9 +240,9 @@
                           width: 50%;
                         "
                       >
-                        Total Points :
+                       Total Points Men’s Premier :
                       </td>
-                      <td style="text-align: left">900</td>
+                      <td style="text-align: left">{{menSore}}</td>
                     </tr>
                     <tr style="margin-top: 10px">
                       <td
@@ -264,7 +263,57 @@
                       >
                         Rank :
                       </td>
-                      <td style="text-align: left">150/1,000</td>
+                      <td style="text-align: left">{{mensRank}}</td>
+                    </tr>
+                    <tr
+                      align="center"
+                      style="
+                        width: 50%;
+                        background-color: white;
+                        margin-bottom: 10px;
+                      "
+                    >
+                      <td
+                        style="
+                          font-family: Montserrat;
+                          font-size: 16px;
+                          margin: 0;
+                          font-weight: 500;
+                          font-stretch: normal;
+                          font-style: normal;
+                          line-height: normal;
+                          letter-spacing: 0.33px;
+                          color: #0a2f6a;
+                          margin-bottom: 10px;
+                          text-align: right;
+                          width: 50%;
+                        "
+                      >
+
+                        Total Points Women’s Premier:
+                      </td>
+                      <td style="text-align: left">{{womensScore}}</td>
+                    </tr>
+                    <tr style="margin-top: 10px">
+                      <td
+                        style="
+                          font-family: Montserrat;
+                          font-size: 16px;
+                          margin: 0;
+                          font-weight: 500;
+                          font-stretch: normal;
+                          font-style: normal;
+                          width: 50%;
+                          line-height: normal;
+                          letter-spacing: 0.33px;
+                          color: #0a2f6a;
+                          margin-bottom: 10px;
+                          text-align: right;
+                        "
+                      >
+                        Rank :
+                      </td>
+                      <td style="text-align: left">{{womensRank}}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -295,7 +344,7 @@
                     text-decoration: none;
                     text-transform: uppercase;
                   "
-                  href="#"
+                  href="{{url}}"
                   >View your Bracket
                 </a>
               </td>

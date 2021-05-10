@@ -25,24 +25,10 @@ let date3_start = "2021-05-10 18:32:00";
 let date3_end = "2021-05-10 18:32:00";
 
 
-reminder1_start = "2021-05-10 13:10:00";
-reminder1_end = "2021-05-10 13:12:00";
-
-reminder2_start = "2021-05-10 13:15:00";
-reminder2_end = "2021-05-10 13:17:00";
-
-date1_start = "2021-05-10 13:20:00";
-date1_end = "2021-05-10 14:19:00";
-
-date2_start = "2021-05-10 13:21:00";
-date2_end = "2021-05-10 14:19:00";
-
-date3_start = "2021-05-10 13:29:00";
-date3_end = "2021-05-10 14:15:00";
-
-
 const sendReminder = async (type) => {
        try {
+          let date2 = new Date();
+	  let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
           const sql2 = `select * from cron_history where type="${type}"`;
           const getQueryResult2 = await connection.query(sql2, { type: models.Sequelize.QueryTypes.SELECT });
         
@@ -52,11 +38,11 @@ const sendReminder = async (type) => {
         const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
         for(let row of getQueryResult){
             let template = "Reminder.html";
-              let to_id = row.email,
+              let to_id = row["email"],
               subject = "Bracket Challenge Reminder",
               template_name = template,
-              replacements = {user:row.user};
-              helper.sendEmail(process.env.mailFrom, "kumarsm2405@gmail.com", subject, template_name, replacements);        
+              replacements = {user:row.user, url:process.env.BASE_URL_FRONTEND};
+              helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);        
         }
 	let cnt = getQueryResult.length;
 	const sql1 = `insert into cron_history values (NULL, 'reminder', ${cnt}, "${dateTime}", "${dateTime}")`;
@@ -104,7 +90,7 @@ let ScoreCard = async (update_after, type) => {
                 subject = "Bracket Challenge: Day 3 Recap | Your Final Score";
             }
             
-            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id limit 1 ;`;
+            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id;`;
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
             for(let row of userData){
                 let rankQuery = `select leaderboards.rank as "rank", score, bracketType from leaderboards where userId=${row["user_id"]} ;`;
@@ -127,7 +113,7 @@ let ScoreCard = async (update_after, type) => {
                 
                 subject = subject;
                 let replacements = { firstName: row["firstName"], url:process.env.BASE_URL_FRONTEND, mensRank, menSore, womensRank, womensScore, totalScore:menSore+womensScore}
-            	helper.sendEmail(process.env.mailFrom, "surendramaurya@mobikasa.com", subject, template_name, replacements);
+            	helper.sendEmail(process.env.mailFrom, row["email"], subject, template_name, replacements);
             
             }
             
@@ -159,8 +145,8 @@ module.exports = {
     cron.schedule(time, async() => {
       try {
 	let date2 = new Date();
-	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
-	console.log(dateTime);
+	//let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	if(dateTime > reminder1_start && dateTime < reminder1_end){
             sendReminder("reminder_one");
         }else if(dateTime > reminder2_start && dateTime < reminder2_end){

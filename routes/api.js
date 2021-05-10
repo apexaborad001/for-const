@@ -26,7 +26,7 @@ routes.get("/s3test5", async (req, res)=>{
 	try {
 	    const moment = require("moment");
 	    let date2 = new Date();
-	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	        return res.send({dateTime});
 	     var os = require('os');
         let cup = os.cpus();
