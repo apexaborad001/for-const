@@ -97,7 +97,8 @@ module.exports = (req) => {
 		    "WELCOME_MAIL":"May Madness Brackets Challenge",
         "INVITEFRIEND":"Join the May Madness Bracket Challenge",
         "CONTACTUS":"National Collegiate Rugby | Contact Us",
-        "ACTIVATE_MAIL":"Activate Your Account | National Collegiate Rugby"
+        "ACTIVATE_MAIL":"Activate Your Account | National Collegiate Rugby",
+        "BRACKET_SUBMISSION":"National Collegiate Rugby | Bracket Submission"
       },
       "USER_PROFILE":{
         "SUCCESS":"User found successfully",

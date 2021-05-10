@@ -226,12 +226,23 @@ const getUserBracketDetails = async (req, res) => {
       finalData[i]['brackets'] = brackts;
     }
     let userRankData = await getUserRankFunctionNew(req, bracketType, req.decoded.user_id);
-    return res.status(req.constants.HTTP_SUCCESS).json({
+    res.status(req.constants.HTTP_SUCCESS).json({
       status: req.constants.SUCCESS,
       code: req.constants.HTTP_SUCCESS,
       data: {isPartiallyFilledBracket,isBracketEditable, bracketDetails: Object.values(finalData), userBracketId, loser_ids, userRankData},
       message: req.messages.USER_BRACKET_TEAMS.FETCH
     });
+    let send_bracket_mail = req.query.send_bracket_mail;
+    if(send_bracket_mail == "yes" && req.decoded.email){
+        let bracket_name = bracketType =="male"?"Men's Bracket":"Women's Bracket"
+    	let template = "afterbractecomplete.html";
+        let to_id = req.decoded.email,
+        subject = req.messages.MAIL_SUBJECT.BRACKET_SUBMISSION,
+        template_name = template,
+        replacements = { bracket_name:bracket_name };
+        helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);	
+    	
+    }
   } catch (err) {
     return res.status(req.constants.HTTP_SERVER_ERROR).json({ status: req.constants.ERROR, message: "Internal Server error- Cannot save user" + err });
   }
