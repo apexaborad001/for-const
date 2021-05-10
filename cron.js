@@ -6,7 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
 let reminder1_start = "2021-05-10 10:00:00";
-let reminder1_end = "2021-05-10 10:31:00";
+let reminder1_end = "2021-05-10 10:01:00";
 
 let reminder2_start = "2021-05-10 10:30:00";
 let reminder2_end = "2021-05-10 10:31:00";
