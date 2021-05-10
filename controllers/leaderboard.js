@@ -167,9 +167,9 @@ const getUserBrackets = async (req, res) => {
        		let sql = `select count(id) as count from leaderboards ldr where ldr.bracketType = "${gender}"`
       		count = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       		count = count[0];
-      		let game_id="47";
+      		let game_id="31";
       		if(gender=="female"){
-      		   game_id="31"
+      		   game_id="79"
       		}
       		const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name, tms.name as winner_team from leaderboards ldr left join user_breaket_teams ubt on ubt.user_bracket_id = ldr.winner_id and ubt.game_id=${game_id} left join user_images on user_images.user_id = ldr.userId left join tournament_teams tms on tms.team_id = ubt.winner_id where ldr.bracketType = "${gender}" limit ${start}, ${end}`
      		allRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
