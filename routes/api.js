@@ -27,7 +27,7 @@ routes.get("/s3test5", async (req, res)=>{
 	    const moment = require("moment");
 	    let date2 = new Date();
 	let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
-	        return res.send({dateTime});
+	        return res.send({"dateTimenew":dateTime});
 	     var os = require('os');
         let cup = os.cpus();
         let totalMemo = os.totalmem();
