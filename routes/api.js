@@ -19,7 +19,7 @@ routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 routes.get("/starttime", async (req, res)=>{
-  return res.send({"game_start_time":"2021-05-10 15:30:00"});
+  return res.send({"game_start_time":"2021-05-10 17:30:00"});
 })
 
 routes.get("/s3test5", async (req, res)=>{

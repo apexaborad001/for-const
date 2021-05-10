@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 const {  insertUserBracketDetails, tieBreakerResolverFunction } = require('../util')
 const util = require('../util')
+const moment = require("moment");
 
 const tieBreakerResolver = async (req, res) => {
   try {
@@ -77,9 +78,11 @@ const getUserBracketDetails = async (req, res) => {
   try {
 
     let isBracketEditable = true;
-    let sqlCheck = `select winner_id from tournament_games where winner_id is not null limit 1 ;`
-    let isAdminUpdated = await req.database.query(sqlCheck, { type: req.database.QueryTypes.SELECT });
-    if (new Date() > new Date(req.constants.Bracket_submission_deadline) || isAdminUpdated.length > 0) {
+    //let sqlCheck = `select winner_id from tournament_games where winner_id is not null limit 1 ;`
+    //let isAdminUpdated = await req.database.query(sqlCheck, { type: req.database.QueryTypes.SELECT });
+    let date2 = new Date();
+    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+    if (dateTime > req.constants.Bracket_submission_deadline) {
       isBracketEditable = false;
     }
     let isPartiallyFilledBracket = {"male":false, "female":false};

@@ -5,24 +5,24 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
-let reminder1_start = "2021-05-10 15:30:00";
-let reminder1_end = "2021-05-10 15:32:00";
+let reminder1_start = "2021-05-10 10:00:00";
+let reminder1_end = "2021-05-10 10:31:00";
 
-let reminder2_start = "2021-05-10 16:00:00";
-let reminder2_end = "2021-05-10 16:02:00";
+let reminder2_start = "2021-05-10 10:30:00";
+let reminder2_end = "2021-05-10 10:31:00";
 
-let remove_bracket_start = "2021-05-10 16:30:00";
-let remove_bracket_end = "2021-05-10 16:32:00";
+let remove_bracket_start = "2021-05-10 11:30:00";
+let remove_bracket_end = "2021-05-10 11:31:00";
 
 
-let date1_start = "2021-05-10 17:30:00";
-let date1_end = "2021-05-10 17:32:00";
+let date1_start = "2021-05-10 12:00:00";
+let date1_end = "2021-05-10 12:01:00";
 
-let date2_start = "2021-05-10 18:00:00";
-let date2_end = "2021-05-10 18:02:00";
+let date2_start = "2021-05-10 12:30:00";
+let date2_end = "2021-05-10 12:31:00";
 
-let date3_start = "2021-05-10 18:32:00";
-let date3_end = "2021-05-10 18:32:00";
+let date3_start = "2021-05-10 13:00:00";
+let date3_end = "2021-05-10 13:01:00";
 
 
 const sendReminder = async (type) => {
@@ -145,8 +145,8 @@ module.exports = {
     cron.schedule(time, async() => {
       try {
 	let date2 = new Date();
-	//let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
-	let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
+	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	//let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	if(dateTime > reminder1_start && dateTime < reminder1_end){
             sendReminder("reminder_one");
         }else if(dateTime > reminder2_start && dateTime < reminder2_end){
