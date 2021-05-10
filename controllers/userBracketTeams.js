@@ -45,11 +45,12 @@ const upsertBracketDetails = async (req, res) => {
     if (userBracket) {
 	const upsertBracket = await req.models.user_breaket_team.bulkCreate(userBracketDetails);
        res.status(req.constants.HTTP_SUCCESS).json({ status: req.constants.SUCCESS, code: req.constants.HTTP_SUCCESS, message: req.messages.USER_BRACKET_TEAMS.UPSERT, data: upsertBracket });
-      let send_bracket_mail = req.query.send_bracket_mail;
-    if(send_bracket_mail == "yes" && req.decoded.email){
+      let send_bracket_mail = req.body.send_bracket_mail;
+      let bracketType = req.body.bracketType || "male";
+    if(send_bracket_mail == "yes"){
         let bracket_name = bracketType =="male"?"Men's Bracket":"Women's Bracket"
     	let template = "afterbractecomplete.html";
-        let to_id = req.body.email,
+        let to_id = req.decoded.email,
         subject = req.messages.MAIL_SUBJECT.BRACKET_SUBMISSION,
         template_name = template,
         replacements = { bracket_name:bracket_name };
