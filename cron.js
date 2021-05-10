@@ -98,8 +98,10 @@ let ScoreCard = async (update_after, type) => {
              
             let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id;`;
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
+            let date2 = new Date();
+	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
             const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
-            const getQueryResult1 = await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
+            await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
 	
             for(let row of userData){
                 let rankQuery = `select leaderboards.rank as "rank", score, bracketType from leaderboards where userId=${row["user_id"]} ;`;
@@ -134,8 +136,8 @@ let ScoreCard = async (update_after, type) => {
 
 const deleteOldBracket = async (type) => {
        try {
-         const sql2 = `select * from cron_history where type="${type}"`;
-	const getQueryResult2 = await connection.query(sql2, { type: models.Sequelize.QueryTypes.SELECT });
+         const sql3 = `select * from cron_history where type="${type}"`;
+	const getQueryResult2 = await connection.query(sql3, { type: models.Sequelize.QueryTypes.SELECT });
 
 	if(getQueryResult2.length > 0){
 		return false;
@@ -149,7 +151,11 @@ const deleteOldBracket = async (type) => {
      		      
      		      const sql2 = `delete from user_breakets where id="${row_id}"`;
      		      await connection.query(sql2, { type: connection.QueryTypes.DELETE });
-        }       
+        }
+         let date2 = new Date();
+	 let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+         const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
+         await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });       
       } catch (err) {
         console.log("Error in send Reminder" + err);
       }
