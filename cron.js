@@ -5,47 +5,185 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
- const sendReminder = async () => {
+let reminder1_start = "2021-05-10 15:30:00";
+let reminder1_end = "2021-05-10 15:32:00";
+
+let reminder2_start = "2021-05-10 16:00:00";
+let reminder2_end = "2021-05-10 16:02:00";
+
+let remove_bracket_start = "2021-05-10 16:30:00";
+let remove_bracket_end = "2021-05-10 16:32:00";
+
+
+let date1_start = "2021-05-10 17:30:00";
+let date1_end = "2021-05-10 17:32:00";
+
+let date2_start = "2021-05-10 18:00:00";
+let date2_end = "2021-05-10 18:02:00";
+
+let date3_start = "2021-05-10 18:32:00";
+let date3_end = "2021-05-10 18:32:00";
+
+
+reminder1_start = "2021-05-10 13:10:00";
+reminder1_end = "2021-05-10 13:12:00";
+
+reminder2_start = "2021-05-10 13:15:00";
+reminder2_end = "2021-05-10 13:17:00";
+
+date1_start = "2021-05-10 13:20:00";
+date1_end = "2021-05-10 14:19:00";
+
+date2_start = "2021-05-10 13:21:00";
+date2_end = "2021-05-10 14:19:00";
+
+date3_start = "2021-05-10 13:29:00";
+date3_end = "2021-05-10 14:15:00";
+
+
+const sendReminder = async (type) => {
        try {
-        let date2 = new Date();
-        let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
-        if(dateTime > "2021-05-07 13:00" && dateTime < "2021-05-07 13:02"){
+          const sql2 = `select * from cron_history where type="${type}"`;
+          const getQueryResult2 = await connection.query(sql2, { type: models.Sequelize.QueryTypes.SELECT });
         
-        const sql2 = `select * from cron_history where type="reminder"`;
-       const getQueryResult2 = await connection.query(sql2, { type: models.Sequelize.QueryTypes.SELECT });
-        
-        if(getQueryResult2 == 0){
-        
-        const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null group by email`;
-       const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
-       for(let row of getQueryResult){
+          if(getQueryResult2 == 0){        
+         
+         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email;`;
+        const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
+        for(let row of getQueryResult){
             let template = "Reminder.html";
               let to_id = row.email,
-              subject = "Reminder MAil",
+              subject = "Bracket Challenge Reminder",
               template_name = template,
               replacements = {user:row.user};
               helper.sendEmail(process.env.mailFrom, "kumarsm2405@gmail.com", subject, template_name, replacements);        
-       }
+        }
 	let cnt = getQueryResult.length;
 	const sql1 = `insert into cron_history values (NULL, 'reminder', ${cnt}, "${dateTime}", "${dateTime}")`;
         const getQueryResult1 = await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
-	
-       return getQueryResult;
+	return getQueryResult;
        }
-       }
+       
       } catch (err) {
         console.log("Error in send Reminder" + err);
       }
   };
+  
+let ScoreCard = async (update_after, type) => {
+      try {
+        let sql = `SELECT tgs.game_id, tgs.bracket_id, tgs.winner_id, tm1.name as t1_name, tgs.team1_score, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tgs.team2_score, tm2.thumbnails as t2_thumbnails, tls.name as league_name, tls.gender as gender FROM tournament_games tgs inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on tm2.team_id=tgs.team_2_id where tgs.winner_id is not null and tgs.team1_score is not null and tgs.team2_score is not null order by tgs.bracket_id;`
+      const bracketData = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
+      if(bracketData.length > 0){
+	      let games = {};
+	      for (let row of bracketData) {
+		let {league_name, game_id, winner_id, t1_name, t1_thumbnails, t2_name, t2_thumbnails, team1_score,team2_score, gender} = row;
+		if(games[league_name]){
+		 games[league_name].push({t1_name, t2_name, team1_score, team2_score})
+	       }else{
+	      	games[league_name] = [{t1_name, t2_name, team1_score, team2_score}];
+	       }
+	     }
+	   let strData = getScoreHtml(games);
+    	   let template = "Score.html";
+           let template2 = "scoretosend.html";
+           let template_path = path.join(__dirname, "./", "templates/")
+           let html = fs.readFileSync(template_path + template, "utf8");
+           html = html.replace("women_cup_score", strData, html);
+           fs.writeFileSync(template_path + template2, html);
+           
+       
+
+          let subject = "Test",
+            template_name = template2;
+            
+            if(type == "day1"){
+              subject = "Bracket Challenge: Day 1 Recap";
+            }else if(type == "day2"){
+               subject = "Bracket Challenge: Day 2 Recap";
+            }else if(type == "day3"){
+                subject = "Bracket Challenge: Day 3 Recap | Your Final Score";
+            }
+            
+            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id limit 1 ;`;
+            let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
+            for(let row of userData){
+                let rankQuery = `select leaderboards.rank as "rank", score, bracketType from leaderboards where userId=${row["user_id"]} ;`;
+                let rankData = await connection.query(rankQuery, { type: models.Sequelize.QueryTypes.SELECT });
+                let mensRank = "NA";
+                let womensRank = "NA";
+                let menSore = 0;
+                let womensScore = 0;
+                let totalScore = 0;
+                for(let rdata of rankData){
+                   if(rdata["bracketType"] == "male"){
+                        mensRank = rdata["rank"];
+                        menSore  = rdata["score"];
+                   }else{
+                         womensRank = rdata["rank"];
+                         womensScore  = rdata["score"];
+                   }
+                }
+                
+                
+                subject = subject;
+                let replacements = { firstName: row["firstName"], url:process.env.BASE_URL_FRONTEND, mensRank, menSore, womensRank, womensScore, totalScore:menSore+womensScore}
+            	helper.sendEmail(process.env.mailFrom, "surendramaurya@mobikasa.com", subject, template_name, replacements);
+            
+            }
+            
+      }
+      } catch (err) {
+        console.log("Error ScoreCard" + err);
+      }
+  }
+
+const deleteOldBracket = async (type) => {
+       try { 
+        const sql = `select distinct user_bracket_id from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null`;
+        const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT })
+        for(let row of getQueryResult){
+                      let row_id= row["user_bracket_id"];
+        	      const sql = `delete from user_breaket_teams where user_bracket_id="${row_id}"`;
+     		      await connection.query(sql, { type: connection.QueryTypes.DELETE });
+     		      
+     		      const sql2 = `delete from user_breakets where id="${row_id}"`;
+     		      await connection.query(sql2, { type: connection.QueryTypes.DELETE });
+        }       
+      } catch (err) {
+        console.log("Error in send Reminder" + err);
+      }
+ }
 
 module.exports = {
   DailyCron: (time) => {
     cron.schedule(time, async() => {
       try {
-        //const sql = `select distinct user_bracket_id from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null or ubt.team_1_id is null or ubt.team_2_id is null order by user_id`;
-        //const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT })
-        //console.log("Logs....", getQueryResult);
-        sendReminder();
+	let date2 = new Date();
+	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	console.log(dateTime);
+	if(dateTime > reminder1_start && dateTime < reminder1_end){
+            sendReminder("reminder_one");
+        }else if(dateTime > reminder2_start && dateTime < reminder2_end){
+              sendReminder("reminder_two");
+        }
+        
+        if(dateTime > remove_bracket_start && dateTime < remove_bracket_end){
+               deleteOldBracket();
+        }     
+        
+        if(dateTime > date1_start && dateTime < date1_end){
+               ScoreCard("2021-05-09", "day1");
+        }
+        
+        if(dateTime > date2_start && dateTime < date2_end){
+               ScoreCard(date1_start, "day2");
+        }
+        
+        if(dateTime > date3_start && dateTime < date3_end){
+               ScoreCard(date2_start, "day3");
+        }
+        
+        
       } catch (err) {
         console.log("Error reschedule notification appointment-" + err);
       } finally {
@@ -55,45 +193,7 @@ module.exports = {
   },
   
   
-  ScoreCard: (time) => {
-    cron.schedule(time, async() => {
-      try {
-        let sql = `SELECT tgs.game_id, tgs.bracket_id, tgs.winner_id, tm1.name as t1_name, tgs.team1_score, tm1.thumbnails as t1_thumbnails, tm2.name as t2_name, tgs.team2_score, tm2.thumbnails as t2_thumbnails, tls.name as league_name, tls.gender as gender FROM tournament_games tgs inner join tournament_breakets tbs on tgs.bracket_id=tbs.bracket_id inner join tournament_leagues tls on tbs.subseason_id=tls.current_subseason_id left join tournament_teams tm1 on tm1.team_id=tgs.team_1_id left join tournament_teams tm2 on tm2.team_id=tgs.team_2_id where tgs.winner_id is not null and tgs.team1_score is not null and tgs.team2_score is not null order by tgs.bracket_id;`
-        const bracketData = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT })
-     let games = {};
-     for (let row of bracketData) {
-      let {league_name, game_id, winner_id, t1_name, t1_thumbnails, t2_name, t2_thumbnails, team1_score,team2_score, gender} = row;
-      if(games[league_name]){
-         games[league_name].push({t1_name, t2_name, team1_score, team2_score})
-      }else{
-      	games[league_name] = [{t1_name, t2_name, team1_score, team2_score}];
-      }
-     }
-     let strData = getScoreHtml(games);
-    
-       let template = "Score.html";
-       let template2 = "scoretosend.html";
-       let template_path = path.join(__dirname, "./", "templates/")
-       let html = fs.readFileSync(template_path + template, "utf8");
-       html = html.replace("women_cup_score", strData, html);
-       fs.writeFileSync(template_path + template2, html);
-
-      
-    
-
-          let subject = "Test",
-            template_name = template2,
-            replacements = { women_cup_score: strData, url:process.env.BASE_URL_FRONTEND};
-            helper.sendEmail(process.env.mailFrom, "surendramaurya@mobikasa.com", subject, template_name, replacements);
-      
-              console.log("mail sent successfulyy");
-      } catch (err) {
-        console.log("Error reschedule notification appointment-" + err);
-      } finally {
-        
-      }
-    })
-  },
+  
   
   
     
@@ -226,7 +326,7 @@ const getScoreHtml = (games)=>{
            }
            	
     }
-    
+    return strData;
     
 }
 
