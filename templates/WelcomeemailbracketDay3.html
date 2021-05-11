@@ -19,6 +19,16 @@
         .bodytext {
           font-size: 15px;
         }
+        .btntr {
+          display: grid;
+        }
+        .btntr :nth-child(1) {
+          width: 100%;
+          padding-bottom: 30px;
+        }
+        .btntr :nth-child(1) a {
+          padding: 15px 39px;
+        }
         .footertext {
           font-size: 14px;
         }
@@ -30,6 +40,12 @@
       @media only screen and (min-width: 769px) {
         .bodytext {
           font-size: 15px;
+        }
+        .btntr :nth-child(1) {
+          width: 50%;
+        }
+        .btntr :nth-child(1) a {
+          padding: 15px 40px;
         }
         .bodyfooter {
           font-size: 15px;
@@ -185,10 +201,10 @@
                     "
                   >
                     <td>
-                      <table>
+                      <table class="btnbox">
                         <tbody>
-                          <tr>
-                            <td style="width: 50%">
+                          <tr class="btntr">
+                            <td>
                               <a
                                 style="
                                   max-width: 364px;
@@ -203,7 +219,6 @@
                                   text-align: center;
 
                                   height: 60px;
-                                  padding: 15px 40px;
 
                                   background-color: #0a2f6a;
                                   color: white;
