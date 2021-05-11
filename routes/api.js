@@ -21,7 +21,7 @@ routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.up
 routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 routes.get("/starttime", async (req, res)=>{
    const moment = require("moment");
-   let date2 = new Date("2021, 05, 11, 15, 24, 0");
+   let date2 = new Date("2021, 05, 11, 19, 0, 0");
   return res.send({"game_start_time":date2});
 });
 routes.get("/croninit", async (req, res)=>{

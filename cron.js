@@ -5,24 +5,24 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
-let reminder1_start = "2021-05-10 16:00:00";
-let reminder1_end = "2021-05-10 16:00:00";
+let reminder1_start = "2021-05-11 17:00:00";
+let reminder1_end = "2021-05-11 17:01:00";
 
-let reminder2_start = "2021-05-10 16:00:00";
-let reminder2_end = "2021-05-10 16:00:00";
+let reminder2_start = "2021-05-11 17:30:00";
+let reminder2_end = "2021-05-11 17:31:00";
 
-let remove_bracket_start = "2021-05-10 11:30:00";
-let remove_bracket_end = "2021-05-10 11:31:00";
+let remove_bracket_start = "2021-05-11 19:00:00";
+let remove_bracket_end = "2021-05-11 19:01:00";
 
 
-let date1_start = "2021-05-10 16:00:00";
-let date1_end = "2021-05-10 16:00:00";
+let date1_start = "2021-05-11 20:30:00";
+let date1_end = "2021-05-11 20:31:00";
 
-let date2_start = "2021-05-10 16:00:00";
-let date2_end = "2021-05-10 16:00:00";
+let date2_start = "2021-05-11 21:30:00";
+let date2_end = "2021-05-11 21:31:00";
 
-let date3_start = "2021-05-10 16:00:00";
-let date3_end = "2021-05-10 16:00:00";
+let date3_start = "2021-05-11 22:30:00";
+let date3_end = "2021-05-11 22:31:00";
 
 
 const sendReminder = async (type) => {

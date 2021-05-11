@@ -41,7 +41,7 @@ module.exports = (req) => {
       "TEMP_LIVE_URL": `${req.BASE_URL}assets/temp/`,
       "COMMON_IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}`,
       "IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}common/`,
-      "Bracket_submission_deadline":"2021-05-29 11:00:00"
+      "Bracket_submission_deadline":"2021-05-11 19:00:00"
        },
     messages = {
       "LOGIN": {
