@@ -17,8 +17,8 @@ const subscribe = async (req, res) => {
     try {
         const endpoint = req.body.endpoint;
         const auth_key = JSON.stringify(req.body.keys);
-        const user_id = req.body.userId;
-        const token = req.body.token;
+        const user_id = req.decoded.user_id;
+        const token = req.headers['access_token'];
         // let results;
         const results = await req.models.notificationSubscriptions.findOne({ where: { [Op.and]: [{ user_id: user_id }, { token: token }], endpoint: endpoint } }) // notificationSubscriptions.findOne({ where: { $or: [{ user_id: user_id }, { token: token }], endpoint: endpoint } });
         console.log('results', results)

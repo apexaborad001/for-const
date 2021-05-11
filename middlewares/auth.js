@@ -62,56 +62,8 @@ let isAuthenticated = (req, res, next) => {
 
 }
 
-let hasAccess = (req, res, next) => {
-  let role = req.decoded.role;
-  if (req.decoded.status === req.constants.BLOCKED) {
-    return res.status(req.constants.HTTP_FORBIDDEN).json({
-      status: req.constants.ERROR,
-      code: req.constants.LOGOUT_USER,
-      message: req.messages.LOGIN.BLOCKED
-    })
-  }
-  // Check user role is admin or superadmin
-  if (role === req.constants.USER_TYPE.superadmin || role === req.constants.USER_TYPE.admin) {
-    next();
-  } else {
-    if (role === req.constants.USER_TYPE.staff) {
-      let actionName = req.route.path;
-      const blocked_url_readonly = ["/admin/saveInfoPages", "/admin/saveQuestionnaire", "/admin/deleteQuestionnaire/:id", "/admin/updateQuestionnaireOrder", "/admin/registerAdmin", "/admin/updateAdmin","/admin/deleteAdmin",
-                  "/admin/updateAdminStatus","/admin/createProvider","/admin/updateProvider","/admin/deleteProvider/:id",
-                  ,"/admin/updateProfile", "/admin/deletePatient/:id","/admin/changeProviderStatus", "/admin/changePatientStatus",
-                  "/admin/updateInsuranceStatus","/admin/uploadProfilePhoto", "/admin/addPromoCode", "/admin/updatePromoCode", "/admin/addClinicCode","/admin/saveAppVersion", "/admin/saveOnboardingData"]; 
-      
-      const is_valid_url = blocked_url_readonly.every((currentValue) => !actionName.includes(currentValue));
-      if(is_valid_url){
-       return next();
-      }
 
-    }
-    return res.status(req.constants.HTTP_FORBIDDEN).send({
-      code: req.constants.HTTP_FORBIDDEN,
-      status: req.constants.ERROR,
-      message: 'Un-authorized access'
-    });
-  }
-
-}
-let hasAccessForProvider = (req, res, next) => {
-  let role = req.decoded.role;
-  // Check user role is admin or superadmin or provider
-  if (role === req.constants.USER_TYPE.superadmin || role === req.constants.USER_TYPE.admin || role === req.constants.USER_TYPE.provider) {
-    next();
-  } else {
-    return res.status(req.constants.HTTP_FORBIDDEN).send({
-      code: req.constants.HTTP_FORBIDDEN,
-      status: req.constants.ERROR,
-      message: 'Un-authorized access'
-    });
-  }
-}
 
 module.exports = {
-  isAuthenticated,
-  hasAccess,
-  hasAccessForProvider
+  isAuthenticated
 }

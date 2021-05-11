@@ -241,11 +241,10 @@ const getUserBracketDetails = async (req, res) => {
       }
       finalData[i]['brackets'] = brackts;
     }
-    let userRankData = await getUserRankFunctionNew(req, bracketType, req.decoded.user_id);
     return res.status(req.constants.HTTP_SUCCESS).json({
       status: req.constants.SUCCESS,
       code: req.constants.HTTP_SUCCESS,
-      data: {isPartiallyFilledBracket,isBracketEditable, bracketDetails: Object.values(finalData), userBracketId, loser_ids, userRankData},
+      data: {isPartiallyFilledBracket,isBracketEditable, bracketDetails: Object.values(finalData), userBracketId, loser_ids},
       message: req.messages.USER_BRACKET_TEAMS.FETCH
     });
   } catch (err) {

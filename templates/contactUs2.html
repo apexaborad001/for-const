@@ -21,6 +21,50 @@
         font-family: Montserrat-Regular;
       }
     </style>
+    <style>
+      @media only screen and (max-width: 768px) {
+        .form tr :nth-child(1) {
+          width: 50%;
+        }
+        .form tr :nth-child(2) {
+          width: 50%;
+        }
+
+        .title {
+          font-size: 18px;
+        }
+        .bodytext {
+          font-size: 15px;
+        }
+        .footertext {
+          font-size: 14px;
+        }
+        .bodyfooter {
+          font-size: 15px;
+        }
+      }
+
+      @media only screen and (min-width: 769px) {
+        .form tr :nth-child(1) {
+          width: 30%;
+        }
+        .form tr :nth-child(2) {
+          width: 80%;
+        }
+        .title {
+          font-size: 26px;
+        }
+        .bodytext {
+          font-size: 16px;
+        }
+        .bodyfooter {
+          font-size: 16px;
+        }
+        .footertext {
+          font-size: 12px;
+        }
+      }
+    </style>
   </head>
 
   <body style="margin: 0; padding: 0">
@@ -56,8 +100,10 @@
             </tr>
             <tr>
               <td align="center">
-                <img src="https://ncrrugbyuat.s3.amazonaws.com/common/contatct-2.jpg" alt="Ncr rugby"" width="100%"
-                style="display: block; margin-top: -1px" />
+                <img
+                src="https://ncrrugbyuat.s3.amazonaws.com/common/contatct-2.jpg"
+                alt="Ncr rugby"" width="100%" style="display: block; margin-top:
+                -1px" />
               </td>
             </tr>
             <tr>
@@ -73,80 +119,65 @@
                   width="100%"
                   style="border-collapse: collapse"
                 >
-                  <tbody>
+                  <tbody class="form">
                     <tr>
                       <td
+                        class="bodytext"
                         style="
-                          width: 30%;
                           padding: 20px 10px;
                           font-family: 'Montserrat';
-                          font-size: 14px;
+
                           color: #363636;
                         "
                       >
                         First Name:
                       </td>
                       <td
-                        style="
-                          width: 80%;
-                          font-family: 'Montserrat-Regular';
-                          font-size: 14px;
-                        "
+                        class="bodytext"
+                        style="font-family: 'Montserrat-Regular'"
                       >
                         {{firstName}}
                       </td>
                     </tr>
                     <tr>
                       <td
+                        class="bodytext"
                         style="
-                          width: 30%;
                           padding: 20px 10px;
                           font-family: 'Montserrat';
-                          font-size: 14px;
+
                           color: #363636;
                         "
                       >
                         Last Name:
                       </td>
-                      <td
-                        style="
-                          width: 80%;
-                          font-family: 'Montserrat';
-                          font-size: 14px;
-                        "
-                      >
+                      <td class="bodytext" style="font-family: 'Montserrat'">
                         {{lastName}}
                       </td>
                     </tr>
                     <tr>
                       <td
+                        class="bodytext"
                         style="
-                          width: 30%;
                           padding: 20px 10px;
                           font-family: 'Montserrat';
-                          font-size: 14px;
+
                           color: #363636;
                         "
                       >
                         Email Address:
                       </td>
-                      <td
-                        style="
-                          width: 80%;
-                          font-family: 'Montserrat';
-                          font-size: 14px;
-                        "
-                      >
+                      <td class="bodytext" style="font-family: 'Montserrat'">
                         {{email}}
                       </td>
                     </tr>
                     <tr>
                       <td
+                        class="bodytext"
                         style="
-                          width: 30%;
                           padding: 20px 10px;
                           font-family: 'Montserrat';
-                          font-size: 14px;
+
                           color: #363636;
                           display: block;
                         "
@@ -154,12 +185,8 @@
                         Message:
                       </td>
                       <td
-                        style="
-                          width: 80%;
-                          font-family: 'Montserrat';
-                          font-size: 14px;
-                          padding: 20px 0px;
-                        "
+                        class="bodytext"
+                        style="font-family: 'Montserrat'; padding: 20px 0px"
                       >
                         {{message}}
                       </td>
@@ -190,12 +217,13 @@
                       >
                         <tr>
                           <td>
-                            <a href="https://www.facebook.com/nationalcollegiaterugby/">
+                            <a
+                              href="https://www.facebook.com/nationalcollegiaterugby/"
+                            >
                               <img
                                 src="https://ncrrugbyuat.s3.amazonaws.com/common/fb.png"
                                 alt="fb"
-                                width="100%"
-                                style="display: block"
+                                style="display: block; width: 40px"
                                 border="0"
                               />
                             </a>
@@ -204,12 +232,13 @@
                             &nbsp;
                           </td>
                           <td>
-                            <a href="https://twitter.com/ncrrugby?fbclid=IwAR3tHM239yQskkNNY_4v9Jlz7NvJuRTLul7jLZnuurKp5vLEfj5NVakA2d8">
+                            <a
+                              href="https://twitter.com/ncrrugby?fbclid=IwAR3tHM239yQskkNNY_4v9Jlz7NvJuRTLul7jLZnuurKp5vLEfj5NVakA2d8"
+                            >
                               <img
                                 src="https://ncrrugbyuat.s3.amazonaws.com/common/twt.png"
                                 alt="twt."
-                                width="100%"
-                                style="display: block"
+                                style="display: block; width: 40px"
                                 border="0"
                               />
                             </a>
@@ -218,12 +247,13 @@
                             &nbsp;
                           </td>
                           <td>
-                            <a href="https://www.instagram.com/nationalcollegiaterugby/">
+                            <a
+                              href="https://www.instagram.com/nationalcollegiaterugby/"
+                            >
                               <img
                                 src="https://ncrrugbyuat.s3.amazonaws.com/common/insta.png"
                                 alt="instagram."
-                                width="100%"
-                                style="display: block"
+                                style="display: block; width: 40px"
                                 border="0"
                               />
                             </a>
@@ -232,12 +262,13 @@
                             &nbsp;
                           </td>
                           <td>
-                            <a href="https://www.youtube.com/c/NationalCollegiateRugby/featured">
+                            <a
+                              href="https://www.youtube.com/c/NationalCollegiateRugby/featured"
+                            >
                               <img
                                 src="https://ncrrugbyuat.s3.amazonaws.com/common/youtube.png"
                                 alt="youtube."
-                                width="100%"
-                                style="display: block"
+                                style="display: block; width: 40px"
                                 border="0"
                               />
                             </a>

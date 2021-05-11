@@ -19,7 +19,7 @@
 
       @media only screen and (min-width: 769px) {
         .bodytext {
-          font-size: 13px;
+          font-size: 16px;
         }
         .bodyfooter {
           font-size: 12px;
@@ -78,209 +78,12 @@
                 </a>
               </td>
             </tr>
-            <tr
-              style="
-                width: 100%;
-                height: 295px;
-                display: inline-table;
-                margin-top: -1px;
-              "
-            >
-              <td
-                align="center"
-                style="
-                  background-image: url(https://ncrrugbyuat.s3.amazonaws.com/common/reminder-banner.jpg);
-                  background-repeat: no-repeat;
-                  background-position: center;
-                  background-size: cover;
-                  background-attachment: inherit;
-                "
-              >
-                <table
-                  id="countdown"
-                  style="
-                    color: white;
-                    font-weight: bolder;
-                    display: flex;
-                    justify-content: center;
-                    padding-top: 60px;
-                    width: 100%;
-                    text-align: center;
-                  "
-                >
-                  <tbody style="width: 60%; text-align: center">
-                    <script>
-                      (function () {
-                        const second = 1000,
-                          minute = second * 60,
-                          hour = minute * 60,
-                          day = hour * 24;
-
-                        let match = "May 29, 2021 09:30:00",
-                          countDown = new Date(match).getTime(),
-                          x = setInterval(function () {
-                            let now = new Date().getTime(),
-                              distance = countDown - now;
-
-                            (document.getElementById(
-                              "days"
-                            ).innerText = Math.floor(distance / day)),
-                              (document.getElementById(
-                                "hours"
-                              ).innerText = Math.floor(
-                                (distance % day) / hour
-                              )),
-                              (document.getElementById(
-                                "minutes"
-                              ).innerText = Math.floor(
-                                (distance % hour) / minute
-                              )),
-                              (document.getElementById(
-                                "seconds"
-                              ).innerText = Math.floor(
-                                (distance % minute) / second
-                              ));
-
-                            //seconds
-                          }, 0);
-                      })();
-                    </script>
-                    <tr>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 36px;
-                          font-weight: bold;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 1.38px;
-                          text-align: center;
-                          color: var(--white);
-                        "
-                        id="days"
-                      ></td>
-                      <td style="width: 14%">:</td>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 36px;
-                          font-weight: bold;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 1.38px;
-                          text-align: center;
-                          color: var(--white);
-                        "
-                        id="hours"
-                      ></td>
-                      <td style="width: 14%">:</td>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 36px;
-                          font-weight: bold;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 1.38px;
-                          text-align: center;
-                          color: var(--white);
-                        "
-                        id="minutes"
-                      ></td>
-                      <td style="width: 14%">:</td>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 36px;
-                          font-weight: bold;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 1.38px;
-                          text-align: center;
-                          color: var(--white);
-                        "
-                        id="seconds"
-                      ></td>
-                    </tr>
-                    <tr>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 12px;
-                          font-weight: 500;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 0.46px;
-                          text-align: center;
-                          color: #cbcbcb;
-                        "
-                      >
-                        Days
-                      </td>
-                      <td></td>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 12px;
-                          font-weight: 500;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 0.46px;
-                          text-align: center;
-                          color: #cbcbcb;
-                        "
-                      >
-                        Hours
-                      </td>
-                      <td></td>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 12px;
-                          font-weight: 500;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 0.46px;
-                          text-align: center;
-                          color: #cbcbcb;
-                        "
-                      >
-                        Minutes
-                      </td>
-                      <td></td>
-                      <td
-                        style="
-                          width: 14%;
-                          font-family: Industry;
-                          font-size: 12px;
-                          font-weight: 500;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: normal;
-                          letter-spacing: 0.46px;
-                          text-align: center;
-                          color: #cbcbcb;
-                        "
-                      >
-                        Seconds
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <tr>
+              <td align="center">
+                <img
+                src="https://ncrrugbyuat.s3.amazonaws.com/common/welcome-mail-header.jpg"
+                alt="Ncr rugby"" width="100%" style="display: block; margin-top:
+                -1px" />
               </td>
             </tr>
             <tr>
@@ -334,8 +137,9 @@
                           color: #363636;
                         "
                       >
-                        You must be aware that the last date for submission of
-                        Bracket for May Madness 7s Rugby is May 27, 2021.
+                        Thank for registering to play the May Madness 7s Bracket
+                        Challenge. You have 3 days left to complete your
+                        bracket.
                       </p>
                       <p
                         class="bodytext"
@@ -352,8 +156,9 @@
                           color: #363636;
                         "
                       >
-                        Time is running out to submit your bracket for the
-                        College Rugby Championship.
+                        The winners of the Men's and Women's brackets will
+                        receive four VIP tickets to next year's Collegiate Rugby
+                        Championship.
                       </p>
                       <p
                         class="bodytext"
@@ -370,17 +175,47 @@
                           color: #363636;
                         "
                       >
-                        Sign in to your account and submit a men’s or women’s
-                        bracket by Saturday May 29 at 9:00am. The top performers
-                        will be eligible for prizes (and bragging rights!)
+                        Good luck!
                       </p>
                     </td>
                   </tr>
-                  <tr align="center" style="width: 50%">
-                    <td>
-                      <a href="url"
-                        ><img src="https://ncrrugbyuat.s3.amazonaws.com/common/create-brecket-btn.jpg"
-                      /></a>
+                  <tr
+                    align="center"
+                    style="width: 100%; background-color: white"
+                  >
+                    <td style="padding-bottom: 60px">
+                      <a
+                        href="{{url}}"
+                        style="
+                          max-width: 264px;
+                          width: 100%;
+                          background-color: #0a2f6a;
+                          font-family: Montserrat;
+                          font-size: 14px;
+                          font-weight: bold;
+                          font-stretch: normal;
+                          font-style: normal;
+                          line-height: 1.07;
+                          letter-spacing: 1px;
+                          text-align: center;
+                          color: white;
+                          text-decoration: none;
+                          height: 50px;
+                          padding: 18px 21px 17px 22px;
+                        "
+                      >
+                        <span
+                          style="
+                            width: 40px;
+                            display: inline-flex;
+                            vertical-align: text-bottom;
+                          "
+                          ><img
+                            src="https://ncrrugbyuat.s3.amazonaws.com/common/bracket.png" /></span
+                        ><sapn style="text-transform: uppercase"
+                          >Complete Brackets</sapn
+                        >
+                      </a>
                     </td>
                   </tr>
                 </table>
@@ -407,102 +242,70 @@
                         style="border-collapse: collapse"
                       >
                         <tr>
-                          <td bgcolor="white" style="padding: 5px 30px">
-                            <table
-                              border="0"
-                              cellpadding="0"
-                              cellspacing="0"
-                              width="100%"
-                              style="border-collapse: collapse"
+                          <td>
+                            <a
+                              target="_blank"
+                              href="https://www.facebook.com/nationalcollegiaterugby/"
                             >
-                              <tr>
-                                <td align="center" style="padding-top: 0px">
-                                  <table
-                                    border="0"
-                                    cellpadding="0"
-                                    cellspacing="0"
-                                    style="border-collapse: collapse"
-                                  >
-                                    <tr>
-                                      <td>
-                                        <a
-                                          target="_blank"
-                                          href="https://www.facebook.com/nationalcollegiaterugby/"
-                                        >
-                                          <img
-                                            src="https://ncrrugbyuat.s3.amazonaws.com/common/fbnew.png"
-                                            alt="fb"
-                                            width="100%"
-                                            style="display: block"
-                                            border="0"
-                                          />
-                                        </a>
-                                      </td>
-                                      <td
-                                        style="font-size: 0; line-height: 0"
-                                        width="20"
-                                      >
-                                        &nbsp;
-                                      </td>
-                                      <td>
-                                        <a
-                                          target="_blank"
-                                          href="https://twitter.com/ncrrugby?fbclid=IwAR3tHM239yQskkNNY_4v9Jlz7NvJuRTLul7jLZnuurKp5vLEfj5NVakA2d8"
-                                        >
-                                          <img
-                                            src="https://ncrrugbyuat.s3.amazonaws.com/common/twtnew.png"
-                                            alt="twt."
-                                            width="100%"
-                                            style="display: block"
-                                            border="0"
-                                          />
-                                        </a>
-                                      </td>
-                                      <td
-                                        style="font-size: 0; line-height: 0"
-                                        width="20"
-                                      >
-                                        &nbsp;
-                                      </td>
-                                      <td>
-                                        <a
-                                          target="_blank"
-                                          href="https://www.instagram.com/nationalcollegiaterugby/"
-                                        >
-                                          <img
-                                            src="https://ncrrugbyuat.s3.amazonaws.com/common/instanew.png"
-                                            alt="instagram."
-                                            width="100%"
-                                            style="display: block"
-                                            border="0"
-                                          />
-                                        </a>
-                                      </td>
-                                      <td
-                                        style="font-size: 0; line-height: 0"
-                                        width="20"
-                                      >
-                                        &nbsp;
-                                      </td>
-                                      <td>
-                                        <a
-                                          target="_blank"
-                                          href="https://www.youtube.com/c/NationalCollegiateRugby/featured"
-                                        >
-                                          <img
-                                            src="https://ncrrugbyuat.s3.amazonaws.com/common/youtubenew.png"
-                                            alt="youtube."
-                                            width="100%"
-                                            style="display: block"
-                                            border="0"
-                                          />
-                                        </a>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                </td>
-                              </tr>
-                            </table>
+                              <img
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/fbnew.png"
+                                alt="fb"
+                                width="100%"
+                                style="display: block; width: 40px"
+                                border="0"
+                              />
+                            </a>
+                          </td>
+                          <td style="font-size: 0; line-height: 0" width="20">
+                            &nbsp;
+                          </td>
+                          <td>
+                            <a
+                              target="_blank"
+                              href="https://twitter.com/ncrrugby?fbclid=IwAR3tHM239yQskkNNY_4v9Jlz7NvJuRTLul7jLZnuurKp5vLEfj5NVakA2d8"
+                            >
+                              <img
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/twtnew.png"
+                                alt="twt."
+                                width="100%"
+                                style="display: block; width: 40px"
+                                border="0"
+                              />
+                            </a>
+                          </td>
+                          <td style="font-size: 0; line-height: 0" width="20">
+                            &nbsp;
+                          </td>
+                          <td>
+                            <a
+                              target="_blank"
+                              href="https://www.instagram.com/nationalcollegiaterugby/"
+                            >
+                              <img
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/instanew.png"
+                                alt="instagram."
+                                width="100%"
+                                style="display: block; width: 40px"
+                                border="0"
+                              />
+                            </a>
+                          </td>
+                          <td style="font-size: 0; line-height: 0" width="20">
+                            &nbsp;
+                          </td>
+                          <td>
+                            <a
+                              target="_blank"
+                              href="https://www.youtube.com/c/NationalCollegiateRugby/featured"
+                            >
+                              <img
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/youtubenew.png"
+                                alt="youtube."
+                                width="100%"
+                                style="display: block; width: 40px"
+                                border="0"
+                              />
+                            </a>
                           </td>
                         </tr>
                       </table>

@@ -103,7 +103,7 @@ const getUserBrackets = async (req, res) => {
       let date2 = new Date();
       let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
 
-      let sqlQuery = `insert INTO leaderboards select NULL as id, users.id as userId, users.userName, ubs.type, sum(tgs.winner_score ) as score, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", "${dateTime}" as createdAt, "${dateTime}" as updatedAt, group_concat(if(tgs.game_id =47 or tgs.game_id = 31,  ubt.winner_id, NULL)) as winner_id from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id and ubt.winner_id=tgs.winner_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join users on users.id = ubs.user_id  where ubs.type = "${bracketType}" group by users.id;`;
+      let sqlQuery = `insert INTO leaderboards select NULL as id, users.id as userId, users.userName, ubs.type, sum(tgs.winner_score ) as score, RANK() OVER ( order by sum(tgs.winner_score ) desc) as "rank", "${dateTime}" as createdAt, "${dateTime}" as updatedAt, ubs.id as winner_id from user_breaket_teams ubt inner JOIN tournament_games tgs on ubt.game_id=tgs.game_id and ubt.winner_id=tgs.winner_id inner join user_breakets ubs on ubs.id = ubt.user_bracket_id inner join users on users.id = ubs.user_id  where ubs.type = "${bracketType}" group by users.id;`;
       
       const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.UPDATE });
       //await req.models.leaderboard.bulkCreate(userWiseScore);
@@ -167,7 +167,11 @@ const getUserBrackets = async (req, res) => {
        		let sql = `select count(id) as count from leaderboards ldr where ldr.bracketType = "${gender}"`
       		count = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
       		count = count[0];
-      		const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name, tms.name as winner_team from leaderboards ldr left join user_images on user_images.user_id = ldr.userId left join tournament_teams tms on tms.team_id = ldr.winner_id where ldr.bracketType = "${gender}" limit ${start}, ${end}`
+      		let game_id="31";
+      		if(gender=="female"){
+      		   game_id="79"
+      		}
+      		const sql2 = `select ldr.*, user_images.image_path, user_images.name as image_name, tms.name as winner_team from leaderboards ldr left join user_breaket_teams ubt on ubt.user_bracket_id = ldr.winner_id and ubt.game_id=${game_id} left join user_images on user_images.user_id = ldr.userId left join tournament_teams tms on tms.team_id = ubt.winner_id where ldr.bracketType = "${gender}" limit ${start}, ${end}`
      		allRank = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT })
        
        }else{
@@ -199,16 +203,17 @@ const getUserBrackets = async (req, res) => {
   const getUserRank = async (req, res) => {
     try {
       let userid = req.decoded.user_id;      
-      let sqlQuery = `select type from user_breakets where user_id = ${userid};`;
-      const UserData = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+      let sqlQuery = `select bracketType, score, leaderboards.rank as "rank"  from leaderboards where userId = ${userid};`;
+      const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+      
       let mensRank = {"score":0, "rank":"-1"};
       let weMensRank = {"score":0, "rank":"-1"};
-      if(UserData.length > 0){
-      	for(let row of UserData){
-		if(row["type"] == "male"){
-			mensRank = await getUserRankFunctionNew(req, "male", req.decoded.user_id);
+      if(userRank.length > 0){
+      	for(let row of userRank){
+		if(row["bracketType"] == "male"){
+			mensRank = [row];
 		}else{
-                   weMensRank = await getUserRankFunctionNew(req, "female", req.decoded.user_id);
+                   weMensRank = [row];
                 }
 	}
       }

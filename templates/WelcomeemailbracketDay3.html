@@ -22,6 +22,16 @@
         .bodytext {
           font-size: 15px;
         }
+        .btntr {
+          display: grid;
+        }
+        .btntr :nth-child(1) {
+          width: 100%;
+          padding-bottom: 30px;
+        }
+        .btntr :nth-child(1) a {
+          padding: 15px 39px;
+        }
         .footertext {
           font-size: 14px;
         }
@@ -32,13 +42,19 @@
 
       @media only screen and (min-width: 769px) {
         .title {
-          font-size: 26px;
+          font-size: 24px;
         }
         .bodytext {
-          font-size: 16px;
+          font-size: 15px;
+        }
+        .btntr :nth-child(1) {
+          width: 50%;
+        }
+        .btntr :nth-child(1) a {
+          padding: 15px 40px;
         }
         .bodyfooter {
-          font-size: 16px;
+          font-size: 15px;
         }
         .footertext {
           font-size: 12px;
@@ -81,7 +97,7 @@
             <tr>
               <td align="center">
                 <img
-                src="https://ncrrugbyuat.s3.amazonaws.com/common/contact-1.png"
+                src="https://ncrrugbyuat.s3.amazonaws.com/common/welcome-mail-header.jpg"
                 alt="Ncr rugby"" width="100%" style="display: block; margin-top:
                 -1px" />
               </td>
@@ -117,7 +133,7 @@
                           color: #0a2f6a;
                         "
                       >
-                        Your Message
+                        May Madness Brackets Challenge
                       </h1>
                     </td>
                   </tr>
@@ -138,45 +154,122 @@
                           color: #363636;
                         "
                       >
-                        {{message}}.
+                        We continued to see some great 7s action in the final
+                        day of May Madness. Congratulations to all of our Men's
+                        Champions.
+                      </p>
+                      <p
+                        class="bodytext"
+                        style="
+                          margin: 0 0 30px 0;
+                          font-family: Montserrat;
+
+                          font-weight: normal;
+                          font-stretch: normal;
+                          font-style: normal;
+                          line-height: 2;
+                          letter-spacing: 0.47px;
+                          text-align: center;
+                          color: #363636;
+                        "
+                      >
+                        There was also plenty of drama in the men's Bracket
+                        Challenge! Congratulations to the inaugural winner of
+                        the Men's Bracket Challenge. The winner will receive
+                        four VIP tickets to next year's Collegiate Rugby
+                        Championship in New Orleans.
+                      </p>
+                      <p
+                        class="bodytext"
+                        style="
+                          margin: 0 0 30px 0;
+                          font-family: Montserrat;
+
+                          font-weight: normal;
+                          font-stretch: normal;
+                          font-style: normal;
+                          line-height: 2;
+                          letter-spacing: 0.47px;
+                          text-align: center;
+                          color: #363636;
+                        "
+                      >
+                        Thank you for participating in the 2021 May Madness
+                        Bracket Challenge. See you next year back in New
+                        Orleans.
                       </p>
                     </td>
                   </tr>
-                  <tr align="center" style="width: 100%">
+
+                  <tr
+                    align="center"
+                    style="
+                      width: 50%;
+                      background-color: white;
+                      margin-bottom: 10px;
+                    "
+                  >
                     <td>
-                      <a
-                        href="{{url}}"
-                        style="
-                          max-width: 264px;
-                          width: 100%;
-                          background-color: #0a2f6a;
-                          font-family: Montserrat;
-                          font-size: 14px;
-                          font-weight: bold;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: 1.07;
-                          letter-spacing: 1px;
-                          text-align: center;
-                          color: white;
-                          text-decoration: none;
-                          height: 50px;
-                          padding: 18px 4vw 17px 4vw;
-                          text-transform: uppercase;
-                        "
-                      >
-                        check tournament
-                      </a>
+                      <table class="btnbox">
+                        <tbody>
+                          <tr class="btntr">
+                            <td>
+                              <a
+                                style="
+                                  max-width: 364px;
+                                  width: 100%;
+                                  font-family: Montserrat;
+                                  font-size: 14px;
+                                  font-weight: bold;
+                                  font-stretch: normal;
+                                  font-style: normal;
+                                  line-height: 2.14;
+                                  letter-spacing: 1px;
+                                  text-align: center;
+                                  padding: 15px 40px;
+                                  height: 60px;
+
+                                  background-color: #0a2f6a;
+                                  color: white;
+                                  text-decoration: none;
+                                  text-transform: uppercase;
+                                "
+                                href="{{view_brackets}}"
+                                >View brackets
+                              </a>
+                            </td>
+                            <td style="width: 100%; padding: 20px 0">
+                              <a
+                                style="
+                                  margin-top: 10px;
+                                  max-width: 364px;
+                                  width: 100%;
+                                  font-family: Montserrat;
+                                  font-size: 14px;
+                                  font-weight: bold;
+                                  font-stretch: normal;
+                                  font-style: normal;
+                                  line-height: 2.14;
+                                  letter-spacing: 1px;
+                                  text-align: center;
+
+                                  height: 60px;
+                                  padding: 15px 40px;
+
+                                  background-color: #0a2f6a;
+                                  color: white;
+                                  text-decoration: none;
+                                  text-transform: uppercase;
+                                "
+                                href="{{leaderboards}}"
+                                >Leaderboards
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </td>
                   </tr>
-                  <!-- <tr align="center" style="width: 50%">
-                    <td>
-                      <a href="{{url}}"
-                        ><img
-                          src="https://ncrrugbyuat.s3.amazonaws.com/common/visit-tournament-11.jpg"
-                      /></a>
-                    </td>
-                  </tr> -->
                 </table>
               </td>
             </tr>
@@ -203,11 +296,13 @@
                         <tr>
                           <td>
                             <a
+                              target="_blank"
                               href="https://www.facebook.com/nationalcollegiaterugby/"
                             >
                               <img
-                                src="https://ncrrugbyuat.s3.amazonaws.com/common/fb.png"
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/fbnew.png"
                                 alt="fb"
+                                width="100%"
                                 style="display: block; width: 40px"
                                 border="0"
                               />
@@ -218,11 +313,13 @@
                           </td>
                           <td>
                             <a
+                              target="_blank"
                               href="https://twitter.com/ncrrugby?fbclid=IwAR3tHM239yQskkNNY_4v9Jlz7NvJuRTLul7jLZnuurKp5vLEfj5NVakA2d8"
                             >
                               <img
-                                src="https://ncrrugbyuat.s3.amazonaws.com/common/twt.png"
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/twtnew.png"
                                 alt="twt."
+                                width="100%"
                                 style="display: block; width: 40px"
                                 border="0"
                               />
@@ -233,11 +330,13 @@
                           </td>
                           <td>
                             <a
+                              target="_blank"
                               href="https://www.instagram.com/nationalcollegiaterugby/"
                             >
                               <img
-                                src="https://ncrrugbyuat.s3.amazonaws.com/common/insta.png"
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/instanew.png"
                                 alt="instagram."
+                                width="100%"
                                 style="display: block; width: 40px"
                                 border="0"
                               />
@@ -248,11 +347,13 @@
                           </td>
                           <td>
                             <a
+                              target="_blank"
                               href="https://www.youtube.com/c/NationalCollegiateRugby/featured"
                             >
                               <img
-                                src="https://ncrrugbyuat.s3.amazonaws.com/common/youtube.png"
+                                src="https://ncrrugbyuat.s3.amazonaws.com/common/youtubenew.png"
                                 alt="youtube."
+                                width="100%"
                                 style="display: block; width: 40px"
                                 border="0"
                               />

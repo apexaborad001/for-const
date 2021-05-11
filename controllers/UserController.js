@@ -195,6 +195,8 @@ const signUp = async(req, res) => {
         let comparedPassword = await bcrypt.compareSync(password, response.password);
         if (comparedPassword) {
 		      if (response.status !== req.constants.BLOCKED) { 
+			await req.models.devices.destroy({where: { userId: response.id}});
+		        
 		        let accessToken = await helper.createAccessToken(response.email, response.id, req.database, response.firstName, req.models); 
 				res.set({
 					'access_token': accessToken

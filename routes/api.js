@@ -7,9 +7,10 @@ const bracketManagerController = require("../controllers/bracketManager.js");
 const userBreaketTeamController = require("../controllers/userBracketTeams");
 const UserController = require("../controllers/UserController");
 const commonValidation = require("../validations/commonSchema");
-
+const cron = require('node-cron');
+const cronm = require("../cron");
 const routes = require('express').Router();
-
+var task = "";
 routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
 routes.get("/commonData", commondataController.getCommonData);
@@ -19,12 +20,38 @@ routes.get('/getGameLists', bracketManagerController.getGameLists);
 routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.updateMultiWinnerByScore);
 routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 routes.get("/starttime", async (req, res)=>{
-  return res.send({"game_start_time":"2021-05-10 17:30:00"});
+   const moment = require("moment");
+   let date2 = new Date("2021, 05, 11, 15, 24, 0");
+  return res.send({"game_start_time":date2});
+});
+routes.get("/croninit", async (req, res)=>{
+   try{
+	   const token = "217177df38b750681dd444da52fe09f51239df1801eerf5ec0409e21204b6e9c1f1777770";
+	   if(req.headers['access_token'] === token){
+	        console.log(task);
+	 	if(task) task.stop();
+                task = cron.schedule(' * * * * *', () =>  {
+  			cronm.dailyCronAPI();
+		});
+         	
+	   	return res.send({"status":"cron started"});
+	   }else{
+	        return res.send({"error":"invalid token"});
+	   }
+	   
+    }catch(error){
+       return res.send({"error":error});
+    	
+    }
 })
-
+routes.get("/currenttime", async (req, res)=>{
+   const moment = require("moment");
+   let date2 = new Date();
+  return res.send({"current_time":date2});
+});
 routes.get("/s3test5", async (req, res)=>{
 	try {
-	    const moment = require("moment");
+	    /*const moment = require("moment");
 	    let date2 = new Date();
 	let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	        return res.send({"dateTimenew":dateTime});
@@ -41,7 +68,7 @@ routes.get("/s3test5", async (req, res)=>{
 			commonHelper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
         
         return res.send({cup, totalMemo, freeMOm, "instance":process.env})
-        /*
+        */
 		const  fs = require('fs');
 		let path =  require("path");
 		var AWS = require('aws-sdk');
@@ -80,7 +107,7 @@ routes.get("/s3test5", async (req, res)=>{
 			});
 			 
 		}
-		return res.send({"Success1":filenames, "s3Data":s3Data});*/
+		return res.send({"Success1":filenames, "s3Data":s3Data});
 	} catch (err) {
 	  res.send({"res":err})
 	}

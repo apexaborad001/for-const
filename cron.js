@@ -5,24 +5,24 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
-let reminder1_start = "2021-05-10 10:00:00";
-let reminder1_end = "2021-05-10 10:01:00";
+let reminder1_start = "2021-05-10 16:00:00";
+let reminder1_end = "2021-05-10 16:00:00";
 
-let reminder2_start = "2021-05-10 10:30:00";
-let reminder2_end = "2021-05-10 10:31:00";
+let reminder2_start = "2021-05-10 16:00:00";
+let reminder2_end = "2021-05-10 16:00:00";
 
 let remove_bracket_start = "2021-05-10 11:30:00";
 let remove_bracket_end = "2021-05-10 11:31:00";
 
 
-let date1_start = "2021-05-10 12:00:00";
-let date1_end = "2021-05-10 12:01:00";
+let date1_start = "2021-05-10 16:00:00";
+let date1_end = "2021-05-10 16:00:00";
 
-let date2_start = "2021-05-10 17:56:00";
-let date2_end = "2021-05-10 17:60:00";
+let date2_start = "2021-05-10 16:00:00";
+let date2_end = "2021-05-10 16:00:00";
 
-let date3_start = "2021-05-10 13:00:00";
-let date3_end = "2021-05-10 13:01:00";
+let date3_start = "2021-05-10 16:00:00";
+let date3_end = "2021-05-10 16:00:00";
 
 
 const sendReminder = async (type) => {
@@ -36,8 +36,11 @@ const sendReminder = async (type) => {
          
          const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email;`;
         const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
+        let template = "Reminder.html";
+        if(type == "reminder_two"){
+        	template = "Reminder_2nd_day.html";
+        }
         for(let row of getQueryResult){
-            let template = "Reminder.html";
               let to_id = row["email"],
               subject = "Bracket Challenge Reminder",
               template_name = template,
@@ -98,8 +101,11 @@ let ScoreCard = async (update_after, type) => {
              
             let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id;`;
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
+            let date2 = new Date();
+	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+            let cnt = userData.length;
             const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
-            const getQueryResult1 = await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
+            await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
 	
             for(let row of userData){
                 let rankQuery = `select leaderboards.rank as "rank", score, bracketType from leaderboards where userId=${row["user_id"]} ;`;
@@ -134,8 +140,8 @@ let ScoreCard = async (update_after, type) => {
 
 const deleteOldBracket = async (type) => {
        try {
-         const sql2 = `select * from cron_history where type="${type}"`;
-	const getQueryResult2 = await connection.query(sql2, { type: models.Sequelize.QueryTypes.SELECT });
+         const sql3 = `select * from cron_history where type="${type}"`;
+	const getQueryResult2 = await connection.query(sql3, { type: models.Sequelize.QueryTypes.SELECT });
 
 	if(getQueryResult2.length > 0){
 		return false;
@@ -149,22 +155,64 @@ const deleteOldBracket = async (type) => {
      		      
      		      const sql2 = `delete from user_breakets where id="${row_id}"`;
      		      await connection.query(sql2, { type: connection.QueryTypes.DELETE });
-        }       
+        }
+         let date2 = new Date();
+	 let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+         let cnt = getQueryResult.length;
+         const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
+         await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });       
       } catch (err) {
         console.log("Error in send Reminder" + err);
       }
  }
 
-module.exports = {
-  DailyCron: (time) => {
-    cron.schedule(time, async() => {
+let SendRecap = async (update_after, type) => {
+      try {
+	const sql2 = `select * from cron_history where type="${type}"`;
+	const getQueryResult2 = await connection.query(sql2, { type: models.Sequelize.QueryTypes.SELECT });
+
+	if(getQueryResult2.length > 0){
+		return false;
+	}
+        let subject = "";
+        let template_name = "";
+            
+            if(type == "day1"){
+              subject = "Bracket Challenge: Day 1 Recap";
+              template_name = "WelcomeemailbracketDay1.html";
+            }else if(type == "day2"){
+               subject = "Bracket Challenge: Women's Champion and Day 2 Recap";
+               template_name = "WelcomeemailbracketDay2.html";
+            }else if(type == "day3"){
+                subject = "Bracket Challenge: Men's Champion";
+                template_name = "WelcomeemailbracketDay3.html";
+            }
+             
+            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id ;`;
+            let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
+            let date2 = new Date();
+	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	    let cnt = userData.length;
+            const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
+            await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
+	    subject = subject;
+	    for(let row of userData){
+            	let replacements = { firstName: row["firstName"], view_brackets:process.env.BASE_URL_FRONTEND+"create-brackets", leaderboards:process.env.BASE_URL_FRONTEND+"leader-board-main/mens"}
+            	helper.sendEmail(process.env.mailFrom, row["email"], subject, template_name, replacements);
+            }
+      } catch (err) {
+        console.log("Error SendRecap" + err);
+      }
+  }
+  
+dailyCronAPI = () => {
       try {
 	let date2 = new Date();
 	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
-	//let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	if(dateTime > reminder1_start && dateTime < reminder1_end){
             sendReminder("reminder_one");
-        }else if(dateTime > reminder2_start && dateTime < reminder2_end){
+        }
+        if(dateTime > reminder2_start && dateTime < reminder2_end){
               sendReminder("reminder_two");
         }
         
@@ -173,22 +221,61 @@ module.exports = {
         }     
         
         if(dateTime > date1_start && dateTime < date1_end){
-               ScoreCard("2021-05-09", "day1");
+               //ScoreCard("2021-05-09", "day1");
+               SendRecap("2021-05-09", "day1");
         }
         
         if(dateTime > date2_start && dateTime < date2_end){
-               ScoreCard(date1_start, "day2");
+               //ScoreCard(date1_start, "day2");
+                SendRecap(date1_start, "day2");
         }
         
         if(dateTime > date3_start && dateTime < date3_end){
-               ScoreCard(date2_start, "day3");
+               SendRecap(date2_start, "day3");
+        }
+      } catch (err) {
+        console.log("Error reschedule cron-" + err);
+      }
+   
+  };
+  
+module.exports = {
+  dailyCronAPI,
+  DailyCron: (time) => {
+    cron.schedule(time, async() => {
+      try {
+	let date2 = new Date();
+	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	//let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
+	if(dateTime > reminder1_start && dateTime < reminder1_end){
+            sendReminder("reminder_one");
+        }
+        if(dateTime > reminder2_start && dateTime < reminder2_end){
+              sendReminder("reminder_two");
+        }
+        
+        if(dateTime > remove_bracket_start && dateTime < remove_bracket_end){
+               deleteOldBracket("delete_bracket");
+        }     
+        
+        if(dateTime > date1_start && dateTime < date1_end){
+               //ScoreCard("2021-05-09", "day1");
+               SendRecap("2021-05-09", "day1");
+        }
+        
+        if(dateTime > date2_start && dateTime < date2_end){
+               //ScoreCard(date1_start, "day2");
+                SendRecap(date1_start, "day2");
+        }
+        
+        if(dateTime > date3_start && dateTime < date3_end){
+               //ScoreCard(date2_start, "day3");
+               SendRecap(date2_start, "day3");
         }
         
         
       } catch (err) {
-        console.log("Error reschedule notification appointment-" + err);
-      } finally {
-        
+        console.log("Error reschedule cron-" + err);
       }
     })
   },
