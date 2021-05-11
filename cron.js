@@ -5,24 +5,24 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
-let reminder1_start = "2021-05-10 10:00:00";
-let reminder1_end = "2021-05-10 10:01:00";
+let reminder1_start = "2021-05-11 08:00:00";
+let reminder1_end = "2021-05-11 08:50:00";
 
-let reminder2_start = "2021-05-10 10:30:00";
-let reminder2_end = "2021-05-10 10:31:00";
+let reminder2_start = "2021-05-11 08:00:00";
+let reminder2_end = "2021-05-11 08:50:00";
 
 let remove_bracket_start = "2021-05-10 11:30:00";
 let remove_bracket_end = "2021-05-10 11:31:00";
 
 
-let date1_start = "2021-05-10 12:00:00";
-let date1_end = "2021-05-10 12:01:00";
+let date1_start = "2021-05-11 08:00:00";
+let date1_end = "2021-05-11 08:50:00";
 
-let date2_start = "2021-05-10 17:56:00";
-let date2_end = "2021-05-10 17:60:00";
+let date2_start = "2021-05-11 08:00:00";
+let date2_end = "2021-05-11 08:50:00";
 
-let date3_start = "2021-05-10 13:00:00";
-let date3_end = "2021-05-10 13:01:00";
+let date3_start = "2021-05-11 08:00:00";
+let date3_end = "2021-05-11 08:50:00";
 
 
 const sendReminder = async (type) => {
@@ -103,6 +103,7 @@ let ScoreCard = async (update_after, type) => {
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
             let date2 = new Date();
 	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+            let cnt = userData.length;
             const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
             await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
 	
@@ -157,6 +158,7 @@ const deleteOldBracket = async (type) => {
         }
          let date2 = new Date();
 	 let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+         let cnt = getQueryResult.length;
          const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
          await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });       
       } catch (err) {
@@ -190,11 +192,14 @@ let SendRecap = async (update_after, type) => {
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
             let date2 = new Date();
 	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	    let cnt = userData.length;
             const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
             await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
 	    subject = subject;
-            let replacements = { firstName: row["firstName"], view_brackets:process.env.BASE_URL_FRONTEND+"/create-brackets", leaderboards:process.env.BASE_URL_FRONTEND+"/leader-board-main/mens", mensRank, menSore, womensRank, womensScore, totalScore:menSore+womensScore}
-            helper.sendEmail(process.env.mailFrom, row["email"], subject, template_name, replacements);
+	    for(let row of userData){
+            	let replacements = { firstName: row["firstName"], view_brackets:process.env.BASE_URL_FRONTEND+"create-brackets", leaderboards:process.env.BASE_URL_FRONTEND+"leader-board-main/mens"}
+            	helper.sendEmail(process.env.mailFrom, row["email"], subject, template_name, replacements);
+            }
       } catch (err) {
         console.log("Error SendRecap" + err);
       }
@@ -208,7 +213,8 @@ module.exports = {
 	//let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	if(dateTime > reminder1_start && dateTime < reminder1_end){
             sendReminder("reminder_one");
-        }else if(dateTime > reminder2_start && dateTime < reminder2_end){
+        }
+        if(dateTime > reminder2_start && dateTime < reminder2_end){
               sendReminder("reminder_two");
         }
         
