@@ -211,9 +211,9 @@ const getUserBrackets = async (req, res) => {
       if(userRank.length > 0){
       	for(let row of userRank){
 		if(row["bracketType"] == "male"){
-			mensRank = row;
+			mensRank = [row];
 		}else{
-                   weMensRank = row;
+                   weMensRank = [row];
                 }
 	}
       }
