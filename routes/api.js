@@ -7,9 +7,10 @@ const bracketManagerController = require("../controllers/bracketManager.js");
 const userBreaketTeamController = require("../controllers/userBracketTeams");
 const UserController = require("../controllers/UserController");
 const commonValidation = require("../validations/commonSchema");
-
+const cron = require('node-cron');
+const cronm = require("../cron");
 const routes = require('express').Router();
-
+var task = "";
 routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
 routes.get("/commonData", commondataController.getCommonData);
@@ -22,8 +23,32 @@ routes.get("/starttime", async (req, res)=>{
    const moment = require("moment");
    let date2 = new Date();
   return res.send({"game_start_time":date2});
+});
+routes.get("/croninit", async (req, res)=>{
+   try{
+	   const token = "217177df38b750681dd444da52fe09f51239df1801eerf5ec0409e21204b6e9c1f1777770";
+	   if(req.headers['access_token'] === token){
+	        console.log(task);
+	 	if(task) task.stop();
+                task = cron.schedule(' * * * * *', () =>  {
+  			cronm.dailyCronAPI();
+		});
+         	
+	   	return res.send({"status":"cron started"});
+	   }else{
+	        return res.send({"error":"invalid token"});
+	   }
+	   
+    }catch(error){
+       return res.send({"error":error});
+    	
+    }
 })
-
+routes.get("/currenttime", async (req, res)=>{
+   const moment = require("moment");
+   let date2 = new Date();
+  return res.send({"current_time":date2});
+});
 routes.get("/s3test5", async (req, res)=>{
 	try {
 	    /*const moment = require("moment");

@@ -203,16 +203,17 @@ const getUserBrackets = async (req, res) => {
   const getUserRank = async (req, res) => {
     try {
       let userid = req.decoded.user_id;      
-      let sqlQuery = `select type from user_breakets where user_id = ${userid};`;
-      const UserData = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+      let sqlQuery = `select * from leaderboards where userId = ${userID};`;
+      const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
+      
       let mensRank = {"score":0, "rank":"-1"};
       let weMensRank = {"score":0, "rank":"-1"};
-      if(UserData.length > 0){
-      	for(let row of UserData){
-		if(row["type"] == "male"){
-			mensRank = await getUserRankFunctionNew(req, "male", req.decoded.user_id);
+      if(userRank.length > 0){
+      	for(let row of userRank){
+		if(row["bracketType"] == "male"){
+			mensRank = row;
 		}else{
-                   weMensRank = await getUserRankFunctionNew(req, "female", req.decoded.user_id);
+                   weMensRank = row;
                 }
 	}
       }

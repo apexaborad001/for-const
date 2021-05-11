@@ -6,23 +6,23 @@ const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
 let reminder1_start = "2021-05-11 08:00:00";
-let reminder1_end = "2021-05-11 08:50:00";
+let reminder1_end = "2021-05-11 16:00:00";
 
 let reminder2_start = "2021-05-11 08:00:00";
-let reminder2_end = "2021-05-11 08:50:00";
+let reminder2_end = "2021-05-11 16:00:00";
 
 let remove_bracket_start = "2021-05-10 11:30:00";
 let remove_bracket_end = "2021-05-10 11:31:00";
 
 
 let date1_start = "2021-05-11 08:00:00";
-let date1_end = "2021-05-11 08:50:00";
+let date1_end = "2021-05-11 16:00:00";
 
 let date2_start = "2021-05-11 08:00:00";
-let date2_end = "2021-05-11 08:50:00";
+let date2_end = "2021-05-11 16:00:00";
 
 let date3_start = "2021-05-11 08:00:00";
-let date3_end = "2021-05-11 08:50:00";
+let date3_end = "2021-05-11 16:00:00";
 
 
 const sendReminder = async (type) => {
@@ -34,7 +34,7 @@ const sendReminder = async (type) => {
         
           if(getQueryResult2.length == 0){        
          
-         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email;`;
+         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email limit 1;`;
         const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
         let template = "Reminder.html";
         if(type == "reminder_two"){
@@ -181,14 +181,14 @@ let SendRecap = async (update_after, type) => {
               subject = "Bracket Challenge: Day 1 Recap";
               template_name = "WelcomeemailbracketDay1.html";
             }else if(type == "day2"){
-               subject = "Bracket Challenge: Day 2 Recap";
+               subject = "Bracket Challenge: Women's Champion and Day 2 Recap";
                template_name = "WelcomeemailbracketDay2.html";
             }else if(type == "day3"){
-                subject = "Bracket Challenge: Day 3 Recap | Your Final Score";
+                subject = "Bracket Challenge: Men's Champion";
                 template_name = "WelcomeemailbracketDay3.html";
             }
              
-            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id;`;
+            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id limit 1;`;
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
             let date2 = new Date();
 	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
@@ -204,7 +204,43 @@ let SendRecap = async (update_after, type) => {
         console.log("Error SendRecap" + err);
       }
   }
+  
+dailyCronAPI = () => {
+      try {
+	let date2 = new Date();
+	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	if(dateTime > reminder1_start && dateTime < reminder1_end){
+            sendReminder("reminder_one");
+        }
+        if(dateTime > reminder2_start && dateTime < reminder2_end){
+              sendReminder("reminder_two");
+        }
+        
+        if(dateTime > remove_bracket_start && dateTime < remove_bracket_end){
+               deleteOldBracket("delete_bracket");
+        }     
+        
+        if(dateTime > date1_start && dateTime < date1_end){
+               //ScoreCard("2021-05-09", "day1");
+               SendRecap("2021-05-09", "day1");
+        }
+        
+        if(dateTime > date2_start && dateTime < date2_end){
+               //ScoreCard(date1_start, "day2");
+                SendRecap(date1_start, "day2");
+        }
+        
+        if(dateTime > date3_start && dateTime < date3_end){
+               SendRecap(date2_start, "day3");
+        }
+      } catch (err) {
+        console.log("Error reschedule cron-" + err);
+      }
+   
+  };
+  
 module.exports = {
+  dailyCronAPI,
   DailyCron: (time) => {
     cron.schedule(time, async() => {
       try {
