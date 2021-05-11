@@ -5,24 +5,24 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
-let reminder1_start = "2021-05-11 08:00:00";
-let reminder1_end = "2021-05-11 16:00:00";
+let reminder1_start = "2021-05-10 16:00:00";
+let reminder1_end = "2021-05-10 16:00:00";
 
-let reminder2_start = "2021-05-11 08:00:00";
-let reminder2_end = "2021-05-11 16:00:00";
+let reminder2_start = "2021-05-10 16:00:00";
+let reminder2_end = "2021-05-10 16:00:00";
 
 let remove_bracket_start = "2021-05-10 11:30:00";
 let remove_bracket_end = "2021-05-10 11:31:00";
 
 
-let date1_start = "2021-05-11 08:00:00";
-let date1_end = "2021-05-11 16:00:00";
+let date1_start = "2021-05-10 16:00:00";
+let date1_end = "2021-05-10 16:00:00";
 
-let date2_start = "2021-05-11 08:00:00";
-let date2_end = "2021-05-11 16:00:00";
+let date2_start = "2021-05-10 16:00:00";
+let date2_end = "2021-05-10 16:00:00";
 
-let date3_start = "2021-05-11 08:00:00";
-let date3_end = "2021-05-11 16:00:00";
+let date3_start = "2021-05-10 16:00:00";
+let date3_end = "2021-05-10 16:00:00";
 
 
 const sendReminder = async (type) => {
@@ -34,7 +34,7 @@ const sendReminder = async (type) => {
         
           if(getQueryResult2.length == 0){        
          
-         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email limit 1;`;
+         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email;`;
         const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
         let template = "Reminder.html";
         if(type == "reminder_two"){
@@ -188,7 +188,7 @@ let SendRecap = async (update_after, type) => {
                 template_name = "WelcomeemailbracketDay3.html";
             }
              
-            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id limit 1;`;
+            let userQuery = `select distinct email, firstName, user_id from user_breakets ubs inner join users on users.id= ubs.user_id ;`;
             let userData = await connection.query(userQuery, { type: models.Sequelize.QueryTypes.SELECT });
             let date2 = new Date();
 	    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
