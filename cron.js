@@ -229,6 +229,7 @@ let SendRecap = async (update_after, type) => {
 dailyCronAPI = () => {
       try {
 	let date2 = new Date();
+	console.log("cron running", date2);
 	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
 	if(dateTime > reminder1_start && dateTime < reminder1_end){
             sendReminder("reminder_one");
