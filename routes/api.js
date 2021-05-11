@@ -26,7 +26,7 @@ routes.get("/starttime", async (req, res)=>{
 
 routes.get("/s3test5", async (req, res)=>{
 	try {
-	    const moment = require("moment");
+	    /*const moment = require("moment");
 	    let date2 = new Date();
 	let dateTime = moment(date2).tz("Asia/Kokata").format("YYYY-MM-DD HH:mm:ss");
 	        return res.send({"dateTimenew":dateTime});
@@ -43,7 +43,7 @@ routes.get("/s3test5", async (req, res)=>{
 			commonHelper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);
         
         return res.send({cup, totalMemo, freeMOm, "instance":process.env})
-        /*
+        */
 		const  fs = require('fs');
 		let path =  require("path");
 		var AWS = require('aws-sdk');
@@ -82,7 +82,7 @@ routes.get("/s3test5", async (req, res)=>{
 			});
 			 
 		}
-		return res.send({"Success1":filenames, "s3Data":s3Data});*/
+		return res.send({"Success1":filenames, "s3Data":s3Data});
 	} catch (err) {
 	  res.send({"res":err})
 	}
