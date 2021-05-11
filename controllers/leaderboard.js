@@ -203,7 +203,7 @@ const getUserBrackets = async (req, res) => {
   const getUserRank = async (req, res) => {
     try {
       let userid = req.decoded.user_id;      
-      let sqlQuery = `select * from leaderboards where userId = ${userID};`;
+      let sqlQuery = `select * from leaderboards where userId = ${userid};`;
       const userRank = await req.database.query(sqlQuery, { type: req.database.QueryTypes.SELECT });
       
       let mensRank = {"score":0, "rank":"-1"};
