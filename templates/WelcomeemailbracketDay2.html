@@ -4,6 +4,16 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Ncr Rugby</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      @font-face {
+        font-family: Montserrat;
+        src: url(https://ncrrugbyuat.s3.amazonaws.com/common/mirpuri-book.ttf);
+      }
+      * {
+        font-family: Montserrat;
+      }
+    </style>
     <style>
       @media only screen and (max-width: 768px) {
         .bodytext {
@@ -13,16 +23,16 @@
           font-size: 14px;
         }
         .bodyfooter {
-          font-size: 14px;
+          font-size: 15px;
         }
       }
 
       @media only screen and (min-width: 769px) {
         .bodytext {
-          font-size: 16px;
+          font-size: 15px;
         }
         .bodyfooter {
-          font-size: 12px;
+          font-size: 15px;
         }
         .footertext {
           font-size: 12px;
@@ -40,22 +50,6 @@
       width="100%"
       style="background-color: #eeeeee; padding: 20px"
     >
-      <style>
-        @font-face {
-          font-family: Montserrat;
-          src: url(https://ncrrugbyuat.s3.amazonaws.com/common/mirpuri-book.ttf);
-        }
-        @font-face {
-          font-family: Industry;
-          src: url(https://ncrrugbyuat.s3.amazonaws.com/common/Industry-Medium.ttf);
-        }
-        * {
-          font-family: Montserrat;
-        }
-        * {
-          font-family: Industry;
-        }
-      </style>
       <tr>
         <td style="padding: 20px 0 30px 0">
           <table
@@ -107,14 +101,14 @@
                           font-size: 18px;
                           font-weight: 500;
                           font-stretch: normal;
-                          text-align: left;
+                          text-align: center;
                           font-style: normal;
                           line-height: normal;
                           letter-spacing: 0.38px;
                           color: #0a2f6a;
                         "
                       >
-                        Richard,
+                        May Madness Brackets Challenge
                       </h1>
                     </td>
                   </tr>
@@ -131,13 +125,12 @@
                           font-style: normal;
                           line-height: 2;
                           letter-spacing: 0.47px;
-                          text-align: left;
+                          text-align: center;
                           color: #363636;
                         "
                       >
-                        Thank for registering to play the May Madness 7s Bracket
-                        Challenge. You have 3 days left to complete your
-                        bracket.
+                        We've just wrapped another fantastic day of rugby and
+                        have crowned our Women's Champions.
                       </p>
                       <p
                         class="bodytext"
@@ -150,13 +143,13 @@
                           font-style: normal;
                           line-height: 2;
                           letter-spacing: 0.47px;
-                          text-align: left;
+                          text-align: center;
                           color: #363636;
                         "
                       >
-                        The winners of the Men's and Women's brackets will
-                        receive four VIP tickets to next year's Collegiate Rugby
-                        Championship.
+                        Congratulations to the champion of the Women's Bracket
+                        Challenge. You will receive four VIP tickets to next
+                        year's Collegiate Rugby Championship in New Orleans.
                       </p>
                       <p
                         class="bodytext"
@@ -169,50 +162,84 @@
                           font-style: normal;
                           line-height: 2;
                           letter-spacing: 0.47px;
-                          text-align: left;
+                          text-align: center;
                           color: #363636;
                         "
                       >
-                        Gook luck!
+                        We continue to see lots of movement in the Men's Bracket
+                        Challenge, and look forward to seeing a winner emerge
+                        tomorrow.
                       </p>
                     </td>
                   </tr>
+
                   <tr
                     align="center"
-                    style="width: 100%; background-color: white"
+                    style="
+                      width: 50%;
+                      background-color: white;
+                      margin-bottom: 10px;
+                    "
                   >
-                    <td style="padding-bottom: 60px">
-                      <a
-                        href="{{url}}"
-                        style="
-                          max-width: 264px;
-                          width: 100%;
-                          background-color: #0a2f6a;
-                          font-family: Montserrat;
-                          font-size: 14px;
-                          font-weight: bold;
-                          font-stretch: normal;
-                          font-style: normal;
-                          line-height: 1.07;
-                          letter-spacing: 1px;
-                          text-align: center;
-                          color: white;
-                          text-decoration: none;
-                          height: 50px;
-                          padding: 18px 21px 17px 22px;
-                        "
-                      >
-                        <span
-                          style="
-                            width: 40px;
-                            display: inline-flex;
-                            vertical-align: text-bottom;
-                          "
-                          ><img src="https://ncrrugbyuat.s3.amazonaws.com/common/bracket.png" /></span
-                        ><sapn style="text-transform: uppercase"
-                          >Complete Brackets</sapn
-                        >
-                      </a>
+                    <td>
+                      <table>
+                        <tbody>
+                          <tr>
+                            <td style="width: 50%">
+                              <a
+                                style="
+                                  max-width: 364px;
+                                  width: 100%;
+                                  font-family: Montserrat;
+                                  font-size: 14px;
+                                  font-weight: bold;
+                                  font-stretch: normal;
+                                  font-style: normal;
+                                  line-height: 2.14;
+                                  letter-spacing: 1px;
+                                  text-align: center;
+
+                                  height: 60px;
+                                  padding: 15px 40px;
+
+                                  background-color: #0a2f6a;
+                                  color: white;
+                                  text-decoration: none;
+                                  text-transform: uppercase;
+                                "
+                                href="{{view_brackets}}"
+                                >View brackets
+                              </a>
+                            </td>
+                            <td style="width: 50%">
+                              <a
+                                style="
+                                  max-width: 364px;
+                                  width: 100%;
+                                  font-family: Montserrat;
+                                  font-size: 14px;
+                                  font-weight: bold;
+                                  font-stretch: normal;
+                                  font-style: normal;
+                                  line-height: 2.14;
+                                  letter-spacing: 1px;
+                                  text-align: center;
+
+                                  height: 60px;
+                                  padding: 15px 40px;
+
+                                  background-color: #0a2f6a;
+                                  color: white;
+                                  text-decoration: none;
+                                  text-transform: uppercase;
+                                "
+                                href="{{leaderboards}}"
+                                >Leaderboards
+                              </a>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                     </td>
                   </tr>
                 </table>
