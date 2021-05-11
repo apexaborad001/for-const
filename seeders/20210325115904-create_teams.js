@@ -7,7 +7,7 @@ module.exports = {
   [
     {
         "team_id": 1,
-        "name": "Army",
+        "name": "Life",
         "gender": "male",
             
         
@@ -16,7 +16,7 @@ module.exports = {
      },
      {
         "team_id": 2,
-        "name": "NDC",
+        "name": "Western Michigan",
         "gender": "male",
             
         
@@ -25,7 +25,7 @@ module.exports = {
      },
      {
         "team_id": 3,
-        "name": "Clemson",
+        "name": "Iowa State",
         "gender": "male",
             
         
@@ -34,7 +34,7 @@ module.exports = {
      },
      {
         "team_id": 4,
-        "name": "Wheeling",
+        "name": "Salve Regina",
         "gender": "male",
           
         
@@ -43,7 +43,7 @@ module.exports = {
      },
      {
         "team_id": 5,
-        "name": "Iowa",
+        "name": "Loyola Maryland",
         "gender": "male",
             
         
@@ -52,7 +52,7 @@ module.exports = {
      },
       {
         "team_id": 6,
-        "name": "Christendom",
+        "name": "Franciscan",
         "gender": "male",
             
         
@@ -61,7 +61,7 @@ module.exports = {
      },
      {
         "team_id": 7,
-        "name": "Tulane",
+        "name": "Wayne State",
         "gender": "male",
             
         
@@ -70,7 +70,17 @@ module.exports = {
      },
      {
         "team_id": 8,
-        "name": "St. Scholastica",
+        "name": "BYE1",
+        "gender": "male",
+            
+        
+         createdAt: new Date(),
+         updatedAt: new Date(),
+     },
+     
+     {
+        "team_id": 9,
+        "name": "Army",
         "gender": "male",
             
         
@@ -78,71 +88,63 @@ module.exports = {
          updatedAt: new Date(),
      },
      {
-        "team_id": 9,
-        "name": "Life U",
-        "gender": "male",
-          
-        
-         createdAt: new Date(),
-         updatedAt: new Date(),
-     },
-     {
         "team_id": 10,
-        "name": "Dartmouth",
+        "name": "Air Force",
         "gender": "male",
-        
+            
         
          createdAt: new Date(),
          updatedAt: new Date(),
      },
      {
         "team_id": 11,
-        "name": "Queens",
+        "name": "Iowa",
         "gender": "male",
-        
+            
         
          createdAt: new Date(),
          updatedAt: new Date(),
-        },
-     {
-        "team_id": 12,
-        "name": "Iowa State",
-        "gender": "male",
-        
-        
-         createdAt: new Date(),
-        updatedAt: new Date(),
      },
      {
-        "team_id": 13,
-        "name": "James Madison",
+        "team_id": 12,
+        "name": "Wheeling",
         "gender": "male",
+          
         
+         createdAt: new Date(),
+         updatedAt: new Date()
+     },
+     
+     {
+        "team_id": 13,
+        "name": "Lander",
+        "gender": "male",
+            
         
          createdAt: new Date(),
         updatedAt: new Date(),
      },
       {
         "team_id": 14,
-        "name": "Denver",
+        "name": "New Mexico Tech",
         "gender": "male",
-        
+            
         
          createdAt: new Date(),
-         updatedAt: new Date(),
+        updatedAt: new Date(),
      },
      {
         "team_id": 15,
-        "name": "New Mexico Tech",
+        "name": "Central College",
         "gender": "male",
-          
+            
         
          createdAt: new Date(),
         updatedAt: new Date(),
      },
      {
         "team_id": 16,
-        "name": "Central College",
+        "name": "BYE3",
         "gender": "male",
             
         
@@ -153,68 +155,68 @@ module.exports = {
         "team_id": 17,
         "name": "Lindenwood",
         "gender": "male",
-            
+          
         
          createdAt: new Date(),
          updatedAt: new Date(),
      },
      {
         "team_id": 18,
-        "name": "AIC",
+        "name": "NDC",
         "gender": "male",
-            
+        
         
          createdAt: new Date(),
          updatedAt: new Date(),
      },
      {
         "team_id": 19,
-        "name": "Virginia Tech",
+        "name": "AIC",
         "gender": "male",
-            
+        
         
          createdAt: new Date(),
          updatedAt: new Date(),
-     },
+        },
      {
         "team_id": 20,
-        "name": "Spring Hill",
+        "name": "McKendree",
         "gender": "male",
-          
+        
         
          createdAt: new Date(),
-         updatedAt: new Date()
+        updatedAt: new Date(),
      },
      {
         "team_id": 21,
-        "name": "Marian",
+        "name": "Denver",
         "gender": "male",
-            
+        
         
          createdAt: new Date(),
         updatedAt: new Date(),
      },
       {
         "team_id": 22,
-        "name": "Loyola (MD)",
+        "name": "Tulane",
         "gender": "male",
-            
+        
         
          createdAt: new Date(),
-        updatedAt: new Date(),
+         updatedAt: new Date(),
      },
      {
         "team_id": 23,
-        "name": "Franciscan",
+        "name": "Taylor",
         "gender": "male",
-            
+          
         
          createdAt: new Date(),
         updatedAt: new Date(),
      },
      {
         "team_id": 24,
-        "name": "Taylor",
+        "name": "BYE2",
         "gender": "male",
             
         
@@ -232,7 +234,7 @@ module.exports = {
      },
      {
         "team_id": 26,
-        "name": "Mount St Mary's",
+        "name": "Mount St. Mary's",
         "gender": "male",
         
         
@@ -241,7 +243,7 @@ module.exports = {
      },
      {
         "team_id": 27,
-        "name": "W Michigan",
+        "name": "James Madison",
         "gender": "male",
         
         
@@ -250,7 +252,7 @@ module.exports = {
         },
      {
         "team_id": 28,
-        "name": "Furman",
+        "name": "Christendom",
         "gender": "male",
         
         
@@ -259,7 +261,7 @@ module.exports = {
      },
      {
         "team_id": 29,
-        "name": "McKendree",
+        "name": "Marian",
         "gender": "male",
         
         
@@ -277,7 +279,7 @@ module.exports = {
      },
      {
         "team_id": 31,
-        "name": "Salve Regina",
+        "name": "St. Scholastica",
         "gender": "male",
           
         
@@ -286,7 +288,7 @@ module.exports = {
      },
      {
       "team_id": 32,
-      "name": "Lander",
+      "name": "BYE4",
       "gender": "male",
           
       
@@ -295,7 +297,7 @@ module.exports = {
    },
    {
     "team_id": 33,
-    "name": "Life",
+    "name": "Life Univ",
     "gender": "female",
         
     
@@ -304,7 +306,7 @@ module.exports = {
  },
  {
     "team_id": 34,
-    "name": "Wayne State",
+    "name": "Davenport Univ",
     "gender": "female",
         
     
@@ -313,7 +315,7 @@ module.exports = {
  },
  {
     "team_id": 35,
-    "name": "Iowa Univ.",
+    "name": "Wayne State",
     "gender": "female",
         
     
@@ -322,7 +324,7 @@ module.exports = {
  },
  {
     "team_id": 36,
-    "name": "Clemson",
+    "name": "Iowa State Univ",
     "gender": "female",
       
     
@@ -331,7 +333,7 @@ module.exports = {
  },
  {
     "team_id": 37,
-    "name": "Baldwin Wallace",
+    "name": "BYE1",
     "gender": "female",
         
     
@@ -340,7 +342,7 @@ module.exports = {
  },
   {
     "team_id": 38,
-    "name": "Allegheny Rep",
+    "name": "Baldwin",
     "gender": "female",
         
     
@@ -349,7 +351,7 @@ module.exports = {
  },
  {
     "team_id": 39,
-    "name": "Grace College",
+    "name": "SARC Rep Side #2",
     "gender": "female",
         
     
@@ -358,7 +360,7 @@ module.exports = {
  },
  {
     "team_id": 40,
-    "name": "SARC Rep #1",
+    "name": "Allegheny Rep",
     "gender": "female",
         
     
@@ -367,7 +369,7 @@ module.exports = {
  },
  {
     "team_id": 41,
-    "name": "Lindenwood",
+    "name": "Lindenwood Univ",
     "gender": "female",
       
     
@@ -376,7 +378,7 @@ module.exports = {
  },
  {
     "team_id": 42,
-    "name": "UNI",
+    "name": "Univ. Northern Iowa",
     "gender": "female",
     
     
@@ -385,7 +387,7 @@ module.exports = {
  },
  {
     "team_id": 43,
-    "name": "Iowa State Univ",
+    "name": "Bryant Univ",
     "gender": "female",
     
     
@@ -394,7 +396,7 @@ module.exports = {
     },
  {
     "team_id": 44,
-    "name": "Davenport",
+    "name": "Iowa Univ",
     "gender": "female",
     
     
@@ -403,7 +405,7 @@ module.exports = {
  },
  {
     "team_id": 45,
-    "name": "Bryant",
+    "name": "BYE2",
     "gender": "female",
     
     
@@ -412,7 +414,7 @@ module.exports = {
  },
   {
     "team_id": 46,
-    "name": "UW Eau Claire",
+    "name": "Grace College",
     "gender": "female",
     
     
@@ -421,7 +423,7 @@ module.exports = {
  },
  {
     "team_id": 47,
-    "name": "Northern Lights",
+    "name": "SARC Rep Side #1",
     "gender": "female",
       
     
@@ -430,7 +432,7 @@ module.exports = {
  },
  {
     "team_id": 48,
-    "name": "SARC Rep #2",
+    "name": "Northern Lights Rep",
     "gender": "female",
         
     
