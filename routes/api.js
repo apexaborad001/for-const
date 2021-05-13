@@ -22,11 +22,15 @@ routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 const moment = require("moment");
 routes.get("/starttime", async (req, res)=>{
      try{
-   const moment = require("moment");
-   let date2 = new Date("2021, 05, 11, 19, 0, 0");
-   let sql6 = `select * from system_settings where type="submission_deadline"`;
-   let cronData = await req.database.query(sql6, { type: req.database.QueryTypes.SELECT });
-   return res.send({"game_start_time":cronData[0]["value"]});
+     let sql6 = `select * from system_settings where type="submission_deadline"`;
+     let cronData = await req.database.query(sql6, { type: req.database.QueryTypes.SELECT });
+    let gameStarted = false;
+    let date2 = new Date();
+    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+    if (dateTime > cronData[0]["value"]) {
+       gameStarted = true;
+    }
+    return res.send({"game_start_time":cronData[0]["value"], gameStarted});
    }catch(err){
    	console.log("errotr", err);
    	return res.send({err});
