@@ -16,7 +16,7 @@ module.exports = {
      },
      {
         "team_id": 2,
-        "name": "Western Michigan",
+        "name": "W. Michigan",
         "gender": "male",
             
         
@@ -43,7 +43,7 @@ module.exports = {
      },
      {
         "team_id": 5,
-        "name": "Loyola Maryland",
+        "name": "Loyola (MD)",
         "gender": "male",
             
         
@@ -70,7 +70,7 @@ module.exports = {
      },
      {
         "team_id": 8,
-        "name": "BYE1",
+        "name": "BYE #1",
         "gender": "male",
             
         
@@ -144,7 +144,7 @@ module.exports = {
      },
      {
         "team_id": 16,
-        "name": "BYE3",
+        "name": "BYE #3",
         "gender": "male",
             
         
@@ -216,7 +216,7 @@ module.exports = {
      },
      {
         "team_id": 24,
-        "name": "BYE2",
+        "name": "BYE #2",
         "gender": "male",
             
         
@@ -288,7 +288,7 @@ module.exports = {
      },
      {
       "team_id": 32,
-      "name": "BYE4",
+      "name": "BYE #4",
       "gender": "male",
           
       
@@ -297,7 +297,7 @@ module.exports = {
    },
    {
     "team_id": 33,
-    "name": "Life Univ",
+    "name": "Life",
     "gender": "female",
         
     
@@ -306,7 +306,7 @@ module.exports = {
  },
  {
     "team_id": 34,
-    "name": "Davenport Univ",
+    "name": "Davenport",
     "gender": "female",
         
     
@@ -324,7 +324,7 @@ module.exports = {
  },
  {
     "team_id": 36,
-    "name": "Iowa State Univ",
+    "name": "Iowa State",
     "gender": "female",
       
     
@@ -333,7 +333,7 @@ module.exports = {
  },
  {
     "team_id": 37,
-    "name": "BYE1",
+    "name": "BYE #1",
     "gender": "female",
         
     
@@ -342,7 +342,7 @@ module.exports = {
  },
   {
     "team_id": 38,
-    "name": "Baldwin",
+    "name": "Baldwin Wallace",
     "gender": "female",
         
     
@@ -351,7 +351,7 @@ module.exports = {
  },
  {
     "team_id": 39,
-    "name": "SARC Rep Side #2",
+    "name": "SARC Rep #2",
     "gender": "female",
         
     
@@ -369,7 +369,7 @@ module.exports = {
  },
  {
     "team_id": 41,
-    "name": "Lindenwood Univ",
+    "name": "Lindenwood",
     "gender": "female",
       
     
@@ -378,7 +378,7 @@ module.exports = {
  },
  {
     "team_id": 42,
-    "name": "Univ. Northern Iowa",
+    "name": "UNI",
     "gender": "female",
     
     
@@ -387,7 +387,7 @@ module.exports = {
  },
  {
     "team_id": 43,
-    "name": "Bryant Univ",
+    "name": "Bryant",
     "gender": "female",
     
     
@@ -405,7 +405,7 @@ module.exports = {
  },
  {
     "team_id": 45,
-    "name": "BYE2",
+    "name": "BYE #2",
     "gender": "female",
     
     
@@ -423,7 +423,7 @@ module.exports = {
  },
  {
     "team_id": 47,
-    "name": "SARC Rep Side #1",
+    "name": "SARC Rep #1",
     "gender": "female",
       
     
@@ -432,7 +432,7 @@ module.exports = {
  },
  {
     "team_id": 48,
-    "name": "Northern Lights Rep",
+    "name": "Northern Lights",
     "gender": "female",
         
     

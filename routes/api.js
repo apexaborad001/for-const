@@ -94,7 +94,7 @@ routes.get("/croninit", async (req, res)=>{
                     }else if(row2["name"] == "date3_start"){
                           date3_start = row2["value"];
                     }else if(row2["name"] == "date3_end"){
-                          date3_start = row2["value"];
+                          date3_end = row2["value"];
                     }
                              
                 }
