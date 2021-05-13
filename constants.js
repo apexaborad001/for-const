@@ -42,6 +42,7 @@ module.exports = (req) => {
       "COMMON_IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}`,
       "IMAGE_PATH": `${process.env.BUCKET_ACCESS_URL}common/`,
       "Bracket_submission_deadline":"2021-05-11 19:00:00"
+
        },
     messages = {
       "LOGIN": {

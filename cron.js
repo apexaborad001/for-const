@@ -5,6 +5,7 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
+/*
 let reminder1_start = "2021-05-11 17:00:00";
 let reminder1_end = "2021-05-11 17:01:00";
 
@@ -23,6 +24,25 @@ let date2_end = "2021-05-11 21:31:00";
 
 let date3_start = "2021-05-11 22:30:00";
 let date3_end = "2021-05-11 22:31:00";
+*/
+
+let reminder1_start = "2021-05-12 10:00:00";
+let reminder1_end = "2021-05-12 10:31:00";
+
+let reminder2_start = "2021-05-12 10:30:00";
+let reminder2_end = "2021-05-12 10:31:00";
+
+let remove_bracket_start = "2021-05-12 11:30:00";
+let remove_bracket_end = "2021-05-12 11:31:00";
+
+let date1_start = "2021-05-12 12:00:00";
+let date1_end = "2021-05-12 12:01:00";
+
+let date2_start = "2021-05-12 12:30:00";
+let date2_end = "2021-05-12 12:31:00";
+
+let date3_start = "2021-05-12 13:00:00";
+let date3_end = "2021-05-12 13:01:00";
 
 
 const sendReminder = async (type) => {
@@ -208,6 +228,7 @@ let SendRecap = async (update_after, type) => {
 dailyCronAPI = () => {
       try {
 	let date2 = new Date();
+	console.log("cron running", date2);
 	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
 	if(dateTime > reminder1_start && dateTime < reminder1_end){
             sendReminder("reminder_one");
