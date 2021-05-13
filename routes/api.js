@@ -23,7 +23,9 @@ const moment = require("moment");
 routes.get("/starttime", async (req, res)=>{
    const moment = require("moment");
    let date2 = new Date("2021, 05, 11, 19, 0, 0");
-  return res.send({"game_start_time":date2});
+   let sql6 = `select * from system_settings where type="submission_deadline"`;
+   let cronData = await req.database.query(sql6, { type: req.database.QueryTypes.SELECT });
+   return res.send({"game_start_time":dbdata[0]["value"]});
 });
 
 routes.get("/croninit", async (req, res)=>{
