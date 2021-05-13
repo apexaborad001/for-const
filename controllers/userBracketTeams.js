@@ -82,7 +82,9 @@ const getUserBracketDetails = async (req, res) => {
     //let isAdminUpdated = await req.database.query(sqlCheck, { type: req.database.QueryTypes.SELECT });
     let date2 = new Date();
     let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
-    if (dateTime > req.constants.Bracket_submission_deadline) {
+    let sql6 = `select * from system_settings where type="submission_deadline"`;
+    let cronData = await req.database.query(sql6, { type: req.database.QueryTypes.SELECT });
+    if (dateTime > cronData[0]["value"]) {
       isBracketEditable = false;
     }
     let isPartiallyFilledBracket = {"male":false, "female":false};

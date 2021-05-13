@@ -1,6 +1,6 @@
 'use strict'
 module.exports = (req) => {
-  req.BASE_URL_FRONTEND = `https://staging.maymadness7s.com/`;
+  req.BASE_URL_FRONTEND =process.env.BASE_URL_FRONTEND;
   req.BASE_URL = `${req.protocol}://${req.hostname}/`; // Get set url
   let constants = {
       "SALT_ROUND": 10,

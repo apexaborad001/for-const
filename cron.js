@@ -54,7 +54,7 @@ const sendReminder = async (type) => {
         
           if(getQueryResult2.length == 0){        
          
-         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null  group by email;`;
+         const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null;`;
         const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
         let template = "Reminder.html";
         if(type == "reminder_two"){
@@ -258,10 +258,13 @@ dailyCronAPI = () => {
         console.log("Error reschedule cron-" + err);
       }
    
-  };
+};
   
 module.exports = {
   dailyCronAPI,
+  sendReminder,
+  deleteOldBracket,
+  SendRecap,
   DailyCron: (time) => {
     cron.schedule(time, async() => {
       try {
