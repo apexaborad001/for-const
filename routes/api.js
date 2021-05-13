@@ -21,11 +21,16 @@ routes.post('/updateTeamScore',auth.isAuthenticated, bracketManagerController.up
 routes.post('/TestUserCreattion', UserController.TestUserCreattion);
 const moment = require("moment");
 routes.get("/starttime", async (req, res)=>{
+     try{
    const moment = require("moment");
    let date2 = new Date("2021, 05, 11, 19, 0, 0");
    let sql6 = `select * from system_settings where type="submission_deadline"`;
    let cronData = await req.database.query(sql6, { type: req.database.QueryTypes.SELECT });
-   return res.send({"game_start_time":dbdata[0]["value"]});
+   return res.send({"game_start_time":cronData[0]["value"]});
+   }catch(err){
+   	console.log("errotr", err);
+   	return res.send({err});
+   }
 });
 
 routes.get("/croninit", async (req, res)=>{
