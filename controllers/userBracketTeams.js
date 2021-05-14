@@ -113,6 +113,14 @@ const getUserBracketDetails = async (req, res) => {
       }
     });
     if (!bracket) {
+      if(!isBracketEditable){
+		return res.status(req.constants.HTTP_SUCCESS).json({
+		status: req.constants.SUCCESS,
+		code: req.constants.HTTP_SUCCESS,
+		data: {isPartiallyFilledBracket,isBracketEditable, bracketDetails: [], userBracketId=0, loser_ids:[]},
+		message: req.messages.USER_BRACKET_TEAMS.FETCH
+		});
+      }
       let bracketName = `${userName}-${bracketType}-bracket`;
       let userBracketData = {
         user_id: userId,
