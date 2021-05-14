@@ -11,7 +11,7 @@ const cron = require('node-cron');
 const cronm = require("../cron");
 const routes = require('express').Router();
 var task = "";
-routes.get('/getLatestGames',auth.isAuthenticated, userBreaketTeamController.getLatestGames);
+routes.get('/getLatestGames',  userBreaketTeamController.getLatestGames);
 routes.post("/tieBreakerResolver",auth.isAuthenticated,userBreaketTeamController.tieBreakerResolver);
 routes.get("/commonData", commondataController.getCommonData);
 routes.post("/contactUs", validate(commonValidation.contactUs), commondataController.contactUs);
