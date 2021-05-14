@@ -76,6 +76,7 @@ models.sequelize.authenticate()
     try {
       let con = models.sequelize;
       await con.query(`SET sql_mode = ""`);
+      await con.query(`SET global sql_mode = ""`);
      // await con.query(`SET global sql_mode = ""`);
       //await con.close();
       let port = process.env.SERVER_PORT ? process.env.SERVER_PORT : 3000;
