@@ -31,6 +31,18 @@ const tieBreakerResolver = async (req, res) => {
 
 const upsertBracketDetails = async (req, res) => {
   try {
+    let date2 = new Date();
+    let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+    let sql6 = `select * from system_settings where type="submission_deadline"`;
+    let cronData = await req.database.query(sql6, { type: req.database.QueryTypes.SELECT });
+    if (dateTime > cronData[0]["value"]) {
+      return res.status(req.constants.HTTP_BAD_REQUEST).json({
+        status: req.constants.ERROR,
+        code: req.constants.HTTP_BAD_REQUEST,
+        message: "Not allowed",
+        data: null
+      })
+    }
     const userBracketDetails = JSON.parse(req.body.userBracketDetails);
     let userBracketId = userBracketDetails[0].user_bracket_id;
     req.models.user_breaket_team.destroy({
