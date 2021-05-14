@@ -1,3 +1,4 @@
+const moment = require("moment");
 const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender) => {
     let genderWiseArray
     let scoreRoundFinalArray = [];
@@ -39,13 +40,24 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender
     }
     return scoreRoundFinalObject;
 };
-const tieBreakerResolverFunction=async(req,userBracketId1,userBracketId2)=> {
+const tieBreakerResolverFunction=async(req, bracketType)=> {
     try {
-        const sql = `SELECT ubs.user_id, abs((ubt.team_1_score+ubt.team_2_score) - (tgs.team1_score+tgs.team2_score)) as diff_score FROM leaderboards lbs inner join user_breakets ubs on ubs.user_id = lbs.userId and ubs.type= lbs.bracketType inner join user_breaket_teams ubt on ubs.id = ubt.user_bracket_id INNER JOIN tournament_games tgs on tgs.game_id=ubt.game_id where lbs.rank=1 and ubt.team1_score IS NOT NULL and ubt.team2_score IS NOT NULL order by diff_score limit 1`;
+        const sql = `SELECT distinct ubs.user_id, user_bracket_id , (tgs.team1_score+tgs.team2_score) as score1, (ubt.team_1_score + ubt.team_2_score) as score2, lbs.*  FROM leaderboards lbs inner join user_breakets ubs on ubs.user_id = lbs.userId and ubs.type= lbs.bracketType  inner join user_breaket_teams ubt on ubs.id = ubt.user_bracket_id and game_id in (31,79)  INNER JOIN tournament_games tgs on tgs.game_id=ubt.game_id where lbs.rank=1 order by score1-score2`;
         const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
-        return getQueryResult
-    }
-    catch (err) {
+        let date2 = new Date();
+        let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+       
+        let sqlQuery1 = `delete from leaderboards where bracketType="${bracketType}" and leaderboards.rank = 1`
+        await req.database.query(sqlQuery1);
+      
+        for(let row of getQueryResult){
+           let {user_id, userName, bracketType, score, rank, winner_id}  = row;
+           let sqlQuery = `insert INTO leaderboards set userId = ${user_id}, userName = "${userName}", bracketType="${bracketType}", score=${score}, leaderboards.rank=${rank}, leaderboards.winner_id=${winner_id}, createdAt = "${dateTime}", updatedAt = "${dateTime}"`;
+           const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.UPDATE });  
+        }
+        return true;
+      
+    }catch (err) {
         console.log(err)
     }
   }

@@ -1,5 +1,5 @@
 const logger = require('../helper/logger-helper');
-const {  getRoundWiseDetailsInFormat } = require('../util')
+const {  getRoundWiseDetailsInFormat, tieBreakerResolverFunction } = require('../util')
 const topLeaderboardUser = 10;
 const moment = require("moment");
 const getUserBrackets = async (req, res) => {
@@ -107,6 +107,7 @@ const getUserBrackets = async (req, res) => {
       
       const userWiseScore = await req.database.query(sqlQuery, { type: req.database.QueryTypes.UPDATE });
       //await req.models.leaderboard.bulkCreate(userWiseScore);
+      await tieBreakerResolverFunction(req, bracketType);
       return userWiseScore;
     } catch (e) {
       console.log('e', e)
