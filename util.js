@@ -42,7 +42,7 @@ const getRoundWiseDetailsInFormat = async (roundWiseQueryResult,bracketId,gender
 };
 const tieBreakerResolverFunction=async(req, bracketType)=> {
     try {
-        const sql = `SELECT distinct ubs.user_id, user_bracket_id , (tgs.team1_score+tgs.team2_score) as score1, (ubt.team_1_score + ubt.team_2_score) as score2, lbs.*  FROM leaderboards lbs inner join user_breakets ubs on ubs.user_id = lbs.userId and ubs.type= lbs.bracketType  inner join user_breaket_teams ubt on ubs.id = ubt.user_bracket_id and game_id in (31,79)  INNER JOIN tournament_games tgs on tgs.game_id=ubt.game_id where lbs.rank=1 order by score1-score2`;
+        const sql = `SELECT distinct ubs.user_id, user_bracket_id , (tgs.team1_score+tgs.team2_score) as score1, (ubt.team_1_score + ubt.team_2_score) as score2, lbs.*  FROM leaderboards lbs inner join user_breakets ubs on ubs.user_id = lbs.userId and ubs.type= lbs.bracketType  inner join user_breaket_teams ubt on ubs.id = ubt.user_bracket_id and game_id in (31,79)  INNER JOIN tournament_games tgs on tgs.game_id=ubt.game_id where lbs.rank=1 and bracketType="${bracketType}" order by score1-score2`;
         const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT })
         let date2 = new Date();
         let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
