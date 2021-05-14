@@ -30,7 +30,7 @@ routes.get("/starttime", async (req, res)=>{
     if (dateTime > cronData[0]["value"]) {
        gameStarted = true;
     }
-    return res.send({"game_start_time1":cronData[0]["value"], gameStarted});
+    return res.send({"game_start_time2":cronData[0]["value"], gameStarted});
    }catch(err){
    	console.log("errotr", err);
    	return res.send({err});
