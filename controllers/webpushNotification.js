@@ -50,11 +50,11 @@ const subscribe = async (req, res) => {
 const sendNotification = async (req, res) => {
     try {
         let resMeta = {};
-        let endpoint = req.body.endpoint;
-        let user_id=req.decoded.user_id
+        //let endpoint = req.body.endpoint;
+        //let user_id=req.decoded.user_id
         let notification_title = req.body.title || req.query.title;
         let notification_message = req.body.message || req.query.message;
-        const results = await req.models.notificationSubscriptions.findAll({ where:{ [Op.and]: [{ user_id: user_id },{ endpoint: endpoint }],status: 1}});
+        const results = await req.models.notificationSubscriptions.findAll({ where:{status: 1}});
         console.log(results)
         for (let row of results) {
             let subscription = { endpoint: row['endpoint'], keys: JSON.parse(row['auth_key']) };
