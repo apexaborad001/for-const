@@ -98,7 +98,7 @@ module.exports = {
      },
      {
         "team_id": 11,
-        "name": "Iowa",
+        "name": "Wheeling",
         "gender": "male",
             
         
@@ -107,7 +107,7 @@ module.exports = {
      },
      {
         "team_id": 12,
-        "name": "Wheeling",
+        "name": "Lander",
         "gender": "male",
           
         
@@ -117,7 +117,7 @@ module.exports = {
      
      {
         "team_id": 13,
-        "name": "Lander",
+        "name": "Louisiana",
         "gender": "male",
             
         
