@@ -86,6 +86,35 @@ const sendNotification = async (req, res) => {
         return res.json(resMeta);
     }
 }
+
+const sendNotificationCron = async (connection, models, title, message, url) => {
+    try {
+        let resMeta = {};
+        const sql = `select distinct users.firstName as user, notificationSubscriptions.* from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id inner join notificationSubscriptions on notificationSubscriptions.user_id = users.id where ubt.winner_id is null and notificationSubscriptions.status=1;`;
+        const results = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
+               
+        for (let row of results) {
+            let subscription = { endpoint: row['endpoint'], keys: JSON.parse(row['auth_key']) };
+            const payload = JSON.stringify({
+                title: title,
+                body: message,
+                userId: row["user_id"],
+                token: row["token"],
+                url:url
+            });
+
+            webpush.sendNotification(subscription, payload)
+                .then(result => console.log(result))
+                .catch(e => console.log(e.stack))
+
+        }
+        return results;
+
+    } catch (error) {
+         console.log(error);
+    }
+}
+
 const unSubscribe = async (req, res) => {
     try {
         let user_id=req.decoded.user_id
@@ -130,5 +159,6 @@ const unSubscribe = async (req, res) => {
 module.exports = {
     subscribe,
     sendNotification,
-    unSubscribe
+    unSubscribe,
+    sendNotificationCron
 }

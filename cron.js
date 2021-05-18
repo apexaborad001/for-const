@@ -5,27 +5,7 @@ const helper = require('./helper/common-helper');
 const path = require("path");
 const fs = require("fs");
 const moment = require("moment");
-/*
-let reminder1_start = "2021-05-11 17:00:00";
-let reminder1_end = "2021-05-11 17:01:00";
-
-let reminder2_start = "2021-05-11 17:30:00";
-let reminder2_end = "2021-05-11 17:31:00";
-
-let remove_bracket_start = "2021-05-11 19:00:00";
-let remove_bracket_end = "2021-05-11 19:01:00";
-
-
-let date1_start = "2021-05-11 20:30:00";
-let date1_end = "2021-05-11 20:31:00";
-
-let date2_start = "2021-05-11 21:30:00";
-let date2_end = "2021-05-11 21:31:00";
-
-let date3_start = "2021-05-11 22:30:00";
-let date3_end = "2021-05-11 22:31:00";
-*/
-
+const { sendNotificationCron } =  require('./controllers/webpushNotification');
 let reminder1_start = "2021-05-12 10:00:00";
 let reminder1_end = "2021-05-12 10:31:00";
 
@@ -57,8 +37,12 @@ const sendReminder = async (type) => {
          const sql = `select distinct users.firstName as user, users.email from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id inner join users on ubs.user_id=users.id where ubt.winner_id is null;`;
         const getQueryResult = await connection.query(sql, { type: models.Sequelize.QueryTypes.SELECT });
         let template = "Reminder.html";
+        let title = "Bracket Challenge Reminder";
+        let message = "Three days left to complete your May Madness bracket. Earn the most points and win four VIP tickets to next year's Collegiate Rugby Championship.";
+        let url = process.env.BASE_URL_FRONTEND;
         if(type == "reminder_two"){
         	template = "Reminder_2nd_day.html";
+        	message = "Only 24 hours left to complete your May Madness bracket.  All entries must be received by May 28 at 11:59pm EST.";
         }
         for(let row of getQueryResult){
               let to_id = row["email"],
@@ -67,6 +51,8 @@ const sendReminder = async (type) => {
               replacements = {user:row.user, url:process.env.BASE_URL_FRONTEND};
               helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);        
         }
+       
+        await sendNotificationCron(connection, models, title, message, url);
 	let cnt = getQueryResult.length;
 	const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
         const getQueryResult1 = await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
