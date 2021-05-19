@@ -44,6 +44,9 @@ const sendReminder = async (type) => {
         	template = "Reminder_2nd_day.html";
         	message = "Only 24 hours left to complete your May Madness bracket.  All entries must be received by May 28 at 11:59pm EST.";
         }
+        let cnt = getQueryResult.length;
+	const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
+        const getQueryResult1 = await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
         for(let row of getQueryResult){
               let to_id = row["email"],
               subject = "Bracket Challenge Reminder",
@@ -51,11 +54,9 @@ const sendReminder = async (type) => {
               replacements = {user:row.user, url:process.env.BASE_URL_FRONTEND};
               helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);        
         }
-       
+        
         await sendNotificationCron(connection, models, title, message, url);
-	let cnt = getQueryResult.length;
-	const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
-        const getQueryResult1 = await connection.query(sql1, { type: models.Sequelize.QueryTypes.UPDATE });
+	
 	return getQueryResult;
        }
        
