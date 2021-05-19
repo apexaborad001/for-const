@@ -92,6 +92,15 @@ const signUp = async(req, res) => {
           }
         });
         if (findUser) {
+          if(findUser.emailVerified != 1){
+            return res.status(req.constants.HTTP_NOT_EXISTS).json({
+              status: req.constants.ERROR,
+              code: req.constants.HTTP_NOT_EXISTS,
+              message: "Verification link is already shared to this email, please verify to continue"
+            });
+          
+          }
+          
           if(email==findUser.get('email')&&username==findUser.get('userName'))
           {
             return res.status(req.constants.HTTP_ALREADY_EXISTS).json({ status: req.constants.ERROR, code: req.constants.HTTP_ALREADY_EXISTS, message: req.messages.SIGNUP.ALREADY_EXISTS });
@@ -173,18 +182,6 @@ const signUp = async(req, res) => {
        
       	if(response){
           if(response.emailVerified != 1){
-            /*let token = response.email + response.id;
-            let verifyEmailToken = await helper.generateVerificationEmail(token);
-            let verifyEmailLink = `${req.BASE_URL_FRONTEND}` + "verify-email" + "/" + verifyEmailToken;
-            await req.models.user.update({ verifyEmailToken: verifyEmailToken}, { where: { id: response.id } })
-            let template = "WelcomeEmail.html";
-            let to_id = response.email,
-            subject = req.messages.MAIL_SUBJECT.WELCOME_MAIL,
-            template_name = template,
-            replacements = { user: req.body.firstName, url:req.BASE_URL_FRONTEND, date: moment(new Date()).format("MMMM Do YYYY"), verifyEmailLink };
-            helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);*/
-
-
             return res.status(req.constants.HTTP_NOT_EXISTS).json({
               status: req.constants.ERROR,
               code: req.constants.HTTP_NOT_EXISTS,
@@ -344,11 +341,18 @@ const forgotPassword = async(req, res) => {
 try {
   let userName = req.body.userName;
   let email = userName;
-  let userInfoQuery = `SELECT id,email, firstName, reset_password_expires from users where userName =  '${userName}' or email =  '${email}'`
+  let userInfoQuery = `SELECT id,email, firstName, reset_password_expires, email_verified from users where userName =  '${userName}' or email =  '${email}'`
    
   let userInfo = await req.database.query(userInfoQuery, { type: req.database.QueryTypes.SELECT });
   if (userInfo.length > 0) {
       userInfo = userInfo[0];
+      if(userInfo.email_verified != 1){
+            return res.status(req.constants.HTTP_NOT_EXISTS).json({
+              status: req.constants.ERROR,
+              code: req.constants.HTTP_NOT_EXISTS,
+              message: "Verification link is already shared to this email, please verify to continue"
+            });
+      }
       let expiresIn = userInfo.reset_password_expires,
       currTime = (new Date()).getTime(),
       timeDiff = Math.ceil((Math.abs(currTime - expiresIn) / 1000) / 60);
