@@ -350,7 +350,7 @@ try {
             return res.status(req.constants.HTTP_NOT_EXISTS).json({
               status: req.constants.ERROR,
               code: req.constants.HTTP_NOT_EXISTS,
-              message: "Verification link is already shared to this email, please verify to continue"
+              message: "Your e-mail verification is pending, check your inbox and verify first."
             });
       }
       let expiresIn = userInfo.reset_password_expires,
