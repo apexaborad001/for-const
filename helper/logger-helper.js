@@ -18,7 +18,7 @@ let log = async(...args) => {
       if (args[1].constants.DEBUG_TYPE == "email") {
 
         let from_id = process.env.fromId,
-          to_id = "beulah@mobikasa.com, vikram@mobikasa.com",
+          to_id = "surendramaurya@mobikasa.com",
           subject = (args[6]) ? 'API Log' : 'API Error Logs',
           template_name = 'apiErrorLogs.html',
           replacements = {
@@ -50,7 +50,7 @@ let log = async(...args) => {
       } else if (args[1].constants.DEBUG_TYPE == "both") {
 
         let from_id = process.env.fromId,
-          to_id = "utkarsh@mobikasa.com",
+          to_id = "surendramaurya@mobikasa.com",
           subject = (args[6]) ? 'API Log' : 'API Error Logs',
           template_name = 'apiErrorLogs.html',
           replacements = {
@@ -81,7 +81,7 @@ let log = async(...args) => {
     }
   } catch (err) {
     let from_id = process.env.fromId,
-    to_id = "beulah@mobikasa.com, vikram@mobikasa.com",
+    to_id = "surendramaurya@mobikasa.com",
     subject = 'API Error Logs',
     template_name = 'apiErrorLogs.html';
     
