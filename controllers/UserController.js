@@ -39,7 +39,7 @@ const editProfile = async(req,res) =>{
             }
             if(req.files){
                 try{
-					            let imageRes = await helper.upload(req, "myprofile", res);
+					            let imageRes = await helper.upload(req, "myprofile");
 				            	imageRes["userId"] = req.decoded.user_id;
 					            await req.models.user_images.destroy({
                     	where:{
@@ -128,7 +128,7 @@ const signUp = async(req, res) => {
           let newUserData = await req.models.user.create(userData);
 			if(req.files){
                 try{
-				        	let imageRes = await helper.upload(req, "myprofile", res);
+				        	let imageRes = await helper.upload(req, "myprofile");
 				        	imageRes["userId"] = newUserData.id;
             	  	let saveImage = new req.models.user_images(imageRes)
 				        	await saveImage.save()
