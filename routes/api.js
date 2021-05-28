@@ -203,4 +203,43 @@ routes.get("/s3test5", async (req, res)=>{
 	}
 })
 
+
+routes.get("/sendreminder", async (req, res)=>{
+    try{
+
+	let type = "final_reminder";
+	let date2 = new Date();
+	let dateTime = moment(date2).format("YYYY-MM-DD HH:mm:ss");
+	const sql2 = `select * from cron_history where type="${type}"`;
+	const getQueryResult2 = await req.database.query(sql2, { type: req.database.QueryTypes.SELECT });
+        if(getQueryResult2.length == 0){        
+        const sql = `select distinct firstName as user, email from users where admin=0 and id not in (select distinct user_id from user_breaket_teams ubt inner join user_breakets ubs on ubs.id=ubt.user_bracket_id where ubt.winner_id is not null);`;
+        const getQueryResult = await req.database.query(sql, { type: req.database.QueryTypes.SELECT });
+        let template = "ReminderFinal.html";
+        let title = "May Madness brackets close at midnight!";
+        let message = "There is still time to complete the May Madness Brackets Challenge.We encourage you to complete both a men's bracket and a women's bracket to maximize your chances of winning four VIP tickets to next year's CRCs.Brackets close at midnight.";
+        let url = process.env.BASE_URL_FRONTEND;
+        let cnt = getQueryResult.length;
+	const sql1 = `insert into cron_history values (NULL, "${type}", ${cnt}, "${dateTime}", "${dateTime}")`;
+        const getQueryResult1 = await req.database.query(sql1, { type: req.database.QueryTypes.UPDATE });
+        const helper = require('../helper/common-helper');
+        for(let row of getQueryResult){
+              let to_id = row["email"],
+              subject = title,
+              template_name = template,
+              replacements = {user:row.user, url:process.env.BASE_URL_FRONTEND};
+              helper.sendEmail(process.env.mailFrom, to_id, subject, template_name, replacements);        
+        }
+        return res.send({"staus":"success", date:getQueryResult});
+       }
+    
+    
+    return res.send({"staus":"success", date:[]});
+   }catch(err){
+   	console.log("errotr", err);
+   	return res.send({"staus":"failed", err});
+   }
+});
+
+
 module.exports = routes;
